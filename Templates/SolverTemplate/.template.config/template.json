@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "AconCavy",
+    "classifications": [
+        "C#",
+        "Project"
+    ],
+    "identity": "AtCoderTemplate.SolverProjectTemplate",
+    "name": "AtCoder solver project template",
+    "shortName": "atcsolver",
+    "tags": {
+        "language": "C#",
+        "type": "item"
+    },
+    "sourceName": "SolverTemplate"
+}
