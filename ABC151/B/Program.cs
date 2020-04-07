@@ -18,6 +18,10 @@ namespace B
 
         public static void Solve()
         {
+            var nkm = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var ai = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var score = nkm[0] * nkm[2] - ai.Sum();
+            Console.WriteLine(score <= nkm[1] ? Math.Max(score, 0) : -1);
         }
     }
 }

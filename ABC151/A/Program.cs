@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace A
 {
@@ -18,6 +19,8 @@ namespace A
 
         public static void Solve()
         {
+            var c = Console.ReadLine().ToCharArray();
+            Console.WriteLine(Convert.ToChar(Convert.ToByte(c[0]) + 1));
         }
     }
 }
