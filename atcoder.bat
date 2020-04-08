@@ -4,6 +4,7 @@ if "%~1"=="" (
     exit /b
 )
 set SLN=%~1
+start https://atcoder.jp/contests/%SLN%
 dotnet new atcoder -n %SLN%
 cd %SLN%
 dotnet restore
