@@ -9,8 +9,8 @@ namespace Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var input = "\n";
-            var output = "\n";
+            var input = @"";
+            var output = @"";
             Tester.InOutTest(() => Program.Solve(), input, output);
         }
     }

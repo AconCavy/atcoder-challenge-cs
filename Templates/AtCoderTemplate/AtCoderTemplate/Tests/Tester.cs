@@ -19,9 +19,9 @@ namespace Tests
             action();
 
             using var sr = new StringReader(b.ToString());
-            var res = sr.ReadToEnd();
-
-            Assert.AreEqual(output.Replace("\n", Environment.NewLine).Replace(Environment.NewLine, ""), res.Replace(Environment.NewLine, ""));
+            var actual = sr.ReadToEnd().Replace("\r", "").Replace("\n", "").Replace(Environment.NewLine, "");
+            var expected = output.Replace("\r", "").Replace("\n", "").Replace(Environment.NewLine, "");
+            Assert.AreEqual(expected, actual);
         }
     }
 }
