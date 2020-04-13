@@ -18,30 +18,44 @@ namespace D
 
         public static void Solve()
         {
-            var nab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var nab = Console.ReadLine().Trim().Split(' ').Select(long.Parse).ToArray();
             var p = (long)Math.Pow(10, 9) + 7;
-            var all = (PowWithMod(2, nab[0], p) - (1 % p)) % p;
-            var combA = (PermutationCountWithMod(nab[0], nab[1], p) * PowWithMod(PermutationCountWithMod(nab[1], nab[1], p), p - 2, p)) % p;
-            var combB = (PermutationCountWithMod(nab[0], nab[2], p) * PowWithMod(PermutationCountWithMod(nab[2], nab[2], p), p - 2, p)) % p;
-            var result = (all - combA - combB + p) % p;
+            var all = Power(2, nab[0], p);
+            var combA = CombinationCount(nab[0], nab[1], p);
+            var combB = CombinationCount(nab[0], nab[2], p);
+            var result = (all - combA - combB - 1) % p;
+            if (result < 0) result += p;
             Console.WriteLine(result);
         }
 
-        static long PermutationCountWithMod(long n, long k, long mod)
+        static long PermutationCount(long n, long k, long mod)
         {
             if (n < k) throw new ArgumentException();
-            var result = n % mod;
-            for (var i = 1; i < k; i++)
-                result *= ((n - i) % mod);
-            return result % mod;
+            var result = 1L;
+            for (var i = 0; i < k; i++)
+                result = (result * (n - i) % mod) % mod;
+            return result;
         }
 
-        static long PowWithMod(long x, long n, long mod)
+        static long CombinationCount(long n, long k, long mod)
         {
-            if (n == 1) return x % mod;
-            if (n % 2 == 1) return ((x % mod) * PowWithMod(x, n - 1, mod)) % mod;
-            var tmp = PowWithMod(x, n / 2, mod);
-            return ((tmp % mod) * (tmp % mod)) % mod;
+            if (n < k) throw new ArgumentException();
+            k = Math.Min(k, n - k);
+            var top = PermutationCount(n, k, mod);
+            var bottom = PermutationCount(k, k, mod);
+            return (top * Power(bottom, mod - 2, mod)) % mod;
+        }
+
+        static long Power(long x, long y, long mod)
+        {
+            var result = 1L;
+            while (y > 0)
+            {
+                if ((y & 1) == 1) result = ((result % mod) * (x % mod)) % mod;
+                x = ((x % mod) * (x % mod)) % mod;
+                y >>= 1;
+            }
+            return result;
         }
     }
 }
