@@ -19,26 +19,34 @@ namespace C
         public static void Solve()
         {
             var nm = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var tmp = new int[nm[0]];
-            var isValid = true;
-
+            var digits = new int[nm[0]];
+            var checker = new bool[nm[0]];
             for (var i = 0; i < nm[1]; i++)
             {
                 var sc = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-                var isHeadZero = sc[0] == 1 && sc[1] == 0;
-                var isDifferent = tmp[sc[0] - 1] != 0 && tmp[sc[0] - 1] != sc[1];
-                if (isHeadZero || isDifferent)
+                if (checker[sc[0] - 1] && digits[sc[0] - 1] != sc[1])
                 {
-                    isValid = false;
-                    break;
+                    Console.WriteLine(-1);
+                    return;
                 }
-                tmp[sc[0] - 1] = sc[1];
+                digits[sc[0] - 1] = sc[1];
+                checker[sc[0] - 1] = true;
             }
 
-            var isZero = nm[0] == 1 && tmp[0] == 0;
-            if (isValid && nm[0] != 1 && tmp[0] == 0) tmp[0] = 1;
-            var result = int.Parse(string.Join("", tmp));
-            Console.WriteLine(isValid ? result : -1);
+            if (digits[0] == 0 && nm[0] != 1)
+            {
+                if (checker[0])
+                {
+                    Console.WriteLine(-1);
+                    return;
+                }
+                else
+                {
+                    digits[0] = 1;
+                }
+            }
+
+            Console.WriteLine(int.Parse(string.Join("", digits)));
         }
     }
 }
