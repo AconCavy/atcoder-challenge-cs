@@ -1,0 +1,318 @@
+{
+	"Input": {
+		"scope": "csharp",
+		"prefix": "instr",
+		"body": [
+			"var ${1:val} = Console.ReadLine();"
+		],
+		"description": "Input string from console"
+	},
+	"InputNumber": {
+		"scope": "csharp",
+		"prefix": "innum",
+		"body": [
+			"var ${1:val} = int.Parse(Console.ReadLine());"
+		],
+		"description": "Input number from console"
+	},
+	"InputCharacterArray": {
+		"scope": "csharp",
+		"prefix": "instrarr",
+		"body": [
+			"var ${1:val} = Console.ReadLine().Trim().Split(' ');"
+		],
+		"description": "Input char array from console"
+	},
+	"InputNumberArray": {
+		"scope": "csharp",
+		"prefix": "innumarr",
+		"body": [
+			"var ${1:val} = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();"
+		],
+		"description": "Input number array from console"
+	},
+	"ReverseString": {
+		"scope": "csharp",
+		"prefix": "revstr",
+		"body": [
+			"static string Reverse(string str)",
+			"{",
+			"    var chars = str.ToCharArray();",
+			"    for (int i = 0, j = str.Length - 1; i >= 0; i--)",
+			"    {",
+			"        var tmp = chars[i];",
+			"        chars[i] = chars[j];",
+			"        chars[j] = tmp;",
+			"    }",
+			"    return new string(chars);",
+			"}"
+		],
+		"description": "Reverse string"
+	},
+	"GreatestCommonDivisor": {
+		"scope": "csharp",
+		"prefix": "gcd",
+		"body": [
+			"static int GCD(int a, int b) => b == 0 ? a : GCD(b, a % b);"
+		],
+		"description": "Method of the greatest common divisor number"
+	},
+	"LeastCommonMultiple": {
+		"scope": "csharp",
+		"prefix": "lcm",
+		"body": [
+			"static int LCM(int a, int b) => a * b / GCD(a, b);"
+		],
+		"description": "Method of the least common multiple number"
+	},
+	"Permutation": {
+		"scope": "csharp",
+		"prefix": "perm",
+		"body": [
+			"static IEnumerable<IEnumerable<T>> Permutation<T>(IEnumerable<T> items, int k)",
+			"{",
+			"    if (k == 1)",
+			"    {",
+			"        foreach (var next in items)",
+			"            yield return new T[] { next };",
+			"        yield break;",
+			"    }",
+			"    foreach (var item in items)",
+			"    {",
+			"        var fixedItems = new T[] { item };",
+			"        var exceptedItems = items.Except(fixedItems);",
+			"        foreach (var next in Permutation(exceptedItems, k - 1))",
+			"            yield return fixedItems.Concat(next).ToArray();",
+			"    }",
+			"}"
+		],
+		"description": "Method of permutation"
+	},
+	"PermutationCount": {
+		"scope": "csharp",
+		"prefix": "permc",
+		"body": [
+			"static long PermutationCount(long n, long k)",
+			"{",
+			"    if (n < k) throw new ArgumentException();",
+			"    var result = 1L;",
+			"    for (var i = 0; i < k; i++)",
+			"        result *= (n - i);",
+			"    return result;",
+			"}"
+		],
+		"description": "Method of permutation count"
+	},
+	"PermutationCountWithMod": {
+		"scope": "csharp",
+		"prefix": "permcm",
+		"body": [
+			"static long PermutationCount(long n, long k, long mod)",
+			"{",
+			"    if (n < k) throw new ArgumentException();",
+			"    var result = 1L;",
+			"    for (var i = 0; i < k; i++)",
+			"        result = (result * (n - i) % mod) % mod;",
+			"    return result;",
+			"}"
+		],
+		"description": "Method of permutation count"
+	},
+	"CombinationCount": {
+		"scope": "csharp",
+		"prefix": "combc",
+		"body": [
+			"static long CombinationCount(long n, long k)",
+			"{",
+			"    if (n < k) throw new ArgumentException();",
+			"    k = Math.Min(k, n - k);",
+			"    return PermutationCount(n, k) / PermutationCount(k, k);",
+			"}"
+		],
+		"description": "Method of combinations count"
+	},
+	"CombinationCountWithMod": {
+		"scope": "csharp",
+		"prefix": "combcm",
+		"body": [
+			"static long CombinationCount(long n, long k, long mod)",
+			"{",
+			"    if (n < k) throw new ArgumentException();",
+			"    k = Math.Min(k, n - k);",
+			"    var top = PermutationCount(n, k, mod);",
+			"    var bottom = PermutationCount(k, k, mod);",
+			"    return (top * Power(bottom, mod - 2, mod)) % mod;",
+			"}"
+		],
+		"description": "Method of combinations count"
+	},
+	"Fractrial": {
+		"scope": "csharp",
+		"prefix": "frac",
+		"body": [
+			"static long Fractorial(long n) => PermutationCount(n, n);"
+		],
+		"description": "Method of fractrial count"
+	},
+	"PowerWithMod": {
+		"scope": "csharp",
+		"prefix": "powm",
+		"body": [
+			"static long Power(long x, long y, long mod)",
+			"{",
+			"    var result = 1L;",
+			"    while (y > 0)",
+			"    {",
+			"        if ((y & 1) == 1) result = ((result % mod) * (x % mod)) % mod;",
+			"        x = ((x % mod) * (x % mod)) % mod;",
+			"        y >>= 1;",
+			"    }",
+			"    return result;",
+			"}"
+		],
+		"description": "Calculate powered value with mod"
+	},
+	"CumulativeSum": {
+		"scope": "csharp",
+		"prefix": "cumsum",
+		"body": [
+			"public static IEnumerable<int> CumulativeSum(this IEnumerable<int> items)",
+			"{",
+			"    if (items == null) throw new ArgumentNullException();",
+			"    var count = items.Count();",
+			"    if (count < 1) throw new ArgumentException();",
+			"    var array = new int[count + 1];",
+			"    array[0] = 0;",
+			"    for (var i = 1; i < array.Length; i++)",
+			"    {",
+			"        var index = i - 1;",
+			"        array[i] = items.ElementAt(index) + array[index];",
+			"    }",
+			"    return array;",
+			"}"
+		],
+		"description": "Method of fractrial count"
+	},
+	"CountOf": {
+		"scope": "csharp",
+		"prefix": "countof",
+		"body": [
+			"static int CountOf(string target, string value)",
+			"{",
+			"    var editStr = target;",
+			"    var count = 0;",
+			"    var index = 0;",
+			"    while (true)",
+			"    {",
+			"        index = editStr.IndexOf(value);",
+			"        if (index < 0) break;",
+			"        count++;",
+			"        if (editStr.Length > 1) editStr = editStr.Substring(index + 1);",
+			"    }",
+			"    return count;",
+			"}"
+		],
+		"description": "Count of a substring in a string"
+	},
+	"IsPrime": {
+		"scope": "csharp",
+		"prefix": "isprime",
+		"body": [
+			"static bool IsPrime(int x)",
+			"{",
+			"    if (x < 2) return false;",
+			"    if (x == 2) return true;",
+			"    if (x % 2 == 0) return false;",
+			"    var sqrt = Math.Sqrt(x);",
+			"    for (var i = 3; i < sqrt; i++) if (x % i == 0) return false;",
+			"    return true;",
+			"}"
+		],
+		"description": "Is value prime"
+	},
+	"GeneratePrimes": {
+		"scope": "csharp",
+		"prefix": "generateprimes",
+		"body": [
+			"static IEnumerable<int> GeneratePrimes(int limit)",
+			"{",
+			"    var numbers = Enumerable.Range(2, limit + 1).ToList();",
+			"    var primes = new List<int>();",
+			"    while (true)",
+			"    {",
+			"        var prime = numbers.First();",
+			"        if (prime * prime > limit) break;",
+			"        primes.Add(prime);",
+			"        var i = 0;",
+			"        while (i < numbers.Count())",
+			"        {",
+			"            var num = numbers[i];",
+			"            if (num % prime == 0)",
+			"            {",
+			"                numbers.RemoveAt(i);",
+			"                continue;",
+			"            }",
+			"            i++;",
+			"        }",
+			"    }",
+			"    foreach (var val in numbers) primes.Add(val);",
+			"    return primes;",
+			"}"
+		],
+		"description": "Is value prime"
+	},
+	"BitFullSearchEnumerable": {
+		"scope": "csharp",
+		"prefix": "bitfull",
+		"body": [
+			"static IEnumerable<bool[]> BitFullSearchEnumerable(int n)",
+			"{",
+			"    if (n < 0) yield return new bool[0];",
+			"    for (var i = 0; i < Math.Pow(2, n); i++)",
+			"    {",
+			"        var array = new bool[n];",
+			"        for (var j = 0; j < n; j++)",
+			"        {",
+			"            var right = (i >> j) & 1;",
+			"            array[j] = right == 1;",
+			"        }",
+			"        yield return array;",
+			"    }",
+			"}"
+		],
+		"description": "Reverse string"
+	},
+	"For": {
+		"scope": "csharp",
+		"prefix": "for",
+		"body": [
+			"for (var ${1:index} = ${2:start}; ${1:index} < ${3:end}; ${1:index}++)",
+			"{",
+			"    ${4:statement}",
+			"}"
+		],
+		"description": "for statement"
+	},
+	"Out": {
+		"scope": "csharp",
+		"prefix": "out",
+		"body": [
+			"Console.WriteLine(${1:out});"
+		],
+		"description": "Output"
+	},
+	"TestMethod": {
+		"scope": "csharp",
+		"prefix": "testmethod",
+		"body": [
+			"[TestMethod]",
+			"public void TestMethod${1:number}()",
+			"{",
+			"    var input = @\"\";",
+			"    var output = @\"\";",
+			"    Tester.InOutTest(() => Program.Solve(), input, output);",
+			"}"
+		],
+		"description": "Output"
+	},
+}

@@ -6,6 +6,4 @@ if "%~1"=="" (
 set SLN=%~1
 start https://atcoder.jp/contests/%SLN%
 dotnet new atcoder -n %SLN%
-cd %SLN%
-dotnet restore
-code .
+code -n .
