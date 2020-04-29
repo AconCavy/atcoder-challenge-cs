@@ -19,16 +19,22 @@ namespace D
 
         public static void Solve()
         {
-            var s = Console.ReadLine().Trim().ToCharArray().Select(x => double.Parse(x.ToString())).ToArray();
+            var s = Console.ReadLine();
+            var mod = 2019;
+            var counts = new long[mod];
+            var aggregate = 0;
+            var digit = 1;
             var count = 0L;
-            for (var i = 0; i < s.Length - 3; i++)
+            counts[aggregate]++;
+            for (var i = 0; i < s.Length; i++)
             {
-                var val = 100 * s[i] + 10 * s[i + 1] + s[i + 2];
-                for (var j = 3; i + j < s.Length; j++)
-                {
-                    val = ((val * 10) % 2019 + s[i + j]) % 2019;
-                    if (val == 0) count++;
-                }
+                aggregate = (aggregate + (s[s.Length - 1 - i] - '0') * digit) % mod;
+                counts[aggregate]++;
+                digit = (digit * 10) % mod;
+            }
+            for (var i = 0; i < counts.Length; i++)
+            {
+                count += (counts[i] * (counts[i] - 1)) / 2;
             }
             Console.WriteLine(count);
         }
