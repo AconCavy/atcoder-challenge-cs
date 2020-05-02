@@ -13,8 +13,7 @@ namespace Tests
         1 3 3 100
         1 2 2 10
         2 3 2 10";
-            var output = @"110
-        ";
+            var output = @"110";
             Tester.InOutTest(() => Program.Solve(), input, output);
         }
 
