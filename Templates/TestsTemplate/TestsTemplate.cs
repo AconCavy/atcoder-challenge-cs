@@ -12,5 +12,21 @@ namespace Tests
             var output = @"";
             Tester.InOutTest(() => Program.Solve(), input, output);
         }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var input = @"";
+            var output = @"";
+            Tester.InOutTest(() => Program.Solve(), input, output);
+        }
+
+        [TestMethod]
+        public void TestMethod3()
+        {
+            var input = @"";
+            var output = @"";
+            Tester.InOutTest(() => Program.Solve(), input, output);
+        }
     }
 }
