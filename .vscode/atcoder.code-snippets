@@ -333,6 +333,35 @@
 		],
 		"description": "UnionFind tree class"
 	},
+	"Bfs": {
+		"scope": "csharp",
+		"prefix": "bfs",
+		"body": [
+			"var graph = new List<int>[${1:n}].Select(x => new List<int>()).ToArray();",
+			"for (var i = 0; i < nm[1]; i++)",
+			"{",
+			"    var ab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();",
+			"    var a = ab[0] - 1;",
+			"    var b = ab[1] - 1;",
+			"    graph[a].Add(b);",
+			"    graph[b].Add(a);",
+			"}",
+			"var queue = new Queue<int>();",
+			"queue.Enqueue(0);",
+			"var depths = Enumerable.Repeat(-1, nm[0]).ToArray();",
+			"depths[0] = 0;",
+			"while (queue.Any())",
+			"{",
+			"    var current = queue.Dequeue();",
+			"    foreach (var next in graph[current])",
+			"    {",
+			"        if (depths[next] != -1) continue;",
+			"        depths[next] = depths[current] + 1;",
+			"        queue.Enqueue(next);",
+			"}"
+		],
+		"description": "breadth first search"
+	},
 	"For": {
 		"scope": "csharp",
 		"prefix": "for",
