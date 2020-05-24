@@ -65,6 +65,74 @@
 		],
 		"description": "Method of the least common multiple number"
 	},
+	"Enumeration": {
+		"scope": "csharp",
+		"prefix": "enumeration",
+		"body": [
+			"public static class Enumeration",
+			"{",
+			"    private static Dictionary<long, long> _memo = new Dictionary<long, long>();",
+			"    private static Dictionary<long, long> _modMemo = new Dictionary<long, long>();",
+			"",
+			"    public static long Fractorial(long n)",
+			"    {",
+			"        if (_memo.ContainsKey(n)) return _memo[n];",
+			"        if (n < 0) throw new ArgumentException();",
+			"        if (n <= 1) return _memo[n] = 1;",
+			"        return _memo[n] = n * Fractorial(n - 1);",
+			"    }",
+			"",
+			"    public static long Fractorial(long n, long mod)",
+			"    {",
+			"        if (_modMemo.ContainsKey(n)) return _modMemo[n];",
+			"        if (n < 0) throw new ArgumentException();",
+			"        if (n <= 1) return _modMemo[n] = 1;",
+			"        return _modMemo[n] = ((n % mod) * Fractorial(n - 1, mod)) % mod;",
+			"    }",
+			"",
+			"    public static long PermutationCount(long n, long k)",
+			"    {",
+			"        if (n < k) throw new ArgumentException();",
+			"        return Fractorial(n) / Fractorial(n - k);",
+			"    }",
+			"",
+			"    public static long PermutationCount(long n, long k, long mod)",
+			"    {",
+			"        if (n < k) throw new ArgumentException();",
+			"        var top = Fractorial(n, mod);",
+			"        var bottom = Fractorial(n - k, mod);",
+			"        return (top * Power(bottom, mod - 2, mod)) % mod;",
+			"    }",
+			"",
+			"    public static long CombinationCount(long n, long k)",
+			"    {",
+			"        if (n < k) throw new ArgumentException();",
+			"        return Fractorial(n) / (Fractorial(k) * Fractorial(n - k));",
+			"    }",
+			"",
+			"    public static long CombinationCount(long n, long k, long mod)",
+			"    {",
+			"        if (n < k) throw new ArgumentException();",
+			"        var top = Fractorial(n, mod);",
+			"        var bottom = (Fractorial(k, mod) * Fractorial(n - k, mod)) % mod;",
+			"        return (top * Power(bottom, mod - 2, mod)) % mod;",
+			"    }",
+			"",
+			"    public static long Power(long x, long y, long mod)",
+			"    {",
+			"        var result = 1L;",
+			"        while (y > 0)",
+			"        {",
+			"            if ((y & 1) == 1) result = ((result % mod) * (x % mod)) % mod;",
+			"            x = ((x % mod) * (x % mod)) % mod;",
+			"            y >>= 1;",
+			"        }",
+			"        return result;",
+			"    }",
+			"}"
+		],
+		"description": "Utility of enumeration"
+	},
 	"Permutation": {
 		"scope": "csharp",
 		"prefix": "perm",
@@ -87,72 +155,6 @@
 			"}"
 		],
 		"description": "Method of permutation"
-	},
-	"PermutationCount": {
-		"scope": "csharp",
-		"prefix": "permc",
-		"body": [
-			"static long PermutationCount(long n, long k)",
-			"{",
-			"    if (n < k) throw new ArgumentException();",
-			"    var result = 1L;",
-			"    for (var i = 0; i < k; i++)",
-			"        result *= (n - i);",
-			"    return result;",
-			"}"
-		],
-		"description": "Method of permutation count"
-	},
-	"PermutationCountWithMod": {
-		"scope": "csharp",
-		"prefix": "permcm",
-		"body": [
-			"static long PermutationCount(long n, long k, long mod)",
-			"{",
-			"    if (n < k) throw new ArgumentException();",
-			"    var result = 1L;",
-			"    for (var i = 0; i < k; i++)",
-			"        result = (result * (n - i) % mod) % mod;",
-			"    return result;",
-			"}"
-		],
-		"description": "Method of permutation count"
-	},
-	"CombinationCount": {
-		"scope": "csharp",
-		"prefix": "combc",
-		"body": [
-			"static long CombinationCount(long n, long k)",
-			"{",
-			"    if (n < k) throw new ArgumentException();",
-			"    k = Math.Min(k, n - k);",
-			"    return PermutationCount(n, k) / PermutationCount(k, k);",
-			"}"
-		],
-		"description": "Method of combinations count"
-	},
-	"CombinationCountWithMod": {
-		"scope": "csharp",
-		"prefix": "combcm",
-		"body": [
-			"static long CombinationCount(long n, long k, long mod)",
-			"{",
-			"    if (n < k) throw new ArgumentException();",
-			"    k = Math.Min(k, n - k);",
-			"    var top = PermutationCount(n, k, mod);",
-			"    var bottom = PermutationCount(k, k, mod);",
-			"    return (top * Power(bottom, mod - 2, mod)) % mod;",
-			"}"
-		],
-		"description": "Method of combinations count"
-	},
-	"Fractrial": {
-		"scope": "csharp",
-		"prefix": "frac",
-		"body": [
-			"static long Fractorial(long n) => PermutationCount(n, n);"
-		],
-		"description": "Method of fractrial count"
 	},
 	"PowerWithMod": {
 		"scope": "csharp",
