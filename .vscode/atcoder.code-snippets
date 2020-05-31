@@ -133,47 +133,6 @@
 		],
 		"description": "Utility of enumeration"
 	},
-	"Permutation": {
-		"scope": "csharp",
-		"prefix": "perm",
-		"body": [
-			"static IEnumerable<IEnumerable<T>> Permutation<T>(IEnumerable<T> items, int k)",
-			"{",
-			"    if (k == 1)",
-			"    {",
-			"        foreach (var next in items)",
-			"            yield return new T[] { next };",
-			"        yield break;",
-			"    }",
-			"    foreach (var item in items)",
-			"    {",
-			"        var fixedItems = new T[] { item };",
-			"        var exceptedItems = items.Except(fixedItems);",
-			"        foreach (var next in Permutation(exceptedItems, k - 1))",
-			"            yield return fixedItems.Concat(next).ToArray();",
-			"    }",
-			"}"
-		],
-		"description": "Method of permutation"
-	},
-	"PowerWithMod": {
-		"scope": "csharp",
-		"prefix": "powm",
-		"body": [
-			"static long Power(long x, long y, long mod)",
-			"{",
-			"    var result = 1L;",
-			"    while (y > 0)",
-			"    {",
-			"        if ((y & 1) == 1) result = ((result % mod) * (x % mod)) % mod;",
-			"        x = ((x % mod) * (x % mod)) % mod;",
-			"        y >>= 1;",
-			"    }",
-			"    return result;",
-			"}"
-		],
-		"description": "Calculate powered value with mod"
-	},
 	"CumulativeSum": {
 		"scope": "csharp",
 		"prefix": "cumsum",
@@ -215,53 +174,6 @@
 			"}"
 		],
 		"description": "Count of a substring in a string"
-	},
-	"IsPrime": {
-		"scope": "csharp",
-		"prefix": "isprime",
-		"body": [
-			"static bool IsPrime(int x)",
-			"{",
-			"    if (x < 2) return false;",
-			"    if (x == 2) return true;",
-			"    if (x % 2 == 0) return false;",
-			"    var sqrt = Math.Sqrt(x);",
-			"    for (var i = 3; i < sqrt; i++) if (x % i == 0) return false;",
-			"    return true;",
-			"}"
-		],
-		"description": "Is value prime"
-	},
-	"GeneratePrimes": {
-		"scope": "csharp",
-		"prefix": "generateprimes",
-		"body": [
-			"static IEnumerable<int> GeneratePrimes(int limit)",
-			"{",
-			"    var numbers = Enumerable.Range(2, limit + 1).ToList();",
-			"    var primes = new List<int>();",
-			"    while (true)",
-			"    {",
-			"        var prime = numbers.First();",
-			"        if (prime * prime > limit) break;",
-			"        primes.Add(prime);",
-			"        var i = 0;",
-			"        while (i < numbers.Count())",
-			"        {",
-			"            var num = numbers[i];",
-			"            if (num % prime == 0)",
-			"            {",
-			"                numbers.RemoveAt(i);",
-			"                continue;",
-			"            }",
-			"            i++;",
-			"        }",
-			"    }",
-			"    foreach (var val in numbers) primes.Add(val);",
-			"    return primes;",
-			"}"
-		],
-		"description": "Is value prime"
 	},
 	"BitFullSearchEnumerable": {
 		"scope": "csharp",
@@ -334,6 +246,40 @@
 			"}"
 		],
 		"description": "UnionFind tree class"
+	},
+	"Prime": {
+		"scope": "csharp",
+		"prefix": "prime",
+		"body": [
+			"public class Prime",
+			"{",
+			"    public Dictionary<long, long> Factors => new Dictionary<long, long>(_factors);",
+			"    private Dictionary<long, long> _factors;",
+			"    public Prime(long n)",
+			"    {",
+			"        _factors = new Dictionary<long, long>();",
+			"        var tmp = n;",
+			"        var max = (long)Math.Sqrt(n);",
+			"        var p = 2;",
+			"        while (p <= max)",
+			"        {",
+			"            if (tmp % p == 0)",
+			"            {",
+			"                _factors[p] = 0;",
+			"                while (tmp % p == 0)",
+			"                {",
+			"                    tmp /= p;",
+			"                    _factors[p]++;",
+			"                }",
+			"            }",
+			"            p++;",
+			"        }",
+			"        if (tmp > 1) _factors[tmp] = 1;",
+			"    }",
+			"    public bool IsPrime(long n) => _factors.ContainsKey(n);",
+			"}"
+		],
+		"description": "Prime number class"
 	},
 	"Bfs": {
 		"scope": "csharp",
