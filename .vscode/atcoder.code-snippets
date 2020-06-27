@@ -215,24 +215,17 @@
 	},
 	"CumulativeSum": {
 		"scope": "csharp",
-		"prefix": "cumsum",
+		"prefix": "cumitems",
 		"body": [
-			"public static IEnumerable<int> CumulativeSum(this IEnumerable<int> items)",
+			"public static IEnumerable<long> CumulativeItems(IEnumerable<long> items)",
 			"{",
-			"    if (items == null) throw new ArgumentNullException();",
-			"    var count = items.Count();",
-			"    if (count < 1) throw new ArgumentException();",
-			"    var array = new int[count + 1];",
-			"    array[0] = 0;",
-			"    for (var i = 1; i < array.Length; i++)",
-			"    {",
-			"        var index = i - 1;",
-			"        array[i] = items.ElementAt(index) + array[index];",
-			"    }",
-			"    return array;",
+			"    var arr = items.ToArray();",
+			"    var ret = new long[arr.Length + 1];",
+			"    for (var i = 0; i < arr.Length; i++) ret[i + 1] = arr[i] + ret[i];",
+			"    return ret;",
 			"}"
 		],
-		"description": "Method of fractrial count"
+		"description": "Cumulative sum of items"
 	},
 	"CountOf": {
 		"scope": "csharp",
