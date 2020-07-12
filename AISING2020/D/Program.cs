@@ -20,45 +20,41 @@ namespace D
         {
             var N = int.Parse(Console.ReadLine());
             var X = Console.ReadLine().Select(x => x == '1').ToArray();
-            var defaultCount = X.Count(x => x);
-            var memo = new int[N];
-            for (var i = 1; i < N; i++)
+            var dpc = X.Count(x => x);
+            var dnWhen0 = GetValue(X, dpc + 1);
+            var dnWhen1 = GetValue(X, dpc - 1);
+            var answer = new int[N];
+            var memo = new int[N + 1];
+            for (var i = 1; i < memo.Length; i++)
             {
                 memo[i] = i % PopCount(i);
             }
-
-            var counts = new int[N];
-            counts[0] = 1;
-            for (var i = 1; i < N; i++)
+            var counts = new int[N + 1];
+            for (var i = 1; i < counts.Length; i++)
             {
                 counts[i] = counts[memo[i]] + 1;
             }
 
-            Console.WriteLine(string.Join(" ", counts));
-            for (var i = 0; i < N; i++)
+            for (var i = 0; i < X.Length; i++)
             {
-                var n = defaultCount;
-                if (X[i]) n--;
-                else n++;
-                var tmp = X;
-                tmp[i] = !tmp[i];
-                var answer = 0;
-                if (n != 0)
-                {
-                    var mod = GetVal(tmp, n);
-                    answer = counts[mod];
-                }
-                Console.WriteLine(answer);
+                var pc = dpc;
+                var n = 0;
+                pc += X[i] ? -1 : 1;
+                if (pc <= 0) continue;
+                var pow = Power(2, N - 1 - i, pc);
+                if (X[i]) n = (pc + dnWhen1 - pow) % pc;
+                else n = (dnWhen0 + pow) % pc;
+
+                Console.WriteLine(counts[n] + 1);
             }
         }
 
-        private static int GetVal(bool[] n, int mod)
+        private static int GetValue(bool[] n, int mod)
         {
             var ret = 0;
-            var rev = n.Reverse().ToArray();
-            for (var i = 0; i < rev.Length; i++)
+            for (var i = 0; i < n.Length; i++)
             {
-                if (rev[i])
+                if (n[n.Length - 1 - i])
                 {
                     ret += Power(2, i, mod);
                     ret %= mod;
