@@ -7,6 +7,6 @@ set TASK=%~1
 
 dotnet new atcsolver -n %TASK%
 dotnet sln add ./%TASK%/%TASK%.csproj
-dotnet new atctests -n Test%TASK% -o ./Tests
+dotnet new atctests -n %TASK% -o ./Tests
 dotnet add ./Tests/Tests.csproj reference ./%TASK%/%TASK%.csproj
 code ./%TASK%/Program.cs

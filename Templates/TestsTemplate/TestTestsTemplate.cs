@@ -1,9 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TestsTemplate;
 
 namespace Tests
 {
     [TestClass]
-    public class TestsTemplate
+    public class TestTestsTemplate
     {
         [TestMethod]
         public void TestMethod1()
