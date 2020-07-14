@@ -22,6 +22,8 @@
     <ProjectReference Include="..\F\F.csproj" />
     <ProjectReference Include="..\G\G.csproj" />
     <ProjectReference Include="..\H\H.csproj" />
+    <ProjectReference Include="..\I\I.csproj" />
+    <ProjectReference Include="..\J\J.csproj" />
   </ItemGroup>
 
 </Project>
