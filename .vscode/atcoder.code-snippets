@@ -439,7 +439,7 @@
 			"{",
 			"    var input = @\"\";",
 			"    var output = @\"\";",
-			"    Tester.InOutTest(() => Program.Solve(), input, output);",
+			"    Tester.InOutTest(() => Tasks.${2:task}.Solve(), input, output);",
 			"}"
 		],
 		"description": "Output"
