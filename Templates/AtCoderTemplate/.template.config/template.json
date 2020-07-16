@@ -5,8 +5,8 @@
         "C#",
         "Console"
     ],
-    "identity": "AtCoderTemplate.Projects",
-    "name": "AtCoder projects",
+    "identity": "AconCavy.AtCoderTemplates.Project",
+    "name": "AtCoder project",
     "shortName": "atcoder",
     "tags": {
         "language": "C#",

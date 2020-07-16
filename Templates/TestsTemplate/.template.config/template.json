@@ -5,7 +5,7 @@
         "C#",
         "Code"
     ],
-    "identity": "AtCoderTemplate.TestsClassTemplate",
+    "identity": "AconCavy.AtCoderTemplates.Test",
     "name": "AtCoder tests class template",
     "shortName": "atctests",
     "tags": {

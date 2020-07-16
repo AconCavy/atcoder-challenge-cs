@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace B
+namespace Tasks
 {
-    public class Program
+    public class C
     {
         static void Main(string[] args)
         {

@@ -3,10 +3,10 @@
     "author": "AconCavy",
     "classifications": [
         "C#",
-        "Project"
+        "Code"
     ],
-    "identity": "AtCoderTemplate.SolverProjectTemplate",
-    "name": "AtCoder solver project template",
+    "identity": "AconCavy.AtCoderTemplates.Solver",
+    "name": "AtCoder solver class template",
     "shortName": "atcsolver",
     "tags": {
         "language": "C#",

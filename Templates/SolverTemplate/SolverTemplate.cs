@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace D
+namespace Tasks
 {
-    public class Program
+    public class SolverTemplate
     {
         static void Main(string[] args)
         {
