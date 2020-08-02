@@ -31,6 +31,46 @@
 		],
 		"description": "Input number array from console"
 	},
+	"Scan1": {
+		"scope": "csharp",
+		"prefix": "scan1",
+		"body": [
+			"var ${1:val} = Scanner.Scan<${2:type}>();"
+		],
+		"description": "Scan value to 1 variable"
+	},
+	"Scan2": {
+		"scope": "csharp",
+		"prefix": "scan2",
+		"body": [
+			"var (${1:val1}, ${2:val2}) = Scanner.Scan<${3:type1}, ${4:type2}>();"
+		],
+		"description": "Scan values to 2 variables"
+	},
+	"Scan3": {
+		"scope": "csharp",
+		"prefix": "scan3",
+		"body": [
+			"var (${1:val1}, ${2:val2}, ${3:val3}) = Scanner.Scan<${4:type1}, ${5:type2}, ${6:val3}>();"
+		],
+		"description": "Scan values to 3 variables"
+	},
+	"Scan4": {
+		"scope": "csharp",
+		"prefix": "scan4",
+		"body": [
+			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}) = Scanner.Scan<${5:type1}, ${6:type2}, ${7:val3}, ${8:val4}>();"
+		],
+		"description": "Scan values to 4 variables"
+	},
+	"Scan5": {
+		"scope": "csharp",
+		"prefix": "scan5",
+		"body": [
+			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}, ${5:val5}) = Scanner.Scan<${6:type1}, ${7:type2}, ${8:val3}, ${9:val4}, ${10:val5}>();"
+		],
+		"description": "Scan values to 5 variables"
+	},
 	"ReverseString": {
 		"scope": "csharp",
 		"prefix": "revstr",
