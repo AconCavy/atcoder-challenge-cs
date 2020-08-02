@@ -18,17 +18,20 @@ namespace Tasks
 
         public static void Solve()
         {
-            // var NK = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            // var (N, K) = (NK[0], NK[1]);
-            // var A = Console.ReadLine().Trim().Split(' ').Select(double.Parse).ToArray();
-            // Array.Sort(A);
-            // for (var i = 0; i < K; i++)
-            // {
-            //     A[N - 1] /= 2.0;
-            //     Array.Sort(A);
-            // }
+            var NK = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var (N, K) = (NK[0], NK[1]);
+            var A = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var l = 0;
+            var r = (int)1e9;
+            while (r - l > 1)
+            {
+                var m = (l + r) / 2;
+                var sum = A.Sum(x => (x - 1) / m);
+                if (sum <= K) r = m;
+                else l = m;
+            }
 
-            // Console.WriteLine(Math.Ceiling(A[N - 1]));
+            Console.WriteLine(r);
         }
     }
 }
