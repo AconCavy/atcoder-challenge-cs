@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using F;
 
 namespace Tests
 {
     [TestClass]
-    public class TestF
+    public class FTests
     {
         [TestMethod]
         public void TestMethod1()
@@ -12,7 +11,7 @@ namespace Tests
             var input = @"axyb
 abyxb";
             var output = @"axb";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
         }
 
         [TestMethod]
@@ -21,7 +20,7 @@ abyxb";
             var input = @"aa
 xayaz";
             var output = @"aa";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
         }
 
         [TestMethod]
@@ -31,7 +30,7 @@ xayaz";
 z";
             var output = @"
 ";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
         }
 
         [TestMethod]
@@ -40,7 +39,7 @@ z";
             var input = @"abracadabra
 avadakedavra";
             var output = @"aaadara";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
         }
     }
 }

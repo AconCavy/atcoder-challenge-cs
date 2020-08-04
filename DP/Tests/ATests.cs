@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using A;
 
 namespace Tests
 {
     [TestClass]
-    public class TestA
+    public class ATests
     {
         [TestMethod]
         public void TestMethod1()
@@ -12,7 +11,7 @@ namespace Tests
             var input = @"4
 10 30 40 20";
             var output = @"30";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
         }
 
         [TestMethod]
@@ -21,7 +20,7 @@ namespace Tests
             var input = @"2
 10 10";
             var output = @"0";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
         }
 
         [TestMethod]
@@ -30,7 +29,7 @@ namespace Tests
             var input = @"6
 30 10 60 10 60 50";
             var output = @"40";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
         }
     }
 }

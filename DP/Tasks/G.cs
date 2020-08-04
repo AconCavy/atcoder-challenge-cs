@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace G
+namespace Tasks
 {
-    public class Program
+    public class G
     {
         static void Main(string[] args)
         {
@@ -16,16 +16,12 @@ namespace G
             Console.Out.Flush();
         }
 
-        static bool[] used;
-        static List<int> nodes;
-        static List<int>[] graph;
-
         public static void Solve()
         {
             var NM = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
             var (N, M) = (NM[0], NM[1]);
 
-            graph = new List<int>[N].Select(x => new List<int>()).ToArray();
+            var graph = new List<int>[N].Select(x => new List<int>()).ToArray();
             for (var i = 0; i < M; i++)
             {
                 var ab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
@@ -34,8 +30,19 @@ namespace G
                 graph[a].Add(b);
             }
 
-            used = new bool[N];
-            nodes = new List<int>();
+            var used = new bool[N];
+            var nodes = new List<int>();
+
+            void Dfs(int u)
+            {
+                if (used[u]) return;
+                used[u] = true;
+                foreach (var v in graph[u])
+                {
+                    Dfs(v);
+                }
+                nodes.Add(u);
+            }
 
             for (var i = 0; i < N; i++)
             {
@@ -56,15 +63,19 @@ namespace G
             Console.WriteLine(answer);
         }
 
-        private static void Dfs(int u)
+        public static class Scanner
         {
-            if (used[u]) return;
-            used[u] = true;
-            foreach (var v in graph[u])
+            private static Queue<string> queue = new Queue<string>();
+            public static T Next<T>()
             {
-                Dfs(v);
+                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
             }
-            nodes.Add(u);
+            public static T Scan<T>() => Next<T>();
+            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
+            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
         }
     }
 }

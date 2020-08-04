@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using H;
 
 namespace Tests
 {
     [TestClass]
-    public class TestH
+    public class HTests
     {
         [TestMethod]
         public void TestMethod1()
@@ -14,7 +13,7 @@ namespace Tests
 .#..
 ....";
             var output = @"3";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
         }
 
         [TestMethod]
@@ -27,7 +26,7 @@ namespace Tests
 .#
 ..";
             var output = @"0";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
         }
 
         [TestMethod]
@@ -40,7 +39,7 @@ namespace Tests
 .....
 ..#..";
             var output = @"24";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
         }
 
         [TestMethod]
@@ -68,7 +67,7 @@ namespace Tests
 ....................
 ....................";
             var output = @"345263555";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
         }
     }
 }

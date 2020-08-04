@@ -14,16 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\A\A.csproj" />
-    <ProjectReference Include="..\B\B.csproj" />
-    <ProjectReference Include="..\C\C.csproj" />
-    <ProjectReference Include="..\D\D.csproj" />
-    <ProjectReference Include="..\E\E.csproj" />
-    <ProjectReference Include="..\F\F.csproj" />
-    <ProjectReference Include="..\G\G.csproj" />
-    <ProjectReference Include="..\H\H.csproj" />
-    <ProjectReference Include="..\I\I.csproj" />
-    <ProjectReference Include="..\J\J.csproj" />
+    <ProjectReference Include="..\Tasks\Tasks.csproj" />
   </ItemGroup>
 
 </Project>
