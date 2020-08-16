@@ -27,7 +27,7 @@
 		"scope": "csharp",
 		"prefix": "innumarr",
 		"body": [
-			"var ${1:val} = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();"
+			"var ${1:val} = Console.ReadLine().Trim().Split(' ').Select(${2:int}.Parse).ToArray();"
 		],
 		"description": "Input number array from console"
 	},
@@ -35,7 +35,7 @@
 		"scope": "csharp",
 		"prefix": "scan1",
 		"body": [
-			"var ${1:val} = Scanner.Scan<${2:type}>();"
+			"var ${1:val} = Scanner.Scan<${2:int}>();"
 		],
 		"description": "Scan value to 1 variable"
 	},
@@ -43,7 +43,7 @@
 		"scope": "csharp",
 		"prefix": "scan2",
 		"body": [
-			"var (${1:val1}, ${2:val2}) = Scanner.Scan<${3:type1}, ${4:type2}>();"
+			"var (${1:val1}, ${2:val2}) = Scanner.Scan<${3:int}, ${4:int}>();"
 		],
 		"description": "Scan values to 2 variables"
 	},
@@ -51,7 +51,7 @@
 		"scope": "csharp",
 		"prefix": "scan3",
 		"body": [
-			"var (${1:val1}, ${2:val2}, ${3:val3}) = Scanner.Scan<${4:type1}, ${5:type2}, ${6:val3}>();"
+			"var (${1:val1}, ${2:val2}, ${3:val3}) = Scanner.Scan<${4:int}, ${5:int}, ${6:int}>();"
 		],
 		"description": "Scan values to 3 variables"
 	},
@@ -59,7 +59,7 @@
 		"scope": "csharp",
 		"prefix": "scan4",
 		"body": [
-			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}) = Scanner.Scan<${5:type1}, ${6:type2}, ${7:val3}, ${8:val4}>();"
+			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}) = Scanner.Scan<${5:int}, ${6:int}, ${7:int}, ${8:int}>();"
 		],
 		"description": "Scan values to 4 variables"
 	},
@@ -67,7 +67,7 @@
 		"scope": "csharp",
 		"prefix": "scan5",
 		"body": [
-			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}, ${5:val5}) = Scanner.Scan<${6:type1}, ${7:type2}, ${8:val3}, ${9:val4}, ${10:val5}>();"
+			"var (${1:val1}, ${2:val2}, ${3:val3}, ${4:val4}, ${5:val5}) = Scanner.Scan<${6:int}, ${7:int}, ${8:int}, ${9:int}, ${10:int}>();"
 		],
 		"description": "Scan values to 5 variables"
 	},
@@ -93,7 +93,7 @@
 		"scope": "csharp",
 		"prefix": "gcd",
 		"body": [
-			"static int GCD(int a, int b) => b == 0 ? a : GCD(b, a % b);"
+			"static long GCD(long a, long b) => b == 0 ? a : GCD(b, a % b);"
 		],
 		"description": "Method of the greatest common divisor number"
 	},
@@ -101,7 +101,7 @@
 		"scope": "csharp",
 		"prefix": "lcm",
 		"body": [
-			"static int LCM(int a, int b) => a * b / GCD(a, b);"
+			"static long LCM(long a, long b) => a * b / GCD(a, b);"
 		],
 		"description": "Method of the least common multiple number"
 	},
@@ -178,8 +178,9 @@
 			"        var result = 1L;",
 			"        while (y > 0)",
 			"        {",
-			"            if ((y & 1) == 1) result = ((result % mod) * (x % mod)) % mod;",
-			"            x = ((x % mod) * (x % mod)) % mod;",
+			"            var xmod = x % mod;",
+			"            if ((y & 1) == 1) result = (result * xmod) % mod;",
+			"            x = (xmod * xmod) % mod;",
 			"            y >>= 1;",
 			"        }",
 			"        return result;",
@@ -421,22 +422,29 @@
 		],
 		"description": "Prime number class"
 	},
+	"Graph": {
+		"scope": "csharp",
+		"prefix": "graph",
+		"body": [
+			"var G = new List<int>[${1:nodes}].Select(x => new List<int>()).ToArray();",
+			"for (var i = 0; i < ${2:edges}; i++)",
+			"{",
+			"    var (${3:a}, ${4:b}) = Scanner.Scan<${5:int}, ${6:int}>();",
+			"    ${3}--;",
+			"    ${4}--;",
+			"    G[${3}].Add(${4});",
+			"    G[${4}].Add(${3});",
+			"}"
+		],
+		"description": "graph"
+	},
 	"Bfs": {
 		"scope": "csharp",
 		"prefix": "bfs",
 		"body": [
-			"var graph = new List<int>[${1:nodes}].Select(x => new List<int>()).ToArray();",
-			"for (var i = 0; i < ${2:edges}; i++)",
-			"{",
-			"    var ab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();",
-			"    var a = ab[0] - 1;",
-			"    var b = ab[1] - 1;",
-			"    graph[a].Add(b);",
-			"    graph[b].Add(a);",
-			"}",
 			"var queue = new Queue<int>();",
 			"queue.Enqueue(0);",
-			"var depths = Enumerable.Repeat(-1, ${2:edges}).ToArray();",
+			"var depths = Enumerable.Repeat(-1, ${1:edges}).ToArray();",
 			"depths[0] = 0;",
 			"while (queue.Any())",
 			"{",
@@ -466,7 +474,7 @@
 		"scope": "csharp",
 		"prefix": "out",
 		"body": [
-			"Console.WriteLine(${1:out});"
+			"Console.WriteLine(${1});"
 		],
 		"description": "Output"
 	},
