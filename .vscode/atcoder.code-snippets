@@ -295,7 +295,14 @@
 			"    var ret = new long[arr.Length + 1];",
 			"    for (var i = 0; i < arr.Length; i++) ret[i + 1] = arr[i] + ret[i];",
 			"    return ret;",
-			"}"
+			"}",
+			"public static IEnumerable<long> CumulativeItems(IEnumerable<long> items, long mod)",
+			"{",
+			"    var arr = items.ToArray();",
+			"    var ret = new long[arr.Length + 1];",
+			"    for (var i = 0; i < arr.Length; i++) ret[i + 1] = (arr[i] + ret[i]) % mod;",
+			"    return ret;",
+			"}",
 		],
 		"description": "Cumulative sum of items"
 	},
