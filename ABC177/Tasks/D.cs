@@ -27,16 +27,14 @@ namespace Tasks
                 B--;
                 uf.Union(A, B);
             }
-            var dict = new Dictionary<int, int>();
+
+            var answer = 0L;
             for (var i = 0; i < N; i++)
             {
-                var parent = uf.Find(i);
-                if (!dict.ContainsKey(parent)) dict[parent] = 0;
-                dict[parent]++;
+                answer = Math.Max(answer, uf.Size(i));
             }
 
-            Console.WriteLine(dict.Values.Max());
-
+            Console.WriteLine(answer);
         }
 
         public class UnionFind

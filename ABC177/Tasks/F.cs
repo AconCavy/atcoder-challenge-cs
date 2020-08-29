@@ -25,31 +25,6 @@ namespace Tasks
                 var (A, B) = Scanner.Scan<int, int>();
                 G[i] = (A - 1, B - 1);
             }
-
-            // var inf = (long)1e18;
-            // var answer = Enumerable.Repeat(inf, W).ToArray();
-            // for (var k = W - 1; k >= 0; k--)
-            // {
-            //     var x = k;
-            //     var tmp = 0L;
-            //     for (var i = 0; i < H; i++)
-            //     {
-            //         while (x < W)
-            //         {
-            //             tmp++;
-            //             if (tmp > answer[i]) break;
-            //             if (x < G[i].l || G[i].r < x) break;
-            //             else x++;
-            //         }
-            //         if (x >= W) tmp = inf;
-            //         answer[i] = Math.Min(answer[i], tmp);
-            //     }
-            // }
-
-            // foreach (var count in answer)
-            // {
-            //     Console.WriteLine(count != (long)1e18 ? count : -1);
-            // }
         }
 
         public static class Scanner

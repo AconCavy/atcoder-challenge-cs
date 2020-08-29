@@ -20,60 +20,82 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
+            var max = (int)1e6 + 1;
+            var sieve = new int[max];
+            foreach (var a in A) sieve[a]++;
 
-            var tmp = A[0];
-            for (var i = 1; i < N; i++)
+            var isPairwise = true;
+            for (var i = 2; i < max && isPairwise; i++)
             {
-                tmp = GCD(tmp, A[i]);
+                var count = 0;
+                for (var j = i; j < max; j += i)
+                {
+                    count += sieve[j];
+                }
+                if (count > 1) isPairwise = false;
             }
-
-            if (tmp != 1)
+            if (isPairwise)
             {
-                Console.WriteLine("not coprime");
+                Console.WriteLine("pairwise coprime");
                 return;
             }
 
-            var isPairwise = true;
-            var primes = new HashSet<long>();
-            for (var i = 0; i < N && isPairwise; i++)
-            {
-                tmp = A[i];
-                if (primes.Contains(tmp))
-                {
-                    isPairwise = false;
-                    break;
-                }
-                var max = (long)Math.Sqrt(A[i]);
-                var p = 2;
-                while (p <= max)
-                {
-                    if (tmp % p == 0)
-                    {
-                        if (primes.Contains(p))
-                        {
-                            isPairwise = false;
-                            break;
-                        }
-                        primes.Add(p);
-                        while (tmp % p == 0)
-                        {
-                            tmp /= p;
-                        }
-                    }
-                    p++;
-                }
-                if (tmp > 1)
-                {
-                    if (primes.Contains(tmp))
-                    {
-                        isPairwise = false;
-                        break;
-                    }
-                    primes.Add(tmp);
-                }
-            }
+            var gcd = A.Aggregate((x, y) => GCD(x, y));
+            Console.WriteLine(gcd == 1 ? "setwise coprime" : "not coprime");
 
-            Console.WriteLine(isPairwise ? "pairwise coprime" : "setwise coprime");
+            // var tmp = A[0];
+            // for (var i = 1; i < N; i++)
+            // {
+            //     tmp = GCD(tmp, A[i]);
+            // }
+
+            // if (tmp != 1)
+            // {
+            //     Console.WriteLine("not coprime");
+            //     return;
+            // }
+
+            // var isPairwise = true;
+            // var primes = new HashSet<long>();
+            // for (var i = 0; i < N && isPairwise; i++)
+            // {
+            //     tmp = A[i];
+            //     if (primes.Contains(tmp))
+            //     {
+            //         isPairwise = false;
+            //         break;
+            //     }
+            //     var max = (long)Math.Sqrt(A[i]);
+            //     var p = 2;
+            //     while (p <= max)
+            //     {
+            //         if (tmp % p == 0)
+            //         {
+            //             if (primes.Contains(p))
+            //             {
+            //                 isPairwise = false;
+            //                 break;
+            //             }
+            //             primes.Add(p);
+            //             while (tmp % p == 0)
+            //             {
+            //                 tmp /= p;
+            //             }
+            //         }
+            //         p++;
+            //     }
+            //     if (tmp > 1)
+            //     {
+            //         if (primes.Contains(tmp))
+            //         {
+            //             isPairwise = false;
+            //             break;
+            //         }
+            //         primes.Add(tmp);
+            //     }
+            // }
+
+            // Console.WriteLine(isPairwise ? "pairwise coprime" : "setwise coprime");
         }
 
         static long GCD(long a, long b) => b == 0 ? a : GCD(b, a % b);

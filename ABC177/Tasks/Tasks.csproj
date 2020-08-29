@@ -7,7 +7,8 @@
     <!-- <StartupObject>Tasks.B</StartupObject> -->
     <!-- <StartupObject>Tasks.C</StartupObject> -->
     <!-- <StartupObject>Tasks.D</StartupObject> -->
-    <StartupObject>Tasks.E</StartupObject>
+    <!-- <StartupObject>Tasks.E</StartupObject> -->
+    <StartupObject>Tasks.F</StartupObject>
   </PropertyGroup>
 
 </Project>
