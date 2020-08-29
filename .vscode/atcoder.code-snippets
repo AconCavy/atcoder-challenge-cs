@@ -71,6 +71,22 @@
 		],
 		"description": "Scan values to 5 variables"
 	},
+	"ScanArray": {
+		"scope": "csharp",
+		"prefix": "scanarray",
+		"body": [
+			"var ${1:array} = Scanner.ScanEnumerable<${2:int}>().ToArray();"
+		],
+		"description": "Scan values as array"
+	},
+	"ScanList": {
+		"scope": "csharp",
+		"prefix": "scanlist",
+		"body": [
+			"var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
+		],
+		"description": "Scan values as list"
+	},
 	"ReverseString": {
 		"scope": "csharp",
 		"prefix": "revstr",
