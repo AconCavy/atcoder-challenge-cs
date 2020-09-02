@@ -20,9 +20,7 @@ dotnet new -i ./Templates/TestsTemplate
 dotnet new -i ./Templates/AtCoderTemplate
 ```
 
-### Windows
-
-`atcoder-inst.bat` を実行すると3つのテンプレートがインストールされます．
+また，Windowsの場合は `atcoder-inst.bat`，Mac OSまたはLinuxの場合は `atcoder-inst.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがインストールされます．
 
 ## テンプレートのアンインストール
 
@@ -34,19 +32,19 @@ dotnet new -u ./Templates/TestsTemplate
 dotnet new -u ./Templates/AtCoderTemplate
 ```
 
-### Windows
-
-`atcoder-uninst.bat` を実行すると3つのテンプレートがアンインストールされます．
+また，Windowsの場合は `atcoder-uninst.bat`，Mac OSまたはLinuxの場合は `atcoder-uninst.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがアンインストールされます．
 
 ## プロジェクトの作成
 
 
-### Windows
-
-`atcoder.bat` をプロジェクト名とともにコンソール上で実行することでプロジェクトが作成され，コンテストサイトが開きます．
+Windowsの場合は `atcoder.bat`， Mac OSまたはLinuxの場合は `atcoder.sh` をプロジェクト名とともに実行すると，プロジェクトが作成され，コンテストサイトが開きます．
 
 ```
-./atcodet.bat ABC177
+./atcoder.bat ABC177
+```
+
+```
+./atcoder.sh ABC177
 ```
 
 ## タスクのテスト
@@ -133,13 +131,15 @@ dotnet new atcsolver -n E -o ./Tasks
 dotnet new atctests -n E -o ./Tests
 ```
 
-### Windows
-
-`add-task.bat` にタスク名とともに実行することで，`./Tasks` と `./Tests` 以下にそれぞれテンプレートを生成できます．
-カレントが `ABC177` の場合は以下のように実行すると，`ABC177/Tasks` と `ABC177/Tests` 内にそれぞれ生成されます．
+また，Windowsの場合は `add-task.bat`，Mac OSまたはLinuxの場合は `add-task.sh` にタスク名とともに実行すると，`Tasks` と `Tests` の下にそれぞれテンプレートファイルを生成できます．
+カレントが `ABC177` の場合は，以下のように実行すると，`ABC177/Tasks/E.cs` と `ABC177/Tests/ETests.cs` がそれぞれ生成されます．
 
 ```
 ../add-task.bat E
+```
+
+```
+../add-task.sh E
 ```
 
 ## 備考
