@@ -9,4 +9,4 @@ TASK=$1
 
 dotnet new atcsolver -n $TASK -o ./Tasks
 dotnet new atctests -n $TASK -o ./Tests
-code ./Tests/$1Tests.cs ./Tasks/$1.cs
+code ./Tests/${TASK}Tests.cs ./Tasks/${TASK}.cs
