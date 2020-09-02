@@ -1,6 +1,6 @@
 @echo off
 if "%~1"=="" (
-    echo Need sln name
+    echo option requires a sln name as an argument
     exit /b
 )
 set SLN=%~1

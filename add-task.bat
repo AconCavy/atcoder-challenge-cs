@@ -1,6 +1,6 @@
 @echo off
 if "%~1"=="" (
-    echo Need task name
+    echo option requires a task name as an argument
     exit /b
 )
 set TASK=%~1
