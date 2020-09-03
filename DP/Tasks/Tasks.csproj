@@ -14,7 +14,8 @@
     <!-- <StartupObject>Tasks.I</StartupObject> -->
     <!-- <StartupObject>Tasks.J</StartupObject> -->
     <!-- <StartupObject>Tasks.K</StartupObject> -->
-    <StartupObject>Tasks.L</StartupObject>
+    <!-- <StartupObject>Tasks.L</StartupObject> -->
+    <StartupObject>Tasks.M</StartupObject>
   </PropertyGroup>
 
 </Project>
