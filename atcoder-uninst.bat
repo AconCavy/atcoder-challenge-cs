@@ -1,4 +1,7 @@
 @echo off
-dotnet new -u ./Templates/SolverTemplate
-dotnet new -u ./Templates/TestsTemplate
-dotnet new -u ./Templates/AtCoderTemplate
+
+set DIR=%~dp0
+
+dotnet new -u %DIR%Templates\SolverTemplate
+dotnet new -u %DIR%Templates\TestsTemplate
+dotnet new -u %DIR%Templates\AtCoderTemplate

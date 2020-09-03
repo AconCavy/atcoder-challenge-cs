@@ -1,5 +1,7 @@
 #!/bin/sh
 
-dotnet new -u ./Templates/SolverTemplate
-dotnet new -u ./Templates/TestsTemplate
-dotnet new -u ./Templates/AtCoderTemplate
+DIR="$(pwd)"
+
+dotnet new -u $DIR/Templates/SolverTemplate
+dotnet new -u $DIR/Templates/TestsTemplate
+dotnet new -u $DIR/Templates/AtCoderTemplate
