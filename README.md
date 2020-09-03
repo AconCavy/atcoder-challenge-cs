@@ -24,12 +24,12 @@ dotnet new -i ./Templates/AtCoderTemplate
 
 ## テンプレートのアンインストール
 
-上記のテンプレートをアンインストールします．
+`/path/to/` を保存先ディレクトリとして，以下のコマンドを実行すると，上記のテンプレートがアンインストールされます．
 
 ```
-dotnet new -u ./Templates/SolverTemplate
-dotnet new -u ./Templates/TestsTemplate
-dotnet new -u ./Templates/AtCoderTemplate
+dotnet new -u /path/to/Templates/SolverTemplate
+dotnet new -u /path/to/Templates/TestsTemplate
+dotnet new -u /path/to/Templates/AtCoderTemplate
 ```
 
 また，Windowsの場合は `atcoder-uninst.bat`，Mac OSまたはLinuxの場合は `atcoder-uninst.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがアンインストールされます．
@@ -40,7 +40,7 @@ dotnet new -u ./Templates/AtCoderTemplate
 Windowsの場合は `atcoder.bat`， Mac OSまたはLinuxの場合は `atcoder.sh` をプロジェクト名とともに実行すると，プロジェクトが作成され，コンテストサイトが開きます．
 
 ```
-./atcoder.bat ABC177
+.\atcoder.bat ABC177
 ```
 
 ```
@@ -135,7 +135,7 @@ dotnet new atctests -n E -o ./Tests
 カレントが `ABC177` の場合は，以下のように実行すると，`ABC177/Tasks/E.cs` と `ABC177/Tests/ETests.cs` がそれぞれ生成されます．
 
 ```
-../add-task.bat E
+..\add-task.bat E
 ```
 
 ```
