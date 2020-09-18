@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,96 +19,90 @@ namespace Tasks
         {
             var (N, Q) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().Select(x => new S(x, 1)).ToArray();
-            Func<S, S, S> operation = (l, r) => new S(l.A + r.A, l.Size + r.Size);
-            var identityS = new S(0, 0);
-            Func<F, S, S> mapping = (l, r) => new S(r.A * l.A + r.Size * l.B, r.Size);
-            Func<F, F, F> composition = (l, r) => new F(r.A * l.A, r.B * l.A + l.B);
-            var identityF = new F(1, 0);
 
-            var lseg = new LazySegTree<S, F>(A, operation, identityS, mapping, composition, identityF);
+            var identityS = new S(0, 0);
+            var identityF = new F(1, 0);
+            static S Operation(S l, S r) => new S(l.A + r.A, l.Size + r.Size);
+            static S Mapping(F l, S r) => new S(r.A * l.A + r.Size * l.B, r.Size);
+            static F Composition(F l, F r) => new F(r.A * l.A, r.B * l.A + l.B);
+
+            var lst = new LazySegmentTree<S, F>(A, Operation, identityS, Mapping, Composition, identityF);
 
             for (var i = 0; i < Q; i++)
             {
                 var q = Scanner.ScanEnumerable<int>().ToArray();
-                if (q[0] == 0)
-                {
-                    var (l, r, c, d) = (q[1], q[2], q[3], q[4]);
-                    lseg.Apply(l, r, new F(c, d));
-                }
-                else
-                {
-                    var (l, r) = (q[1], q[2]);
-                    Console.WriteLine(lseg.Prod(l, r).A);
-                }
+                if (q[0] == 0) lst.Apply(q[1], q[2], new F(q[3], q[4]));
+                else Console.WriteLine(lst.Query(q[1], q[2]).A);
             }
         }
 
-        public struct S
+        public readonly struct S
         {
-            public MInt A;
-            public int Size;
-            public S(MInt a, int size)
+            public readonly ModuloInteger A;
+            public readonly int Size;
+            public S(ModuloInteger a, int size)
             {
                 A = a;
                 Size = size;
             }
         }
 
-        public struct F
+        public readonly struct F
         {
-            public MInt A;
-            public MInt B;
-            public F(MInt a, MInt b)
+            public readonly ModuloInteger A;
+            public readonly ModuloInteger B;
+            public F(ModuloInteger a, ModuloInteger b)
             {
                 A = a;
                 B = b;
             }
         }
 
-        public readonly struct MInt
+        public readonly struct ModuloInteger
         {
             public long Value { get; }
-            public static long Mod { get; private set; } = 998244353;
+            public const long Modulo = 998244353;
+            // public static long Modulo { get; private set; } = 998244353;
 
-            public MInt(long data) => Value = (0 <= data ? data : data + Mod) % Mod;
-            public static implicit operator long(MInt mint) => mint.Value;
-            public static implicit operator int(MInt mint) => (int)mint.Value;
-            public static implicit operator MInt(long val) => new MInt(val);
-            public static implicit operator MInt(int val) => new MInt(val);
-            public static MInt operator +(MInt a, MInt b) => a.Value + b.Value;
-            public static MInt operator +(MInt a, long b) => a.Value + b;
-            public static MInt operator +(MInt a, int b) => a.Value + b;
-            public static MInt operator -(MInt a, MInt b) => a.Value - b.Value;
-            public static MInt operator -(MInt a, long b) => a.Value - b;
-            public static MInt operator -(MInt a, int b) => a.Value - b;
-            public static MInt operator *(MInt a, MInt b) => a.Value * b.Value;
-            public static MInt operator *(MInt a, long b) => a.Value * (b % Mod);
-            public static MInt operator *(MInt a, int b) => a.Value * (b % Mod);
-            public static MInt operator /(MInt a, MInt b) => a * b.Inverse();
-            public static MInt operator /(MInt a, long b) => a.Value * Inverse(b);
-            public static MInt operator /(MInt a, int b) => a.Value * Inverse(b);
-            public static bool operator ==(MInt a, MInt b) => a.Value == b.Value;
-            public static bool operator !=(MInt a, MInt b) => a.Value != b.Value;
-            public bool Equals(MInt other) => Value == other.Value;
-            public override bool Equals(object obj) => obj is MInt other && Equals(other);
+            public ModuloInteger(long data) => Value = (0 <= data ? data : data + Modulo) % Modulo;
+            public static implicit operator long(ModuloInteger mint) => mint.Value;
+            public static implicit operator int(ModuloInteger mint) => (int)mint.Value;
+            public static implicit operator ModuloInteger(long val) => new ModuloInteger(val);
+            public static implicit operator ModuloInteger(int val) => new ModuloInteger(val);
+            public static ModuloInteger operator +(ModuloInteger a, ModuloInteger b) => a.Value + b.Value;
+            public static ModuloInteger operator +(ModuloInteger a, long b) => a.Value + b;
+            public static ModuloInteger operator +(ModuloInteger a, int b) => a.Value + b;
+            public static ModuloInteger operator -(ModuloInteger a, ModuloInteger b) => a.Value - b.Value;
+            public static ModuloInteger operator -(ModuloInteger a, long b) => a.Value - b;
+            public static ModuloInteger operator -(ModuloInteger a, int b) => a.Value - b;
+            public static ModuloInteger operator *(ModuloInteger a, ModuloInteger b) => a.Value * b.Value;
+            public static ModuloInteger operator *(ModuloInteger a, long b) => a.Value * (b % Modulo);
+            public static ModuloInteger operator *(ModuloInteger a, int b) => a.Value * (b % Modulo);
+            public static ModuloInteger operator /(ModuloInteger a, ModuloInteger b) => a * b.Inverse();
+            public static ModuloInteger operator /(ModuloInteger a, long b) => a.Value * Inverse(b);
+            public static ModuloInteger operator /(ModuloInteger a, int b) => a.Value * Inverse(b);
+            public static bool operator ==(ModuloInteger a, ModuloInteger b) => a.Value == b.Value;
+            public static bool operator !=(ModuloInteger a, ModuloInteger b) => a.Value != b.Value;
+            public bool Equals(ModuloInteger other) => Value == other.Value;
+            public override bool Equals(object obj) => obj is ModuloInteger other && Equals(other);
             public override int GetHashCode() => Value.GetHashCode();
             public override string ToString() => Value.ToString();
 
-            public MInt Inverse() => Inverse(Value);
+            public ModuloInteger Inverse() => Inverse(Value);
 
-            public static MInt Inverse(long a)
+            public static ModuloInteger Inverse(long a)
             {
                 if (a == 0) return 0;
-                var p = Mod;
+                var p = Modulo;
                 var (x1, y1, x2, y2) = (1L, 0L, 0L, 1L);
                 while (true)
                 {
-                    if (p == 1) return (x2 % Mod + Mod) % Mod;
+                    if (p == 1) return (x2 % Modulo + Modulo) % Modulo;
                     var div = a / p;
                     x1 -= x2 * div;
                     y1 -= y2 * div;
                     a %= p;
-                    if (a == 1) return (x1 % Mod + Mod) % Mod;
+                    if (a == 1) return (x1 % Modulo + Modulo) % Modulo;
                     div = p / a;
                     x2 -= x1 * div;
                     y2 -= y1 * div;
@@ -117,12 +110,12 @@ namespace Tasks
                 }
             }
 
-            public MInt Power(long n) => Power(Value, n);
+            public ModuloInteger Power(long n) => Power(Value, n);
 
-            public static MInt Power(MInt x, long n)
+            public static ModuloInteger Power(ModuloInteger x, long n)
             {
                 if (n < 0) throw new ArgumentException();
-                var r = new MInt(1);
+                var r = new ModuloInteger(1);
                 while (n > 0)
                 {
                     if ((n & 1) > 0) r *= x;
@@ -132,8 +125,13 @@ namespace Tasks
 
                 return r;
             }
+
+            // public static void SetMod(long m) => Modulo = m;
+            // public static void SetMod998244353() => SetMod(998244353);
+            // public static void SetMod1000000007() => SetMod(1000000007);
         }
-        public class LazySegTree<T, U>
+
+        public class LazySegmentTree<T, U>
         {
             private readonly int _n;
             private readonly int _size;
@@ -146,13 +144,13 @@ namespace Tasks
             private readonly T _identityT;
             private readonly U _identityU;
 
-            public LazySegTree(int n, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
+            public LazySegmentTree(int n, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
                 Func<U, U, U> composition, U identityU) :
                 this(new T[n], operation, identityT, mapping, composition, identityU)
             {
             }
 
-            public LazySegTree(IEnumerable<T> data, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
+            public LazySegmentTree(IEnumerable<T> data, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
                 Func<U, U, U> composition, U identityU)
             {
                 var d = data.ToArray();
@@ -164,15 +162,15 @@ namespace Tasks
                 _identityU = identityU;
                 while (1 << _log < _n) _log++;
                 _size = 1 << _log;
-                _data = Enumerable.Repeat(identityT, _size * 2).ToArray();
+                _data = Enumerable.Repeat(identityT, _size << 1).ToArray();
                 _lazy = Enumerable.Repeat(identityU, _size).ToArray();
-                for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
+                d.CopyTo(_data, _size);
                 for (var i = _size - 1; i >= 1; i--) Update(i);
             }
 
             public void Set(int p, T x)
             {
-                if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+                if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
                 p += _size;
                 for (var i = _log; i >= 1; i--) Push(p >> i);
                 _data[p] = x;
@@ -181,15 +179,15 @@ namespace Tasks
 
             public T Get(int p)
             {
-                if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+                if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
                 p += _size;
                 for (var i = _log; i >= 1; i--) Push(p >> i);
                 return _data[p];
             }
 
-            public T Prod(int l, int r)
+            public T Query(int l, int r)
             {
-                if (0 > l || l > r || r > _n) throw new ArgumentException();
+                if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
                 if (l == r) return _identityT;
                 l += _size;
                 r += _size;
@@ -211,11 +209,11 @@ namespace Tasks
                 return _operation(sml, smr);
             }
 
-            public T AllProd() => _data[1];
+            public T QueryToAll() => _data[1];
 
             public void Apply(int p, U u)
             {
-                if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+                if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
                 p += _size;
                 for (var i = _log; i >= 1; i--) Push(p >> i);
                 _data[p] = _mapping(u, _data[p]);
@@ -224,7 +222,7 @@ namespace Tasks
 
             public void Apply(int l, int r, U u)
             {
-                if (0 > l || l > r || r > _n) throw new ArgumentException();
+                if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
                 if (l == r) return;
                 l += _size;
                 r += _size;
@@ -237,8 +235,8 @@ namespace Tasks
                 var (l2, r2) = (l, r);
                 while (l2 < r2)
                 {
-                    if ((l2 & 1) == 1) AllApply(l2++, u);
-                    if ((r2 & 1) == 1) AllApply(--r2, u);
+                    if ((l2 & 1) == 1) ApplyToAll(l2++, u);
+                    if ((r2 & 1) == 1) ApplyToAll(--r2, u);
                     l2 >>= 1;
                     r2 >>= 1;
                 }
@@ -252,14 +250,14 @@ namespace Tasks
 
             public int MaxRight(int l, Func<T, bool> func)
             {
-                if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
+                if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
                 if (!func(_identityT)) throw new ArgumentException(nameof(func));
                 if (l == _n) return _n;
                 l += _size;
                 var sm = _identityT;
                 do
                 {
-                    while (l % 2 == 0) l >>= 1;
+                    while ((l & 1) == 0) l >>= 1;
                     if (!func(_operation(sm, _data[l])))
                     {
                         while (l < _size)
@@ -283,7 +281,7 @@ namespace Tasks
 
             public int MinLeft(int r, Func<T, bool> func)
             {
-                if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
+                if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
                 if (!func(_identityT)) throw new ArgumentException(nameof(func));
                 if (r == 0) return 0;
                 r += _size;
@@ -291,12 +289,12 @@ namespace Tasks
                 do
                 {
                     r--;
-                    while (r > 1 && r % 2 == 0) r >>= 1;
+                    while (r > 1 && (r & 1) == 0) r >>= 1;
                     if (!func(_operation(_data[r], sm)))
                     {
                         while (r < _size)
                         {
-                            r = r * 2 + 1;
+                            r = (r << 1) + 1;
                             var tmp = _operation(_data[r], sm);
                             if (!func(tmp)) continue;
                             sm = tmp;
@@ -313,9 +311,9 @@ namespace Tasks
                 return 0;
             }
 
-            private void Update(int k) => _data[k] = _operation(_data[k * 2], _data[k * 2 + 1]);
+            private void Update(int k) => _data[k] = _operation(_data[k << 1], _data[(k << 1) + 1]);
 
-            private void AllApply(int k, U u)
+            private void ApplyToAll(int k, U u)
             {
                 _data[k] = _mapping(u, _data[k]);
                 if (k < _size) _lazy[k] = _composition(u, _lazy[k]);
@@ -323,8 +321,8 @@ namespace Tasks
 
             private void Push(int k)
             {
-                AllApply(k * 2, _lazy[k]);
-                AllApply(k * 2 + 1, _lazy[k]);
+                ApplyToAll(k << 1, _lazy[k]);
+                ApplyToAll((k << 1) + 1, _lazy[k]);
                 _lazy[k] = _identityU;
             }
         }
