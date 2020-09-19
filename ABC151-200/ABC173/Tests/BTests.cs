@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using B;
 
 namespace Tests
 {
     [TestClass]
-    public class TestB
+    public class BTests
     {
         [TestMethod]
         public void TestMethod1()
@@ -20,7 +19,7 @@ TLE";
 WA x 1
 TLE x 2
 RE x 0";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
         }
 
         [TestMethod]
@@ -41,7 +40,7 @@ AC";
 WA x 0
 TLE x 0
 RE x 0";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
         }
     }
 }
