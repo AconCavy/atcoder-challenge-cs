@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <!-- <StartupObject>Tasks.A</StartupObject> -->
+    <!-- <StartupObject>Tasks.B</StartupObject> -->
+    <!-- <StartupObject>Tasks.C</StartupObject> -->
+    <!-- <StartupObject>Tasks.D</StartupObject> -->
+    <!-- <StartupObject>Tasks.E</StartupObject> -->
+    <StartupObject>Tasks.F</StartupObject>
+  </PropertyGroup>
+
+</Project>

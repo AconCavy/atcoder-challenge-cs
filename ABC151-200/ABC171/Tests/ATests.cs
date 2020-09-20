@@ -1,17 +1,16 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using A;
 
 namespace Tests
 {
     [TestClass]
-    public class TestA
+    public class ATests
     {
         [TestMethod]
         public void TestMethod1()
         {
             var input = @"B";
             var output = @"A";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
         }
 
         [TestMethod]
@@ -19,7 +18,7 @@ namespace Tests
         {
             var input = @"a";
             var output = @"a";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
         }
     }
 }
