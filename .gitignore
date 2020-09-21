@@ -4,3 +4,6 @@ obj/
 
 # Test results
 TestResults/
+
+# snippets
+AtCoderLibraryCSharp.code-snippets
