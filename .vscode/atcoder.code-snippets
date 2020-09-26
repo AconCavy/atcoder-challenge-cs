@@ -399,13 +399,13 @@
 			"    }",
 			"    var count = bit * length;",
 			"    foreach (var flags in sieve) count -= BitOperations.PopCount(flags);",
-			"    var primes = new int[count];",
+			"    var primes = count < limit ? stackalloc int[count] : new int[count];",
 			"    primes[0] = 2;",
 			"    var index = 1;",
 			"    for (var i = 1; i < n; i++)",
 			"        if ((sieve[i / bit] >> (i % bit) & 1U) == 0)",
 			"            primes[index++] = i * 2 + 1;",
-			"    return primes;",
+			"    return primes.ToArray();",
 			"}"
 		],
 		"description": "Sieve of Eratosthenes (enumerate prime numbers)"
