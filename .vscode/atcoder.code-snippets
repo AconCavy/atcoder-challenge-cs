@@ -402,7 +402,7 @@
 			"    var primes = count < limit ? stackalloc int[count] : new int[count];",
 			"    primes[0] = 2;",
 			"    var index = 1;",
-			"    for (var i = 1; i < n; i++)",
+			"    for (var i = 1; index < count && i <= n; i++)",
 			"        if ((sieve[i / bit] >> (i % bit) & 1U) == 0)",
 			"            primes[index++] = i * 2 + 1;",
 			"    return primes.ToArray();",
@@ -505,9 +505,9 @@
 			"var G = new List<${2:int}>[${1:N}].Select(x => new List<${2:int}>()).ToArray();",
 			"for (var i = 0; i < ${3:M}; i++)",
 			"{",
-			"    var (${3:a}, ${4:b}) = Scanner.Scan<${2}, ${2}>();",
-			"    G[--${3}].Add(--${4});",
-			"    G[${4}].Add(${3});",
+			"    var (${4:a}, ${5:b}) = Scanner.Scan<${2}, ${2}>();",
+			"    G[--${4}].Add(--${5});",
+			"    G[${5}].Add(${4});",
 			"}"
 		],
 		"description": "graph"
