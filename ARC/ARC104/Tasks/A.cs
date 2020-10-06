@@ -19,17 +19,9 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<int, int>();
-            for (var i = -100; i <= 100; i++)
-            {
-                for (var j = -100; j <= 100; j++)
-                {
-                    if (i + j == A && i - j == B)
-                    {
-                        Console.WriteLine($"{i} {j}");
-                        return;
-                    }
-                }
-            }
+            var y = (A - B) / 2;
+            var x = A - y;
+            Console.WriteLine($"{x} {y}");
         }
 
         public static class Scanner

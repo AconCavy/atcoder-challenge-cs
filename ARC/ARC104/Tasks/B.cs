@@ -19,58 +19,25 @@ namespace Tasks
         public static void Solve()
         {
             var (N, S) = Scanner.Scan<int, string>();
-            var countA1 = new long[N];
-            var countT1 = new long[N];
-            var countC1 = new long[N];
-            var countG1 = new long[N];
-            var countA2 = new long[N];
-            var countT2 = new long[N];
-            var countC2 = new long[N];
-            var countG2 = new long[N];
+            var answer = 0;
             for (var i = 0; i < S.Length; i++)
             {
-                switch (S[i])
+                var (count1, count2) = (0, 0);
+                for (var j = i; j < S.Length; j++)
                 {
-                    case 'A': countA1[i]++; countT2[i]++; break;
-                    case 'T': countT1[i]++; countA2[i]++; break;
-                    case 'C': countC1[i]++; countG2[i]++; break;
-                    case 'G': countG1[i]++; countC2[i]++; break;
-                    default: break;
-                }
-            }
-
-            countA1 = CumulativeItems(countA1).ToArray();
-            countT1 = CumulativeItems(countT1).ToArray();
-            countC1 = CumulativeItems(countC1).ToArray();
-            countG1 = CumulativeItems(countG1).ToArray();
-            countA2 = CumulativeItems(countA2).ToArray();
-            countT2 = CumulativeItems(countT2).ToArray();
-            countC2 = CumulativeItems(countC2).ToArray();
-            countG2 = CumulativeItems(countG2).ToArray();
-
-            var answer = 0;
-            for (var i = 2; i <= N; i++)
-            {
-                for (var j = i; j <= N; j++)
-                {
-                    var ok = true;
-                    if (countA1[j] - countA1[j - i] != countA2[j] - countA2[j - i]) ok = false;
-                    if (countT1[j] - countT1[j - i] != countT2[j] - countT2[j - i]) ok = false;
-                    if (countC1[j] - countC1[j - i] != countC2[j] - countC2[j - i]) ok = false;
-                    if (countG1[j] - countG1[j - i] != countG2[j] - countG2[j - i]) ok = false;
-                    if (ok) answer++;
+                    switch (S[j])
+                    {
+                        case 'A': count1++; break;
+                        case 'T': count1--; break;
+                        case 'C': count2++; break;
+                        case 'G': count2--; break;
+                        default: break;
+                    }
+                    if (count1 == 0 && count2 == 0) answer++;
                 }
             }
 
             Console.WriteLine(answer);
-        }
-
-        public static IEnumerable<long> CumulativeItems(IEnumerable<long> items)
-        {
-            var arr = items.ToArray();
-            var ret = new long[arr.Length + 1];
-            for (var i = 0; i < arr.Length; i++) ret[i + 1] = arr[i] + ret[i];
-            return ret;
         }
 
         public static class Scanner
