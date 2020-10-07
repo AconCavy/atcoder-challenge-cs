@@ -20,28 +20,98 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var P = Scanner.ScanEnumerable<long>().ToArray();
-            var A = new (int i, long p)[N];
-            for (var i = 0; i < N; i++) A[i] = (i + 1, P[i]);
-            Array.Sort(A, (x, y) => y.p.CompareTo(x.p));
-            var stMin = new SegmentTree<int>(N + 1, Math.Min, N + 1);
-            var stMax = new SegmentTree<int>(N + 1, Math.Max, 0);
+            var A = new int[N];
+            for (var i = 0; i < N; i++) A[P[i] - 1] = i + 1;
+            var ft = new FenwickTree(N + 2);
+            ft.Add(0, 2);
+            ft.Add(N + 1, 2);
             var answer = 0L;
-            for (var ph = 0; ph < N; ph++)
+            for (var ph = N; ph > 0; ph--)
             {
-                var (i, p) = A[ph];
-                var x = stMax.Query(0, i);
-                var w = stMax.Query(0, Math.Max(0, x));
-                stMax.Set(i, i);
+                var i = A[ph - 1];
+                var l = ft.Sum(0, i);
+                var w = ft.LowerBound(l - 1);
+                var x = ft.LowerBound(l);
+                var y = ft.LowerBound(l + 1);
+                var z = ft.LowerBound(l + 2);
 
-                var y = stMin.Query(i + 1, N + 1);
-                var z = stMin.Query(Math.Min(y + 1, N + 1), N + 1);
-                stMin.Set(i, i);
-
-                answer += p * (x - w) * (y - i);
-                answer += p * (i - x) * (z - y);
+                answer += (long)ph * (x - w) * (y - i);
+                answer += (long)ph * (i - x) * (z - y);
+                ft.Add(i, 1);
             }
 
+            // var A = new (int i, long p)[N];
+            // for (var i = 0; i < N; i++) A[i] = (i + 1, P[i]);
+            // Array.Sort(A, (x, y) => y.p.CompareTo(x.p));
+            // var stMin = new SegmentTree<int>(N + 1, Math.Min, N + 1);
+            // var stMax = new SegmentTree<int>(N + 1, Math.Max, 0);
+            // var answer = 0L;
+            // for (var ph = 0; ph < N; ph++)
+            // {
+            //     var (i, p) = A[ph];
+            //     var x = stMax.Query(0, i);
+            //     var w = stMax.Query(0, Math.Max(0, x));
+            //     stMax.Set(i, i);
+
+            //     var y = stMin.Query(i + 1, N + 1);
+            //     var z = stMin.Query(Math.Min(y + 1, N + 1), N + 1);
+            //     stMin.Set(i, i);
+
+            //     answer += p * (x - w) * (y - i);
+            //     answer += p * (i - x) * (z - y);
+            // }
+
             Console.WriteLine(answer);
+        }
+
+        public class FenwickTree
+        {
+            private readonly int _n;
+            private readonly long[] _data;
+            public FenwickTree(int n = 0)
+            {
+                _n = n;
+                _data = new long[n];
+            }
+            public void Add(int p, long x)
+            {
+                if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
+                p++;
+                while (p <= _n)
+                {
+                    _data[p - 1] += x;
+                    p += p & -p;
+                }
+            }
+            public long Sum(int l, int r)
+            {
+                if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
+                return Sum(r) - Sum(l);
+            }
+            public int LowerBound(long w)
+            {
+                if (w <= 0) return 0;
+                var x = 0;
+                var r = 1;
+                while (r < _n) r <<= 1;
+                for (var k = r; k > 0; k >>= 1)
+                {
+                    if (x + k - 1 >= _n || _data[x + k - 1] >= w) continue;
+                    w -= _data[x + k - 1];
+                    x += k;
+                }
+                return x;
+            }
+            private long Sum(int r)
+            {
+                var s = 0L;
+                while (r > 0)
+                {
+                    s += _data[r - 1];
+                    r -= r & -r;
+                }
+                return s;
+            }
         }
 
         public class SegmentTree<TMonoid>
