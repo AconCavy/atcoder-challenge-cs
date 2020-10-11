@@ -376,6 +376,22 @@
 		],
 		"description": "Prime number class"
 	},
+	"GetDivisors": {
+		"scope": "csharp",
+		"prefix": "getdivisors",
+		"body": [
+			"public static IEnumerable<long> GetDivisors(long n)",
+			"{",
+			"    for (var i = 1L; i * i <= n; i++)",
+			"    {",
+			"        if (n % i != 0) continue;",
+			"        yield return i;",
+			"        if (n / i != i) yield return n / i;",
+			"    }",
+			"}"
+		],
+		"description": "Get divisors of n"
+	},
 	"SieveOfEratosthenes": {
 		"scope": "csharp",
 		"prefix": "sieve",
