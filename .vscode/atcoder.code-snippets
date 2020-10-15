@@ -89,17 +89,30 @@
 	},
 	"GreatestCommonDivisor": {
 		"scope": "csharp",
-		"prefix": "gcd",
+		"prefix": [
+			"gcd",
+			"greatestcommondivisor"
+		],
 		"body": [
-			"public static long GCD(long a, long b) => b == 0 ? a : GCD(b, a % b);"
+			"private static long GreatestCommonDivisor(long a, long b)",
+			"{",
+			"    while (true)",
+			"    {",
+			"        if (b == 0) return a;",
+			"        (a, b) = (b, a % b);",
+			"    }",
+			"}"
 		],
 		"description": "Method of the greatest common divisor number"
 	},
 	"LeastCommonMultiple": {
 		"scope": "csharp",
-		"prefix": "lcm",
+		"prefix": [
+			"lcm",
+			"leastcommonmultiple"
+		],
 		"body": [
-			"public static long LCM(long a, long b) => a * b / GCD(a, b);"
+			"public static long LeastCommonMultiple(long a, long b) => a * b / GreatestCommonDivisor(a, b);"
 		],
 		"description": "Method of the least common multiple number"
 	},
