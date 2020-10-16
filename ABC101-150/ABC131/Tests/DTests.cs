@@ -1,39 +1,38 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using D;
 
 namespace Tests
 {
     [TestClass]
-    public class TestD
+    public class DTests
     {
         [TestMethod]
         public void TestMethod1()
         {
-            var input = @"5
+            const string input = @"5
 2 4
 1 9
 1 8
 4 9
 3 12";
-            var output = @"Yes";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            const string output = @"Yes";
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            var input = @"3
+            const string input = @"3
 334 1000
 334 1000
 334 1000";
-            var output = @"No";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            const string output = @"No";
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
 
         [TestMethod]
         public void TestMethod3()
         {
-            var input = @"30
+            const string input = @"30
 384 8895
 1725 9791
 170 1024
@@ -64,8 +63,8 @@ namespace Tests
 4 7042
 292 11386
 334 5720";
-            var output = @"Yes";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            const string output = @"Yes";
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
     }
 }
