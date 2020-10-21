@@ -1,16 +1,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using B;
 
 namespace Tests
 {
     [TestClass]
-    public class TestB
+    public class BTests
     {
         [TestMethod]
         public void TestMethod1()
         {
-            var input = @"2 10 20";
-            var output = @"30
+            const string input = @"2 10 20";
+            const string output = @"30
 50
 90
 170
@@ -20,14 +19,14 @@ namespace Tests
 2570
 5130
 10250";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            var input = @"4 40 60";
-            var output = @"200
+            const string input = @"4 40 60";
+            const string output = @"200
 760
 3000
 11960
@@ -37,7 +36,7 @@ namespace Tests
 3058360
 12233400
 48933560";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
         }
     }
 }
