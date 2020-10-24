@@ -20,41 +20,25 @@ namespace Tasks
         {
             var (N, K) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().Select(x => (ModuloInteger)x).ToArray();
-
-            var frac = new ModuloInteger[K + 1];
-            var ifrac = new ModuloInteger[K + 1];
-            frac[0] = ifrac[0] = 1;
-            for (var i = 1; i <= K; i++)
-            {
-                frac[i] = frac[i - 1] * i;
-                ifrac[i] = 1 / frac[i];
-            }
-
-            var powSum = new ModuloInteger[K + 1];
-            ModuloInteger pow = 1;
+            var sum = new ModuloInteger[K + 1];
             for (var i = 0; i < N; i++)
             {
-                pow = 1;
-                powSum[0] += pow;
-                for (var j = 1; j <= K; j++)
+                ModuloInteger x = 1;
+                for (var j = 0; j <= K; j++)
                 {
-                    pow *= A[i];
-                    powSum[j] += pow;
+                    sum[j] += x;
+                    x *= A[i];
                 }
             }
 
-            pow = 2;
             var i2 = ModuloInteger.Inverse(2);
             for (var i = 1; i <= K; i++)
             {
-                ModuloInteger sum = 0;
+                ModuloInteger answer = 0;
                 for (var j = 0; j <= i; j++)
-                {
-                    var comb = frac[i] * ifrac[j] * ifrac[i - j];
-                    sum += comb * powSum[j] * powSum[i - j];
-                }
-                Console.WriteLine((sum - powSum[i] * pow) * i2);
-                pow *= 2;
+                    answer += EnumerationModulo.Combination(i, j) * (sum[j] * sum[i - j] - sum[i]);
+                answer *= i2;
+                Console.WriteLine(answer);
             }
         }
 
@@ -107,6 +91,55 @@ namespace Tasks
                     n >>= 1;
                 }
                 return ret;
+            }
+        }
+
+        public static class EnumerationModulo
+        {
+            private const int DefaultLength = 32;
+            private static ModuloInteger[] _factorial;
+            private static ModuloInteger[] _factorialInverse;
+            private static int _length;
+            static EnumerationModulo()
+            {
+                _factorial = new ModuloInteger[DefaultLength + 1];
+                _factorial[0] = 1;
+                _factorialInverse = new ModuloInteger[DefaultLength + 1];
+                _factorialInverse[0] = 1;
+                Initialize(DefaultLength);
+            }
+            public static ModuloInteger Combination(int n, int r)
+            {
+                if (n < 0) throw new ArgumentException(nameof(n));
+                if (r < 0 || n < r) throw new ArgumentException(nameof(r));
+                if (_length < n) Initialize(n);
+                return _factorial[n] * _factorialInverse[r] * _factorialInverse[n - r];
+            }
+            public static ModuloInteger Permutation(int n, int r)
+            {
+                if (n < 0) throw new ArgumentException(nameof(n));
+                if (r < 0 || n < r) throw new ArgumentException(nameof(r));
+                if (_length < n) Initialize(n);
+                return _factorial[n] * _factorialInverse[n - r];
+            }
+            public static ModuloInteger Factorial(int n)
+            {
+                if (_length < n) Initialize(n);
+                return _factorial[n];
+            }
+            private static void Initialize(int n)
+            {
+                if (_length < n)
+                {
+                    Array.Resize(ref _factorial, n + 1);
+                    Array.Resize(ref _factorialInverse, n + 1);
+                }
+                for (var i = _length + 1; i <= n; i++)
+                {
+                    _factorial[i] = _factorial[i - 1] * i;
+                    _factorialInverse[i] = 1 / _factorial[i];
+                }
+                _length = n;
             }
         }
 
