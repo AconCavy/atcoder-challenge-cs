@@ -26,31 +26,34 @@ namespace Tasks
                 P[i] = (x, y);
             }
             var answer = 0.0;
-            var used = new bool[N];
-            var frac = 1;
-            for (var i = 1; i <= N; i++) frac *= i;
+            var fac = 1L;
+            for (var i = 1; i <= N; i++) fac *= i;
 
-            void Dfs(int current, double sum)
+            void Dfs(int step)
             {
-                if (used.All(x => x)) { answer += sum; return; }
-                used[current] = true;
-
-                for (var i = 0; i < N; i++)
+                if (step == N)
                 {
-                    if (used[i]) continue;
-                    var dx = P[current].X - P[i].X;
-                    var dy = P[current].Y - P[i].Y;
-                    used[i] = true;
-                    var distance = Math.Sqrt(dx * dx + dy * dy);
-                    Dfs(i, sum + distance);
-                    used[i] = false;
+                    for (var i = 1; i < N; i++)
+                    {
+                        var dx = P[i].X - P[i - 1].X;
+                        var dy = P[i].Y - P[i - 1].Y;
+                        answer += Math.Sqrt(dx * dx + dy * dy);
+                    }
+                    return;
                 }
-                used[current] = false;
+
+                Dfs(step + 1);
+
+                for (var i = step + 1; i < N; i++)
+                {
+                    (P[step], P[i]) = (P[i], P[step]);
+                    Dfs(step + 1);
+                    (P[step], P[i]) = (P[i], P[step]);
+                }
             }
 
-            for (var i = 0; i < N; i++) Dfs(i, 0);
-            answer /= frac;
-
+            Dfs(0);
+            answer /= fac;
             Console.WriteLine(answer);
         }
 
