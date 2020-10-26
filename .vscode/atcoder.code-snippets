@@ -531,6 +531,24 @@
 		],
 		"description": "check the lines are crossing."
 	},
+	"Xor0To": {
+		"scope": "csharp",
+		"prefix": "xor0to",
+		"body": [
+			"public static long Xor0To(long x)",
+			"{",
+			"    if (x < 0) return 0;",
+			"    return (x % 4) switch",
+			"    {",
+			"        0 => x,",
+			"        1 => 1,",
+			"        2 => 1 ^ x,",
+			"        _ => 0",
+			"    };",
+			"}"
+		],
+		"description": "Aggregated xor value"
+	},
 	"For": {
 		"scope": "csharp",
 		"prefix": "for",
