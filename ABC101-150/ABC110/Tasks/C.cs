@@ -18,32 +18,20 @@ namespace Tasks
 
         public static void Solve()
         {
-            var S = Scanner.Scan<string>();
-            var T = Scanner.Scan<string>();
-            var dict1 = new Dictionary<char, char>();
-            var dict2 = new Dictionary<char, char>();
+            var S = Scanner.Scan<string>().Select(x => x - 'a').ToArray();
+            var T = Scanner.Scan<string>().Select(x => x - 'a').ToArray();
+            var r1 = new int[26];
+            var r2 = new int[26];
+            Array.Fill(r1, -1);
+            Array.Fill(r2, -1);
             for (var i = 0; i < S.Length; i++)
             {
-                if (dict1.ContainsKey(S[i]))
-                {
-                    if (dict1[S[i]] != T[i])
-                    {
-                        Console.WriteLine("No");
-                        return;
-                    }
-                }
-                else dict1[S[i]] = T[i];
-
-                if (dict2.ContainsKey(T[i]))
-                {
-                    if (dict2[T[i]] != S[i])
-                    {
-                        Console.WriteLine("No");
-                        return;
-                    }
-                }
-                else dict2[T[i]] = S[i];
+                if (r1[S[i]] != -1 && r1[S[i]] != T[i]) { Console.WriteLine("No"); return; }
+                else r1[S[i]] = T[i];
+                if (r2[T[i]] != -1 && r2[T[i]] != S[i]) { Console.WriteLine("No"); return; }
+                else r2[T[i]] = S[i];
             }
+
             Console.WriteLine("Yes");
         }
 
