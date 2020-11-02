@@ -29,86 +29,46 @@ namespace Tasks
             var count = P.Count(p => Math.Abs(p.X + p.Y) % 2 == 0);
             if (count != 0 && count != N) { Console.WriteLine(-1); return; }
 
-            var A = new List<long>();
-            for (var i = 30; i >= 0; i--) A.Add(1 << i);
-            if (Math.Abs(P[0].X + P[0].Y) % 2 == 0) A.Add(1);
-            Console.WriteLine(A.Count);
-            Console.WriteLine(string.Join(" ", A));
+            var D = new List<long>();
+            for (var i = 30; i >= 0; i--) D.Add(1L << i);
+            if (Math.Abs(P[0].X + P[0].Y) % 2 == 0) D.Add(1);
+            Console.WriteLine(D.Count);
+            Console.WriteLine(string.Join(" ", D));
 
-            // var Q = P.Select(p => (p.X + p.Y, p.X - p.Y)).ToArray();
-            // foreach (var (u, v) in Q)
-            // {
-            //     var answer = new StringBuilder();
-            //     var (cu, cv) = (0L, 0L);
-            //     foreach (var arm in A)
-            //     {
-            //         // < < < x
-            //         // < > < x
-            //         // < < > x
-            //         // < > > x
-
-            //         // > < < x
-            //         // > > < x
-            //         // > < > x
-            //         // > > > x
-
-            //         if (cu >= u)
-            //         {
-            //             if (cv >= v)
-            //             {
-            //                 (cu, cv) = (cu - arm, cv - arm);
-            //                 answer.Append('L');
-            //             }
-            //             else
-            //             {
-            //                 (cu, cv) = (cu + arm, cv + arm);
-            //                 answer.Append('R');
-            //             }
-            //         }
-            //         else
-            //         {
-            //             if (cv >= v)
-            //             {
-            //                 (cu, cv) = (cu - arm, cv + arm);
-            //                 answer.Append('D');
-            //             }
-            //             else
-            //             {
-            //                 (cu, cv) = (cu + arm, cv - arm);
-            //                 answer.Append('U');
-            //             }
-            //         }
-            //     }
-
-            //     var rx = (cu + cv) / 2;
-            //     var ry = cu - rx;
-            //     Console.WriteLine($"{rx} {ry}");
-
-            //     Console.WriteLine(answer.ToString());
-            // }
-
-            foreach (var (x, y) in P)
+            foreach (var (u, v) in P.Select(p => (p.X + p.Y, p.X - p.Y)))
             {
                 var answer = new StringBuilder();
-                var (cx, cy) = (0L, 0L);
-                foreach (var arm in A)
+                var (cu, cv) = (0L, 0L);
+                foreach (var d in D)
                 {
-                    var min = long.MaxValue;
-                    var minOp = '#';
-                    var (mx, my) = (0L, 0L);
-                    void Update(long x, long y, char c)
+                    if (cu < u)
                     {
-                        var diff = Math.Abs(x) + Math.Abs(y);
-                        if (diff < min) (minOp, mx, my, min) = (c, x, y, diff);
+                        if (cv < v)
+                        {
+                            (cu, cv) = (cu + d, cv + d);
+                            answer.Append('R');
+                        }
+                        else
+                        {
+                            (cu, cv) = (cu + d, cv - d);
+                            answer.Append('U');
+                        }
                     }
-                    Update(cy - arm, cx, 'U');
-                    Update(cy + arm, cx, 'D');
-                    Update(cy, cx - arm, 'R');
-                    Update(cy, cx + arm, 'L');
-                    (cy, cx) = (my, my);
-                    answer.Append(minOp);
+                    else
+                    {
+                        if (cv < v)
+                        {
+                            (cu, cv) = (cu - d, cv + d);
+                            answer.Append('D');
+                        }
+                        else
+                        {
+                            (cu, cv) = (cu - d, cv - d);
+                            answer.Append('L');
+                        }
+                    }
                 }
-                Console.WriteLine($"{cx} {cy}");
+
                 Console.WriteLine(answer.ToString());
             }
         }
