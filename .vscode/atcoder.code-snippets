@@ -202,71 +202,6 @@
 			"}"
 		]
 	},
-	"BinarySearch": {
-		"scope": "csharp",
-		"prefix": [
-			"binarysearch",
-			"bs"
-		],
-		"body": [
-			"public static bool BinarySearch<T>(this IReadOnlyList<T> source, T key, Comparison<T> comparison = null)",
-			"{",
-			"    comparison ??= Comparer<T>.Default.Compare;",
-			"    var (l, r) = (-1, source.Count);",
-			"    while (r - l > 1)",
-			"    {",
-			"        var m = (l + r) / 2;",
-			"        var result = comparison(source[m], key);",
-			"        if (result < 0) l = m;",
-			"        else if (result > 0) r = m;",
-			"        else return true;",
-			"    }",
-			"    return false;",
-			"}"
-		]
-	},
-	"LowerBound": {
-		"scope": "csharp",
-		"prefix": [
-			"lowerbound",
-			"lb",
-		],
-		"body": [
-			"public static int LowerBound<T>(IReadOnlyList<T> source, T key, Comparison<T> comparison = null)",
-			"{",
-			"    comparison ??= Comparer<T>.Default.Compare;",
-			"    var (l, r) = (-1, source.Count);",
-			"    while (r - l > 1)",
-			"    {",
-			"        var m = (l + r) / 2;",
-			"        if (comparison(source[m], key) < 0) l = m;",
-			"        else r = m;",
-			"    }",
-			"    return r;",
-			"}"
-		]
-	},
-	"UpperBound": {
-		"scope": "csharp",
-		"prefix": [
-			"upperbound",
-			"ub",
-		],
-		"body": [
-			"public static int UpperBound<T>(IReadOnlyList<T> source, T key, Comparison<T> comparison = null)",
-			"{",
-			"    comparison ??= Comparer<T>.Default.Compare;",
-			"    var (l, r) = (-1, source.Count);",
-			"    while (r - l > 1)",
-			"    {",
-			"        var m = (l + r) / 2;",
-			"        if (comparison(source[m], key) <= 0) l = m;",
-			"        else r = m;",
-			"    }",
-			"    return r;",
-			"}"
-		]
-	},
 	"CountOf": {
 		"scope": "csharp",
 		"prefix": "countof",
@@ -284,21 +219,6 @@
 			"        if (editStr.Length > 1) editStr = editStr.Substring(index + 1);",
 			"    }",
 			"    return count;",
-			"}"
-		]
-	},
-	"GetDivisors": {
-		"scope": "csharp",
-		"prefix": "getdivisors",
-		"body": [
-			"public static IEnumerable<long> GetDivisors(long n)",
-			"{",
-			"    for (var i = 1L; i * i <= n; i++)",
-			"    {",
-			"        if (n % i != 0) continue;",
-			"        yield return i;",
-			"        if (n / i != i) yield return n / i;",
-			"    }",
 			"}"
 		]
 	},
@@ -332,37 +252,6 @@
 			"        depths[next] = depths[current] + 1;",
 			"        queue.Enqueue(next);",
 			"    }",
-			"}"
-		]
-	},
-	"Intersect": {
-		"scope": "csharp",
-		"prefix": "intersect",
-		"body": [
-			"public static bool Intersect(long ax, long ay, long bx, long by, long cx, long cy, long dx, long dy)",
-			"{",
-			"    var ta = (cx - dx) * (ay - cy) + (cy - dy) * (cx - ax);",
-			"    var tb = (cx - dx) * (by - cy) + (cy - dy) * (cx - bx);",
-			"    var tc = (ax - bx) * (cy - ay) + (ay - by) * (ax - cx);",
-			"    var td = (ax - bx) * (dy - ay) + (ay - by) * (ax - dx);",
-			"    return ta * tb < 0 && tc * td < 0;",
-			"}"
-		]
-	},
-	"Xor0To": {
-		"scope": "csharp",
-		"prefix": "xor0to",
-		"body": [
-			"public static long Xor0To(long x)",
-			"{",
-			"    if (x < 0) return 0;",
-			"    return (x % 4) switch",
-			"    {",
-			"        0 => x,",
-			"        1 => 1,",
-			"        2 => 1 ^ x,",
-			"        _ => 0",
-			"    };",
 			"}"
 		]
 	},
