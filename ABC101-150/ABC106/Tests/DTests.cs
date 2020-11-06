@@ -1,41 +1,40 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using D;
 
 namespace Tests
 {
     [TestClass]
-    public class TestD
+    public class DTests
     {
         [TestMethod]
         public void TestMethod1()
         {
-            var input = @"2 3 1
+            const string input = @"2 3 1
 1 1
 1 2
 2 2
 1 2";
-            var output = @"3";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            const string output = @"3";
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            var input = @"10 3 2
+            const string input = @"10 3 2
 1 5
 2 8
 7 10
 1 7
 3 10";
-            var output = @"1
+            const string output = @"1
 1";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
 
         [TestMethod]
         public void TestMethod3()
         {
-            var input = @"10 10 10
+            const string input = @"10 10 10
 1 6
 2 9
 4 5
@@ -56,7 +55,7 @@ namespace Tests
 3 9
 3 10
 1 10";
-            var output = @"7
+            const string output = @"7
 9
 10
 6
@@ -66,7 +65,7 @@ namespace Tests
 7
 8
 10";
-            Tester.InOutTest(() => Program.Solve(), input, output);
+            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
         }
     }
 }
