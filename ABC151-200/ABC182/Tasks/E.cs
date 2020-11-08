@@ -19,50 +19,34 @@ namespace Tasks
         public static void Solve()
         {
             var (H, W, N, M) = Scanner.Scan<int, int, int, int>();
-            var light = new (int H, int W)[N];
-            var block = new (int H, int W)[M];
+            var G = new int[H, W];
+            var L = new (int H, int W)[N];
             for (var i = 0; i < N; i++)
             {
                 var (a, b) = Scanner.Scan<int, int>();
-                light[i] = (a - 1, b - 1);
+                a--; b--;
+                L[i] = (a, b);
+                G[a, b] = 2;
             }
 
             for (var i = 0; i < M; i++)
             {
                 var (c, d) = Scanner.Scan<int, int>();
-                block[i] = (c - 1, d - 1);
+                G[c - 1, d - 1] = -1;
             }
 
-            var G = new int[H, W];
-            for (var i = 0; i < M; i++)
+            var delta = new[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
+            foreach (var (h, w) in L)
             {
-                var (h, w) = block[i];
-                G[h, w] = -1;
-            }
-
-            for (var i = 0; i < N; i++)
-            {
-                var (h, w) = light[i];
-                G[h, w] = 2;
-                for (var dw = 1; w + dw < W && G[h, w + dw] != -1; dw++)
+                foreach (var (dh, dw) in delta)
                 {
-                    if (G[h, w + dw] == 2) break;
-                    G[h, w + dw] = 1;
-                }
-                for (var dw = -1; w + dw >= 0 && G[h, w + dw] != -1; dw--)
-                {
-                    if (G[h, w + dw] == 2) break;
-                    G[h, w + dw] = 1;
-                }
-                for (var dh = 1; h + dh < H && G[h + dh, w] != -1; dh++)
-                {
-                    if (G[h + dh, w] == 2) break;
-                    G[h + dh, w] = 1;
-                }
-                for (var dh = -1; h + dh >= 0 && G[h + dh, w] != -1; dh--)
-                {
-                    if (G[h + dh, w] == 2) break;
-                    G[h + dh, w] = 1;
+                    for (var (nh, nw) = (h + dh, w + dw);
+                    0 <= nh && nh < H && 0 <= nw && nw < W;
+                    nh += dh, nw += dw)
+                    {
+                        if (G[nh, nw] == 2 || G[nh, nw] == -1) break;
+                        G[nh, nw] = 1;
+                    }
                 }
             }
 

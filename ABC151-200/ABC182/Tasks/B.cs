@@ -24,16 +24,10 @@ namespace Tasks
             var max = -1;
             for (var k = 2; k <= 1000; k++)
             {
-                var count = 0;
-                foreach (var b in A)
-                {
-                    if (b % k == 0) count++;
-                }
-                if (max <= count)
-                {
-                    max = count;
-                    answer = k;
-                }
+                var count = A.Count(x => x % k == 0);
+                if (max > count) continue;
+                max = count;
+                answer = k;
             }
 
             Console.WriteLine(answer);

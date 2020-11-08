@@ -20,7 +20,37 @@ namespace Tasks
         {
             var (N, X) = Scanner.Scan<int, long>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
-            var answer = 0L;
+            var x = new long[N];
+            var t = new long[N];
+            const long linf = (long)1e18;
+            Array.Fill(t, linf);
+            for (var i = N - 1; i >= 0; i--)
+            {
+                x[i] = X / A[i];
+                X %= A[i];
+                if (i > 0) t[i - 1] = A[i] / A[i - 1];
+            }
+            var dp = new long[2];
+            dp[0] = 1;
+            for (var i = 0; i < N; i++)
+            {
+                var prev = new long[2];
+                (dp, prev) = (prev, dp);
+
+                for (var j = 0; j < 2; j++)
+                {
+                    var y = x[i] + j;
+                    if (y == t[i]) dp[1] += prev[j];
+                    else if (y == 0) dp[0] += prev[j];
+                    else
+                    {
+                        dp[0] += prev[j];
+                        dp[1] += prev[j];
+                    }
+                }
+            }
+
+            Console.WriteLine(dp[0]);
         }
 
 

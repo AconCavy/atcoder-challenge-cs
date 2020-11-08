@@ -25,17 +25,13 @@ namespace Tasks
             var current = 0L;
             var cum = A.Cumulate((x, y) => x + y).ToArray();
             var max = new long[cum.Length];
-            for (var i = 1; i < cum.Length; i++)
-            {
-                max[i] = Math.Max(max[i - 1], cum[i]);
-            }
+            for (var i = 1; i < cum.Length; i++) max[i] = Math.Max(max[i - 1], cum[i]);
             for (var i = 0; i < cum.Length; i++)
             {
-                answer = Math.Max(answer, current);
                 answer = Math.Max(answer, current + max[i]);
                 current += cum[i];
+                answer = Math.Max(answer, current);
             }
-            answer = Math.Max(answer, current);
 
             Console.WriteLine(answer);
         }

@@ -77,6 +77,16 @@
 			"var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
 		]
 	},
+	"Inf": {
+		"scope": "csharp",
+		"prefix": "inf",
+		"body": "const int inf = (int)1e9;"
+	},
+	"LongInf": {
+		"scope": "csharp",
+		"prefix": "linf",
+		"body": "const long linf = (long)1e18;"
+	},
 	"GreatestCommonDivisor": {
 		"scope": "csharp",
 		"prefix": [

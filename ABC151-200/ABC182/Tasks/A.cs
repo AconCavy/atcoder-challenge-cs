@@ -19,8 +19,7 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<int, int>();
-            var limit = A * 2 + 100;
-            Console.WriteLine(limit - B);
+            Console.WriteLine(A * 2 + 100 - B);
         }
 
         public static class Scanner
