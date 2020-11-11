@@ -18,6 +18,31 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, M) = Scanner.Scan<int, int>();
+            var cakes = new (long X, long Y, long Z)[N];
+            for (var i = 0; i < N; i++)
+            {
+                var (x, y, z) = Scanner.Scan<long, long, long>();
+                cakes[i] = (x, y, z);
+            }
+
+            const long linf = (long)1e18;
+            var answer = -linf;
+            for (var s = 0; s < 1 << 3; s++)
+            {
+                var list = new List<long>();
+                foreach (var (x, y, z) in cakes)
+                {
+                    var sum = 0L;
+                    sum += (s >> 0 & 1) == 1 ? x : -x;
+                    sum += (s >> 1 & 1) == 1 ? y : -y;
+                    sum += (s >> 2 & 1) == 1 ? z : -z;
+                    list.Add(sum);
+                }
+                answer = Math.Max(answer, list.OrderByDescending(x => x).Take(M).Sum());
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
