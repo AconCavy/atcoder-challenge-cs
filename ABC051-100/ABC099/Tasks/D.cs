@@ -18,6 +18,42 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, C) = Scanner.Scan<int, int>();
+            var D = new int[C][].Select(_ => Scanner.ScanEnumerable<int>().ToArray()).ToArray();
+            var colors = new int[3, C];
+            for (var i = 0; i < N; i++)
+            {
+                var color = Scanner.ScanEnumerable<int>().ToArray();
+                for (var j = 0; j < N; j++)
+                {
+                    colors[(i + j) % 3, color[j] - 1]++;
+                }
+            }
+
+            const long linf = (long)1e18;
+            var answer = linf;
+            for (var i = 0; i < C; i++)
+            {
+                for (var j = 0; j < C; j++)
+                {
+                    if (i == j) continue;
+                    for (var k = 0; k < C; k++)
+                    {
+                        if (k == i || k == j) continue;
+                        var tmp = 0L;
+                        for (var t = 0; t < C; t++)
+                        {
+                            tmp += colors[0, t] * D[t][i];
+                            tmp += colors[1, t] * D[t][j];
+                            tmp += colors[2, t] * D[t][k];
+                        }
+
+                        answer = Math.Min(answer, tmp);
+                    }
+                }
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
