@@ -25,7 +25,6 @@ namespace Tests
                 var expected = expectedReader.ReadLine();
                 var actual = actualReader.ReadLine();
                 if (actual == null && expected == null) return;
-                if (actual == null || expected == null) Assert.Fail();
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -48,7 +47,6 @@ namespace Tests
                 var expected = expectedReader.ReadLine();
                 var actual = actualReader.ReadLine();
                 if (actual == null && expected == null) return;
-                if (actual == null || expected == null) Assert.Fail();
                 if (double.TryParse(expected, out var expectedValue)
                 && double.TryParse(actual, out var actualValue))
                     Assert.AreEqual(expectedValue, actualValue, delta);
