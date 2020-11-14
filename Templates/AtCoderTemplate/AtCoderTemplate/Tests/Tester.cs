@@ -7,38 +7,53 @@ namespace Tests
 {
     public static class Tester
     {
-        public static void InOutTest(Action action, string input, string output)
+        public static void InOutTest(Action solve, string input, string output)
         {
             using var inputReader = new StringReader(input);
             Console.SetIn(inputReader);
 
-            var b = new StringBuilder();
-            using var sw = new StringWriter(b);
-            Console.SetOut(sw);
+            var builder = new StringBuilder();
+            using var stringWriter = new StringWriter(builder);
+            Console.SetOut(stringWriter);
 
-            action();
+            solve();
 
-            using var sr = new StringReader(b.ToString());
-            var actual = sr.ReadToEnd().Replace("\r", "").Replace("\n", "").Replace(Environment.NewLine, "");
-            var expected = output.Replace("\r", "").Replace("\n", "").Replace(Environment.NewLine, "");
-            Assert.AreEqual(expected, actual);
+            using var expectedReader = new StringReader(output.ToString());
+            using var actualReader = new StringReader(builder.ToString());
+            while (true)
+            {
+                var expected = expectedReader.ReadLine();
+                var actual = actualReader.ReadLine();
+                if (actual == null && expected == null) return;
+                if (actual == null || expected == null) Assert.Fail();
+                Assert.AreEqual(expected, actual);
+            }
         }
 
-        public static void InOutTest(Action action, string input, string output, int allowedErrorDigit)
+        public static void InOutTest(Action solve, string input, string output, double delta)
         {
             using var inputReader = new StringReader(input);
             Console.SetIn(inputReader);
 
-            var b = new StringBuilder();
-            using var sw = new StringWriter(b);
-            Console.SetOut(sw);
+            var builder = new StringBuilder();
+            using var stringWriter = new StringWriter(builder);
+            Console.SetOut(stringWriter);
 
-            action();
+            solve();
 
-            using var sr = new StringReader(b.ToString());
-            var actual = double.Parse(sr.ReadToEnd().Replace(Environment.NewLine, ""));
-            var expected = double.Parse(output.Replace(Environment.NewLine, ""));
-            Assert.IsTrue(Math.Abs(expected - actual) < Math.Pow(10, allowedErrorDigit));
+            using var expectedReader = new StringReader(output.ToString());
+            using var actualReader = new StringReader(builder.ToString());
+            while (true)
+            {
+                var expected = expectedReader.ReadLine();
+                var actual = actualReader.ReadLine();
+                if (actual == null && expected == null) return;
+                if (actual == null || expected == null) Assert.Fail();
+                if (double.TryParse(expected, out var expectedValue)
+                && double.TryParse(actual, out var actualValue))
+                    Assert.AreEqual(expectedValue, actualValue, delta);
+                else Assert.AreEqual(expected, actual);
+            }
         }
     }
 }
