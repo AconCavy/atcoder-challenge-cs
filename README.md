@@ -20,7 +20,7 @@ dotnet new -i ./Templates/TestsTemplate
 dotnet new -i ./Templates/AtCoderTemplate
 ```
 
-また，Windowsの場合は `atcoder-inst.bat`，Mac OSまたはLinuxの場合は `atcoder-inst.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがインストールされます．
+また，Windowsの場合は `install.bat`，Mac OSまたはLinuxの場合は `install.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがインストールされます．
 
 ## テンプレートのアンインストール
 
@@ -32,7 +32,7 @@ dotnet new -u /path/to/Templates/TestsTemplate
 dotnet new -u /path/to/Templates/AtCoderTemplate
 ```
 
-また，Windowsの場合は `atcoder-uninst.bat`，Mac OSまたはLinuxの場合は `atcoder-uninst.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがアンインストールされます．
+また，Windowsの場合は `uninstall.bat`，Mac OSまたはLinuxの場合は `uninstall.sh` を実行すると，上記のコマンドが実行され，3つのテンプレートがアンインストールされます．
 
 ## プロジェクトの作成
 
@@ -52,26 +52,39 @@ Windowsの場合は `atcoder.bat`， Mac OSまたはLinuxの場合は `atcoder.s
 タスクごとにテストが生成されるので，`input` と `output`に入出力を記述します．
 
 ```
+[Test]
 public void TestMethod1()
 {
-    var input = @"Foo"; // Here
-    var output = @"FooBar"; // Here
-    Tester.InOutTest(() => Tasks.A.Solve()input, output);
+    const string input = @"Foo"; // Here
+    const string output = @"FooBar"; // Here
+    Tester.InOutTest(Tasks.A.Solve, input, output);
 }
 ```
 
 小数点以下の誤差許容がある場合は，10の指数表記を引数に追加できます．
 
 ```
+[Test]
 public void TestMethod1()
 {
-    var input = @"5"; // Here
-    var output = @"2.50000000"; // Here
-    Tester.InOutTest(() => Tasks.B.Solve()input, output, -6); // 誤差10e-6まで許容
+    const string input = @"5";
+    const string output = @"2.50000000";
+    Tester.InOutTest(Tasks.B.Solve, input, output, 1e-6); // 誤差1e-6まで許容
 }
 ```
 
-問題の `Solve` メソッド内に実装を書きます．
+制限時間を設定するには属性を変更します．
+```
+[Test, Timeout(2000)] // Here (milliseconds)
+public void TestMethod1()
+{
+    const string input = @"5";
+    const string output = @"2.50000000";
+    Tester.InOutTest(Tasks.B.Solve, input, output, 1e-6); // 誤差1e-6まで許容
+}
+```
+
+`Solve` メソッド内に実装を書きます．
 ```
 public class A
 {
