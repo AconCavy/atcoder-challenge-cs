@@ -19,23 +19,33 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<int, int>();
-            var max = Math.Max(A, B);
-            var min = Math.Min(A, B);
-            var cmin = (A < B) ? '.' : '#';
-            var cmax = (A < B) ? '#' : '.';
+            const int K = 50;
+            const int K2 = K * 2;
+            var G = new char[K2][].Select(_ => new char[K2]).ToArray();
+            for (var i = 0; i < K2; i++)
+            {
+                var c = i < K ? '#' : '.';
+                for (var j = 0; j < K2; j++) G[i][j] = c;
+            }
+            for (var i = 0; i < K2 && (A > 1 || B > 1); i += 2)
+            {
+                for (var j = 0; j < K2 && (A > 1 || B > 1); j += 2)
+                {
+                    if (A > 1)
+                    {
+                        G[i][j] = '.';
+                        A--;
+                    }
+                    if (B > 1)
+                    {
+                        G[K2 - 1 - i][j] = '#';
+                        B--;
+                    }
+                }
+            }
 
-            Console.WriteLine($"2 {max * 2}");
-            for (var i = 0; i < max; i++)
-            {
-                Console.Write(cmin);
-                Console.Write(cmax);
-            }
-            Console.WriteLine();
-            for (var i = 0; i < max; i++)
-            {
-                Console.Write(cmin);
-                Console.Write(i < min - 1 ? cmax : cmin);
-            }
+            Console.WriteLine($"{K2} {K2}");
+            Console.WriteLine(string.Join("\n", G.Select(x => new string(x))));
         }
 
         public static class Scanner
