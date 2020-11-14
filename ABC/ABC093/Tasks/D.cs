@@ -18,6 +18,21 @@ namespace Tasks
 
         public static void Solve()
         {
+            var Q = Scanner.Scan<int>();
+            while (Q-- > 0)
+            {
+                var (A, B) = Scanner.Scan<long, long>();
+                if (A == B) { Console.WriteLine((A - 1) * 2); continue; }
+                var max = A * B;
+                var (l, r) = (1L, (long)int.MaxValue);
+                while (r - l > 1)
+                {
+                    var m = (l + r) / 2;
+                    if ((m + 1) / 2 * (m / 2 + 1) < max) l = m;
+                    else r = m;
+                }
+                Console.WriteLine(l - 1);
+            }
         }
 
         public static class Scanner
