@@ -21,14 +21,42 @@ namespace Tasks
             var N = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
             var B = Scanner.ScanEnumerable<int>().ToArray();
-            var answer = 0;
 
-            for (var i = 0; i < N; i++)
+            var answer = 0;
+            for (var k = 0; k <= 28; k++)
             {
-                for (var j = 0; j < N; j++)
+                var mod = (1 << (k + 1)) - 1;
+                var ma = new int[N];
+                var mb = new int[N];
+                for (var i = 0; i < N; i++)
                 {
-                    answer ^= (A[i] + B[j]);
+                    ma[i] = A[i] & mod;
+                    mb[i] = B[i] & mod;
                 }
+
+                int LowerBound(int key)
+                {
+                    var (l, r) = (-1, N);
+                    while (r - l > 1)
+                    {
+                        var m = l + (r - l) / 2;
+                        if (mb[m] >= key) r = m;
+                        else l = m;
+                    }
+                    return r;
+                }
+
+                Array.Sort(mb);
+                var t = 1 << k;
+                var op = 0;
+                for (var i = 0; i < N; i++)
+                {
+                    var t1 = LowerBound(t - ma[i]);
+                    var t2 = LowerBound(2 * t - ma[i]);
+                    var t3 = LowerBound(3 * t - ma[i]);
+                    op += t2 - t1 + N - t3;
+                }
+                answer |= (op & 1) << k;
             }
 
             Console.WriteLine(answer);
