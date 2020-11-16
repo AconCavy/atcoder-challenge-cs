@@ -19,89 +19,43 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            if (M == 0)
-            {
-                Console.WriteLine("Yes");
-                return;
-            }
-
-            var LRD = new Info[M];
-            var min = 0;
+            if (M == 0) { Console.WriteLine("Yes"); return; }
+            var G = new List<(int, long)>[N].Select(x => new List<(int, long)>()).ToArray();
             for (var i = 0; i < M; i++)
             {
-                var (l, r, d) = Scanner.Scan<int, int, int>();
-                l--;
-                r--;
-                if (l > r)
-                {
-                    (l, r) = (r, l);
-                    d = -d;
-                }
-                LRD[i] = new Info { L = l, R = r, D = d };
+                var (L, R, D) = Scanner.Scan<int, int, long>();
+                L--; R--;
+                G[L].Add((R, D));
+                G[R].Add((L, -D));
             }
 
-            LRD = LRD.OrderBy(x => x.L).ToArray();
-            var points = new int[N];
-            points[LRD[0].L] = min;
-            var checker = new bool[N];
-            checker[LRD[0].L] = true;
-            var answer = true;
-            foreach (var info in LRD)
+            var position = new long[N];
+            var used = new bool[N];
+            for (var i = 0; i < N; i++)
             {
-                if (checker[info.R])
+                if (used[i]) continue;
+                used[i] = true;
+
+                var queue = new Queue<int>();
+                queue.Enqueue(i);
+                while (queue.Any())
                 {
-                    if (checker[info.L])
+                    var u = queue.Dequeue();
+                    foreach (var (v, d) in G[u])
                     {
-                        if (points[info.R] != points[info.L] + info.D)
+                        if (used[v])
                         {
-                            answer = false;
-                            break;
+                            if (position[v] != position[u] + d) { Console.WriteLine("No"); return; }
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        points[info.L] = points[info.R] - info.D;
-                        checker[info.L] = true;
-                        min = Math.Min(min, points[info.L]);
-                    }
-                }
-                else
-                {
-                    if (checker[info.L])
-                    {
-                        points[info.R] = points[info.L] + info.D;
-                        checker[info.R] = true;
-                        min = Math.Min(min, points[info.R]);
-                    }
-                    else
-                    {
+                        used[v] = true;
+                        position[v] = position[u] + d;
+                        queue.Enqueue(v);
                     }
                 }
             }
 
-            // Console.WriteLine(string.Join(", ", points));
-
-            if (answer)
-            {
-                foreach (var point in points)
-                {
-                    var p = point - min;
-                    if (p > (int)1e9)
-                    {
-                        answer = false;
-                        break;
-                    }
-                }
-            }
-
-            Console.WriteLine(answer ? "Yes" : "No");
-        }
-
-        public class Info
-        {
-            public int L { get; set; }
-            public int R { get; set; }
-            public int D { get; set; }
+            Console.WriteLine("Yes");
         }
 
         public static class Scanner
