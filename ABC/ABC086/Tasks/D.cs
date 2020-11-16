@@ -18,6 +18,44 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, K) = Scanner.Scan<int, int>();
+            var (K2, K4) = (K * 2, K * 4);
+            var cum2d = new int[K4 + 1, K4 + 1];
+            for (var i = 0; i < N; i++)
+            {
+                var (x, y, c) = Scanner.Scan<int, int, char>();
+                if (c == 'W') x += K;
+                (x, y) = (x % K2, y % K2);
+                cum2d[x, y]++;
+                cum2d[x + K2, y + K2]++;
+                cum2d[x + K2, y]++;
+                cum2d[x, y + K2]++;
+            }
+
+            for (var i = 0; i < K4; i++)
+                for (var j = 0; j < K4; j++)
+                    cum2d[i + 1, j] += cum2d[i, j];
+
+            for (var i = 0; i < K4; i++)
+                for (var j = 0; j < K4; j++)
+                    cum2d[i, j + 1] += cum2d[i, j];
+
+            int GetSum(int sx, int sy, int tx, int ty)
+            {
+                return cum2d[tx, ty] - cum2d[tx, sy] - cum2d[sx, ty] + cum2d[sx, sy];
+            }
+
+            var answer = 0;
+            for (var i = 0; i <= K2; i++)
+            {
+                for (var j = 0; j <= K2; j++)
+                {
+                    var count = GetSum(i, j, i + K, j + K) + GetSum(i + K, j + K, i + K2, j + K2);
+                    answer = Math.Max(answer, count);
+                }
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
