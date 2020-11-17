@@ -19,22 +19,24 @@ namespace Tasks
         public static void Solve()
         {
             var (N, H) = Scanner.Scan<int, int>();
-            var AB = new (int, int)[N].Select(x => Scanner.Scan<int, int>()).ToArray();
-            var answer = 0;
-            var max = AB.Max(x => x.Item1);
-            var sorted = AB.OrderByDescending(x => x.Item2).ToArray();
-            for (var i = 0; i < sorted.Length; i++)
+            var AB = new (int A, int B)[N];
+            for (var i = 0; i < N; i++)
             {
-                H -= sorted[i].Item2;
+                var (A, B) = Scanner.Scan<int, int>();
+                AB[i] = (A, B);
+            }
+            var max = AB.Max(x => x.A);
+            Array.Sort(AB, (x, y) => y.B.CompareTo(x.B));
+            var answer = 0;
+            foreach (var item in AB.Where(x => x.B > max).Select(x => x.B))
+            {
+                H -= item;
                 answer++;
-                if (H < 0)
-                {
-                    Console.WriteLine(answer);
-                    return;
-                }
+                if (H <= 0) { Console.WriteLine(answer); return; }
             }
 
-            answer += (int)Math.Ceiling((double)H / max);
+            answer += (H + max - 1) / max;
+
             Console.WriteLine(answer);
         }
 
