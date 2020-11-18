@@ -18,6 +18,24 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, C) = Scanner.Scan<int, int>();
+            const int inf = (int)2e5 + 2;
+            var imos = new int[inf, C];
+            for (var i = 0; i < N; i++)
+            {
+                var (s, t, c) = Scanner.Scan<int, int, int>();
+                imos[s * 2 - 1, c - 1]++;
+                imos[t * 2, c - 1]--;
+            }
+
+            var sum = new int[inf];
+            for (var c = 0; c < C; c++)
+            {
+                for (var i = 1; i < inf; i++) imos[i, c] += imos[i - 1, c];
+                for (var i = 0; i < inf; i++) sum[i] += imos[i, c] > 0 ? 1 : 0;
+            }
+
+            Console.WriteLine(sum.Max());
         }
 
         public static class Scanner
