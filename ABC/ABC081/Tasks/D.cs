@@ -19,55 +19,57 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var A = Scanner.ScanEnumerable<int>().ToArray();
-            var answer = new List<(int x, int y)>();
-
-            var max = (int)-1e6 - 1;
-            var min = (int)1e6 + 1;
-            var maxIndex = 0;
-            var minIndex = 0;
+            var A = Scanner.ScanEnumerable<long>().ToArray();
+            const long linf = (long)1e18;
+            var (min, max) = (linf, -linf);
+            var (minid, maxid) = (0, 0);
             for (var i = 0; i < A.Length; i++)
             {
-                if (A[i] > max)
-                {
-                    max = A[i];
-                    maxIndex = i;
-                }
-                if (A[i] < min)
+                if(A[i] < min)
                 {
                     min = A[i];
-                    minIndex = i;
+                    minid = i;
+                }
+                if(A[i] > max)
+                {
+                    max = A[i];
+                    maxid = i;
                 }
             }
-
-            if (Math.Abs(max) >= Math.Abs(min))
+            
+            var x = min;
+            var idx = minid;
+            if(Math.Abs(min) < Math.Abs(max))
             {
-                for (var i = 0; i < A.Length; i++)
+                idx = maxid;
+                x = max;
+            }
+            var answer = new List<(int x, int y)>();
+            for (var i = 0; i < N; i++)
+            {
+                if(idx == i) continue;
+                A[i] += x;
+                answer.Add((idx + 1, i + 1));
+            }
+            if(A[0] >= 0)
+            {
+                for (var i = 1; i < N; i++)
                 {
-                    answer.Add((maxIndex + 1, i + 1));
-                }
-                for (var i = 1; i < A.Length; i++)
-                {
+                    A[i] += A[i - 1];
                     answer.Add((i, i + 1));
                 }
             }
             else
             {
-                for (var i = 0; i < A.Length; i++)
+                for (var i = N - 2; i >= 0; i--)
                 {
-                    answer.Add((minIndex + 1, i + 1));
-                }
-                for (var i = A.Length - 1; i > 0; i--)
-                {
-                    answer.Add((i, i + 1));
+                    A[i] += A[i + 1];
+                    answer.Add((i + 2, i + 1));
                 }
             }
-
             Console.WriteLine(answer.Count);
-            foreach (var item in answer)
-            {
-                Console.WriteLine($"{item.x} {item.y}");
-            }
+            Console.WriteLine(string.Join("\n", answer.Select(x => $"{x.x} {x.y}")));
+            // Console.WriteLine(string.Join(" ", A));
         }
 
         public static class Scanner
