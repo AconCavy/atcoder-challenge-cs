@@ -20,20 +20,16 @@ namespace Tasks
         public static void Solve()
         {
             var (N, W) = Scanner.Scan<int, int>();
-            // var Q = new (int S, int T, int P)[N];
             var lim = (int)2e5 + 2;
-            // var lim = 20;
             var imos = new long[lim];
             for (var i = 0; i < N; i++)
             {
                 var (S, T, P) = Scanner.Scan<int, int, int>();
-                // Q[i] = (S, T, P);
                 imos[S] -= P;
                 imos[T] += P;
             }
 
             imos = imos.Cumulate((x, y) => x + y).ToArray();
-            // Console.WriteLine(string.Join(" ", imos));
             var answer = !imos.Any(x => W + x < 0);
 
             Console.WriteLine(answer ? "Yes" : "No");

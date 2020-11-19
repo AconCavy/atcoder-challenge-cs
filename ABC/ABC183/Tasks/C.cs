@@ -21,25 +21,17 @@ namespace Tasks
             var (N, K) = Scanner.Scan<int, int>();
             var T = new long[N].Select(_ => Scanner.ScanEnumerable<long>().ToArray()).ToArray();
             var answer = 0;
-            var used = new bool[N];
-            void Dfs(int current, long sum)
+            foreach (var permutation in Enumerable.Range(1, N - 1).Permute(N - 1))
             {
-                if (used.All(x => x))
+                var sum = 0L;
+                var prev = 0;
+                foreach (var x in permutation)
                 {
-                    if (sum + T[current][0] == K) answer++;
-                    return;
+                    sum += T[prev][x];
+                    prev = x;
                 }
-                used[current] = true;
-                for (var i = 0; i < N; i++)
-                {
-                    if (used[i]) continue;
-                    used[i] = true;
-                    Dfs(i, sum + T[current][i]);
-                    used[i] = false;
-                }
+                if (sum + T[prev][0] == K) answer++;
             }
-
-            Dfs(0, 0);
             Console.WriteLine(answer);
         }
 
@@ -58,6 +50,50 @@ namespace Tasks
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
             public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
             public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
+        }
+    }
+
+    public static partial class EnumerableExtension
+    {
+        public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> source, int count)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            IEnumerable<IEnumerable<T>> Inner()
+            {
+                var items = source.ToArray();
+                if (count <= 0 || items.Length < count) throw new ArgumentOutOfRangeException(nameof(count));
+                var idx = 0;
+                var ret = new T[count];
+                foreach (var x in Permutation(items.Length, count))
+                {
+                    ret[idx++] = items[x];
+                    if (idx == count) yield return ret;
+                    idx %= count;
+                }
+            }
+            return Inner();
+        }
+        private static IEnumerable<int> Permutation(int n, int r)
+        {
+            var items = new int[r];
+            var used = new bool[n];
+            IEnumerable<int> Inner(int step = 0)
+            {
+                if (step >= r)
+                {
+                    foreach (var x in items) yield return x;
+                    yield break;
+                }
+                for (var i = 0; i < n; i++)
+                {
+                    if (used[i]) continue;
+                    used[i] = true;
+                    items[step] = i;
+                    foreach (var x in Inner(step + 1)) yield return x;
+                    used[i] = false;
+                }
+            }
+            return Inner();
         }
     }
 }
