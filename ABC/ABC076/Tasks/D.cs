@@ -19,50 +19,35 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var T = Scanner.ScanEnumerable<int>().ToArray();
-            var V = Scanner.ScanEnumerable<int>().ToArray();
-            var answer = 0.0;
-            var t = 1;
-            var v = 0.0;
-            var i = 0;
-            while (t <= T[N - 1])
-            {
-                if (i == N - 1 || v > V[i + 1])
-                {
-                    if (t == T[i] - v)
-                    {
-                        answer += v - 0.5;
-                        v--;
-                    }
-                    else
-                    {
-                        if (v < V[i])
-                        {
-                            v++;
-                            answer += v - 0.5;
-                        }
-                        else
-                        {
-                            answer += v;
-                        }
-                    }
-                }
-                else
-                {
-                    if (v < V[i])
-                    {
-                        v++;
-                        answer += v - 0.5;
-                    }
-                    else
-                    {
-                        answer += v;
-                    }
-                }
+            var T = Scanner.ScanEnumerable<double>().ToArray();
+            var V = new List<double>() { 0 };
+            V.AddRange(Scanner.ScanEnumerable<double>());
+            V.Add(0);
 
-                Console.WriteLine($"t:{t}, {answer}");
-                t++;
-                if (t == T[i]) i++;
+            var L = new double[N + 2];
+            var R = new double[N + 2];
+            var total = 0.0;
+            for (var i = 1; i <= N; i++)
+            {
+                L[i] = total;
+                R[i] = total + T[i - 1];
+                total += T[i - 1];
+            }
+            L[N + 1] = R[N + 1] = total;
+            var cv = 0.0;
+            var answer = 0.0;
+            for (var t = 0.0; t <= total; t += 0.5)
+            {
+                var minv = 1e9;
+                for (var j = 0; j < N + 2; j++)
+                {
+                    var v = V[j];
+                    if (t < L[j]) v = V[j] + L[j] - t;
+                    else if (t > R[j]) v = V[j] + t - R[j];
+                    minv = Math.Min(minv, v);
+                }
+                answer += 0.25 * (cv + minv);
+                cv = minv;
             }
 
             Console.WriteLine(answer);
