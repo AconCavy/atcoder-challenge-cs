@@ -18,6 +18,27 @@ namespace Tasks
 
         public static void Solve()
         {
+            var K = Scanner.Scan<int>();
+            var q0 = new Queue<(int, int, int)>();
+            var q1 = new Queue<(int, int, int)>();
+            var used = new bool[K];
+            q0.Enqueue((1, 1, 1));
+            var answer = 0;
+            while (q0.Any() || q1.Any())
+            {
+                var (mod, digit, sum) = (q0.Any() ? q0 : q1).Dequeue();
+                if (used[mod]) continue;
+                if (mod == 0)
+                {
+                    answer = sum;
+                    break;
+                }
+                used[mod] = true;
+                if (digit < 9) q1.Enqueue(((mod + 1) % K, digit + 1, sum + 1));
+                q0.Enqueue((mod * 10 % K, 0, sum));
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
