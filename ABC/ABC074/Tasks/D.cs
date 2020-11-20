@@ -18,6 +18,37 @@ namespace Tasks
 
         public static void Solve()
         {
+            var N = Scanner.Scan<int>();
+            var A = new long[N][].Select(_ => Scanner.ScanEnumerable<long>().ToArray()).ToArray();
+            for (var k = 0; k < N; k++)
+            {
+                for (var i = 0; i < N; i++)
+                {
+                    for (var j = 0; j < N; j++)
+                    {
+                        if (A[i][k] + A[k][j] >= A[i][j]) continue;
+                        Console.WriteLine(-1);
+                        return;
+                    }
+                }
+            }
+
+            var answer = 0L;
+            for (var i = 0; i < N; i++)
+            {
+                for (var j = i + 1; j < N; j++)
+                {
+                    var ok = true;
+                    for (var k = 0; k < N && ok; k++)
+                    {
+                        if (k == i || k == j) continue;
+                        if (A[i][k] + A[k][j] == A[i][j]) ok = false;
+                    }
+                    if (ok) answer += A[i][j];
+                }
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
