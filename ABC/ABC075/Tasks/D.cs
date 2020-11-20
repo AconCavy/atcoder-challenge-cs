@@ -18,6 +18,44 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, K) = Scanner.Scan<int, int>();
+            var X = new long[N];
+            var Y = new long[N];
+            var P = new (long X, long Y)[N];
+            for (var i = 0; i < N; i++)
+            {
+                var (x, y) = Scanner.Scan<long, long>();
+                X[i] = x;
+                Y[i] = y;
+                P[i] = (x, y);
+            }
+            Array.Sort(X);
+            Array.Sort(Y);
+            var answer = (X[^1] - X[0]) * (Y[^1] - Y[0]);
+            for (var xi = 0; xi < N; xi++)
+            {
+                for (var xj = xi + 1; xj < N; xj++)
+                {
+                    for (var yi = 0; yi < N; yi++)
+                    {
+                        for (var yj = yi + 1; yj < N; yj++)
+                        {
+                            var count = 0;
+                            var (lx, rx) = (X[xi], X[xj]);
+                            var (by, uy) = (Y[yi], Y[yj]);
+
+                            for (var i = 0; i < N; i++)
+                            {
+                                if (lx <= P[i].X && P[i].X <= rx
+                                && by <= P[i].Y && P[i].Y <= uy) count++;
+                            }
+                            if (count >= K) answer = Math.Min(answer, (rx - lx) * (uy - by));
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
