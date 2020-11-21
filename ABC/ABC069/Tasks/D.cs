@@ -18,6 +18,28 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (H, W) = Scanner.Scan<int, int>();
+            var N = Scanner.Scan<int>();
+            var A = Scanner.ScanEnumerable<int>().Select((x, i) => (x, i)).ToArray();
+            Array.Sort(A, (x, y) => x.x.CompareTo(y.x));
+            var G = new int[H][].Select(_ => new int[W]).ToArray();
+            var (cx, cy) = (0, 0);
+            foreach (var (x, i) in A)
+            {
+                var rem = x;
+                var color = i + 1;
+                while (rem-- > 0)
+                {
+                    G[cx][cy] = color;
+                    if (cy % 2 == 0 && cx == (H - 1) || cy % 2 == 1 && cx == 0) cy++;
+                    else
+                    {
+                        if (cy % 2 == 0) cx++;
+                        else cx--;
+                    }
+                }
+            }
+            Console.WriteLine(string.Join("\n", G.Select(x => string.Join(" ", x))));
         }
 
         public static class Scanner
