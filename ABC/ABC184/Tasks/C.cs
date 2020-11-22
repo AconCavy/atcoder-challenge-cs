@@ -24,14 +24,14 @@ namespace Tasks
             var dc = c2 - c1;
             var absdr = Math.Abs(dr);
             var absdc = Math.Abs(dc);
-            var answer = 0;
+            var drdc = absdr + absdc;
+            var answer = 3;
             if (dr == 0 && dc == 0) answer = 0;
-            else if (dr == dc || dr == -dc) answer = 1;
-            else if (absdr + absdc <= 3) answer = 1;
-            else if (((dr ^ dc ^ 1) & 1) != 0) answer = 2;
-            else if (absdr + absdc <= 6) answer = 2;
+            else if (absdr == absdc) answer = 1;
+            else if (drdc <= 3) answer = 1;
+            else if (drdc % 2 == 0) answer = 2;
+            else if (drdc <= 6) answer = 2;
             else if (Math.Abs(dr + dc) <= 3 || Math.Abs(dr - dc) <= 3) answer = 2;
-            else answer = 3;
             Console.WriteLine(answer);
         }
 

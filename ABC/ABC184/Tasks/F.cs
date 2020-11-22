@@ -21,8 +21,8 @@ namespace Tasks
             var (N, T) = Scanner.Scan<int, long>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
             var M = N / 2;
-            var T1 = new long[1 << M];
-            var T2 = new long[1 << (N - M)];
+            var T1 = new List<long>();
+            var T2 = new List<long>();
             for (var i = 0; i < 1 << M; i++)
             {
                 var sum = 0L;
@@ -30,7 +30,7 @@ namespace Tasks
                 {
                     if ((i >> j & 1) == 1) sum += A[j];
                 }
-                T1[i] = sum;
+                if (sum <= T) T1.Add(sum);
             }
 
             for (var i = 0; i < 1 << (N - M); i++)
@@ -40,13 +40,10 @@ namespace Tasks
                 {
                     if ((i >> j & 1) == 1) sum += A[M + j];
                 }
-                T2[i] = sum;
+                if (sum <= T) T2.Add(sum);
             }
 
-            T1 = T1.Where(x => x <= T).ToArray();
-            T2 = T2.Where(x => x <= T).ToArray();
-            Array.Sort(T1);
-            Array.Sort(T2);
+            T2.Sort();
             var answer = 0L;
             foreach (var t in T1)
             {
@@ -56,6 +53,19 @@ namespace Tasks
             }
 
             Console.WriteLine(answer);
+        }
+
+        public static int UpperBound(List<long> source, long key)
+        {
+            if (source.Count == 0) return 0;
+            var (l, r) = (-1, source.Count);
+            while (r - l > 1)
+            {
+                var m = l + (r - l) / 2;
+                if (source[m] > key) r = m;
+                else l = m;
+            }
+            return r;
         }
 
         public static class Scanner
