@@ -18,10 +18,19 @@ namespace Tasks
 
         public static void Solve()
         {
-            var (N, A, B) = Scanner.Scan<int, int, int>();
-            var H = new long[N].Select(x => Scanner.Scan<long>())).ToArray();
-            var answer = 0;
-            Console.WriteLine(answer);
+            var (N, A, B) = Scanner.Scan<int, long, long>();
+            var H = new long[N].Select(_ => Scanner.Scan<long>()).ToArray();
+            var D = A - B;
+            var (ng, ok) = (-1L, (long)1e9);
+            while (ok - ng > 1)
+            {
+                var m = ng + (ok - ng) / 2;
+                var t = H.Sum(h => Math.Max(0, h - B * m + D - 1) / D);
+                if (t <= m) ok = m;
+                else ng = m;
+            }
+
+            Console.WriteLine(ok);
         }
 
         public static class Scanner
