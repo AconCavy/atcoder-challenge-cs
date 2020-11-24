@@ -228,6 +228,24 @@
 			"}"
 		]
 	},
+	"Combination": {
+		"scope": "csharp",
+		"prefix": [
+			"combination",
+			"pascal"
+		],
+		"body": [
+			"var ${2:combination} = new long[${1:N}, ${1}];",
+			"for (var i = 0; i < ${1}; i++)",
+			"{",
+			"    for (var j = 0; j <= i; j++)",
+			"    {",
+			"        if (j == 0 || j == i) combination[i, j] = 1;",
+			"        else combination[i, j] = combination[i - 1, j - 1] + combination[i - 1, j];",
+			"    }",
+			"}"
+		]
+	},
 	"CountOf": {
 		"scope": "csharp",
 		"prefix": "countof",
