@@ -18,19 +18,18 @@ namespace Tasks
 
         public static void Solve()
         {
-            var NM = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var (N, M) = (NM[0], NM[1]);
-            var students = new (int X, int Y)[N];
-            var checkPoints = new (int X, int Y)[M];
+            var (N, M) = Scanner.Scan<int, int>();
+            var S = new (int X, int Y)[N];
+            var P = new (int X, int Y)[M];
             for (var i = 0; i < N; i++)
             {
-                var ab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-                students[i] = (ab[0], ab[1]);
+                var (a, b) = Scanner.Scan<int, int>();
+                S[i] = (a, b);
             }
             for (var i = 0; i < M; i++)
             {
-                var cd = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-                checkPoints[i] = (cd[0], cd[1]);
+                var (c, d) = Scanner.Scan<int, int>();
+                P[i] = (c, d);
             }
             for (var i = 0; i < N; i++)
             {
@@ -38,15 +37,32 @@ namespace Tasks
                 var answer = 0;
                 for (var j = 0; j < M; j++)
                 {
-                    var distance = Math.Abs(students[i].X - checkPoints[j].X) + Math.Abs(students[i].Y - checkPoints[j].Y);
+                    var distance = Math.Abs(S[i].X - P[j].X) + Math.Abs(S[i].Y - P[j].Y);
                     if (distance < min)
                     {
                         min = distance;
-                        answer = j;
+                        answer = j + 1;
                     }
                 }
-                Console.WriteLine(answer + 1);
+                Console.WriteLine(answer);
             }
+        }
+
+        public static class Scanner
+        {
+            private static Queue<string> queue = new Queue<string>();
+            public static T Next<T>()
+            {
+                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
+            }
+            public static T Scan<T>() => Next<T>();
+            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
+            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }
