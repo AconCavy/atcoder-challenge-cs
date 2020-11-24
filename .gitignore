@@ -5,6 +5,8 @@ obj/
 # Test results
 TestResults/
 
+# Editor
+.vscode/
+
 # snippets
-AtCoderLibraryCSharp.code-snippets
-Sandbox.code-snippets
+!atcoder.code-snippets
