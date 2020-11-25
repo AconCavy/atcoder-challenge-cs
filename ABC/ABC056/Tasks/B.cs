@@ -18,9 +18,25 @@ namespace Tasks
 
         public static void Solve()
         {
-            var WAB = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var (W, A, B) = (WAB[0], WAB[1], WAB[2]);
+            var (W, A, B) = Scanner.Scan<int, int, int>();
             Console.WriteLine(Math.Max(0, Math.Max(B - (A + W), A - (B + W))));
+        }
+
+        public static class Scanner
+        {
+            private static Queue<string> queue = new Queue<string>();
+            public static T Next<T>()
+            {
+                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
+            }
+            public static T Scan<T>() => Next<T>();
+            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
+            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }
