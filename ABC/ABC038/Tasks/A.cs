@@ -19,7 +19,7 @@ namespace Tasks
         public static void Solve()
         {
             var S = Scanner.Scan<string>();
-            Console.WriteLine(S[S.Length - 1] == 'T' ? "YES" : "NO");
+            Console.WriteLine(S[^1] == 'T' ? "YES" : "NO");
         }
 
         public static class Scanner
