@@ -20,14 +20,34 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var P = new (int X, int Y)[N];
+            for (var i = 0; i < N; i++) P[i] = Scanner.Scan<int, int>();
+
+            const double eps = 1e-12;
+            var (a, b, c) = ((long)N * (N - 1) * (N - 2) / 6, 0L, 0L);
+
             for (var i = 0; i < N; i++)
             {
-                P[i] = Scanner.Scan<int, int>();
+                var rad = new List<double>();
+                for (var j = 0; j < N; j++)
+                {
+                    if (i == j) continue;
+                    rad.Add(Math.Atan2(P[j].Y - P[i].Y, P[j].X - P[i].X));
+                }
+
+                rad.Sort();
+                for (var j = 0; j < N - 1; j++) rad.Add(rad[j] + Math.PI * 2);
+                var (u90, o90) = (0, 0);
+                for (var j = 0; j < N - 1; j++)
+                {
+                    while (rad[u90] - rad[j] < Math.PI / 2 - eps) u90++;
+                    while (rad[o90] - rad[j] < Math.PI - eps) o90++;
+                    c += o90 - u90;
+                    if (Math.Abs(rad[u90] - rad[j] - Math.PI / 2) < eps) { b++; c--; }
+                }
             }
 
-            var answer = new long[3];
-
-            Console.WriteLine(string.Join(" ", answer));
+            a -= b + c;
+            Console.WriteLine($"{a} {b} {c}");
         }
 
         public static class Scanner

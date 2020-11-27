@@ -18,12 +18,9 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = Console.ReadLine();
+            var N = Scanner.Scan<string>();
             var number = new int[10];
-            for (var i = 0; i < N.Length; i++)
-            {
-                number[N[i] - '0']++;
-            }
+            foreach (var c in N) number[c - '0']++;
             Console.WriteLine(number.Count(x => x >= 4) == 1 ? "SAME" : "DIFFERENT");
         }
 
