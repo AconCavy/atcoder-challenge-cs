@@ -5,6 +5,6 @@ if "%~1"=="" (
 )
 set TASK=%~1
 
-dotnet new atcsolver -n %TASK% -o .\Tasks
-dotnet new atctests -n %TASK% -o .\Tests
+dotnet new cpsolver -n %TASK% -o .\Tasks
+dotnet new cptests -n %TASK% -o .\Tests
 code .\Tests\%TASK%Tests.cs .\Tasks\%TASK%.cs
