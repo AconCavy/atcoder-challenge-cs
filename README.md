@@ -1,36 +1,46 @@
-# AtCoder Tasks
+# Overview
 
-AtCoderで解いた問題のプログラム (C#, .NET Core) を保存するためのリポジトリです．
+The repository for storing task programs (C#) solved in AtCoder.
 
-## 実行環境
+## Environment
 
 .NET Core 3.1.x
 
-## テンプレートのインストール
+## Install templates
 
-[AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp)をインストールします．
+Installs [AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp).
 
-## プロジェクトの作成
+## Create project
 
-Windowsの場合は `atcoder.bat`， Mac OSまたはLinuxの場合は `atcoder.sh` をプロジェクト名とともに実行すると，プロジェクトが作成され，コンテストサイトが開きます．
+Creates base project with a project name using the `atcoder.bat` on Windows, the `atcoder.sh` on Mac Os or Linux.
+After that, the specified contest web site will be opened.
 
-```
+### Windows
+
+```sh
 ./atcoder.bat ABC177
 ```
 
-```
+### Mac OS or Linux
+
+```sh
 ./atcoder.sh ABC177
 ```
 
-## Task の追加
+## Append task
 
-Windowsの場合は `add-task.bat`，Mac OSまたはLinuxの場合は `add-task.sh` をタスク名とともに実行すると，`Tasks` と `Tests` の下にそれぞれテンプレートファイルを生成されます．
-`(root)/ABC177` の場合に，以下のように実行すると，`(root)/ABC177/Tasks/E.cs` と `(root)/ABC177/Tests/ETests.cs` がそれぞれ生成されます．
+Creates solver items with a task name under the `Tasks` and the `Tests` using the `add-task.bat` on Windows, the `add-task.sh` on Mac Os or Linux.
 
-```
+For example, `(root)/ABC177/Tasks/E.cs` and `(root)/ABC177/Tests/ETests.cs` will be created if the current directory is `(root)/ABC177`.
+
+### Windows
+
+```sh
 ../add-task.bat E
 ```
 
-```
+### Mac OS or Linux
+
+```sh
 ../add-task.sh E
 ```
