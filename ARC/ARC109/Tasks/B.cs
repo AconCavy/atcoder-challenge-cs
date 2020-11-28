@@ -19,15 +19,9 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<long>();
-            var (l, r) = (0L, (long)2e9);
-            while (r - l > 1)
-            {
-                var m = (l + r) / 2;
-                if (m * (m + 1) / 2 <= N + 1) l = m;
-                else r = m;
-            }
-
-            Console.WriteLine(N - l + 1);
+            var x = (-1 + (long)Math.Sqrt(N * 8 + 5)) / 2 - 1;
+            while ((x + 1) * (x + 2) / 2 <= N + 1) x++;
+            Console.WriteLine(N - x + 1);
         }
 
         public static class Scanner
