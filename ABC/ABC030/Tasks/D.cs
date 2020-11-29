@@ -19,8 +19,46 @@ namespace Tasks
         public static void Solve()
         {
             var (N, A) = Scanner.Scan<int, int>();
-            var K = Console.ReadLine();
-            var B = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
+            var K = Scanner.Scan<string>();
+            var B = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToArray();
+
+            var dict = new Dictionary<int, int>();
+            var list = new List<int>();
+            var answer = A - 1;
+            if (K.Length <= 6)
+            {
+                var k = int.Parse(K);
+                while (k-- > 0) answer = B[answer];
+            }
+            else
+            {
+                for (var i = 0; i < N * 2; i++)
+                {
+                    if (dict.ContainsKey(answer))
+                    {
+                        var noloop = dict[answer];
+                        var loop = i - dict[answer];
+                        var mod = (GetModulo(K, loop) - noloop) % loop;
+                        if (mod < 0) mod += loop;
+                        answer = list[noloop + mod];
+                        break;
+                    }
+
+                    dict[answer] = i;
+                    list.Add(answer);
+                    answer = B[answer];
+                }
+            }
+
+            Console.WriteLine(answer + 1);
+        }
+
+        public static int GetModulo(string value, int modulo)
+        {
+            if (modulo == 1) return 0;
+            var ret = 0;
+            foreach (var d in value) ret = (ret * 10 + (d - '0')) % modulo;
+            return ret;
         }
 
         public static class Scanner
@@ -36,6 +74,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }
