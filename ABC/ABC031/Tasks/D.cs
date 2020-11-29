@@ -19,6 +19,51 @@ namespace Tasks
         public static void Solve()
         {
             var (K, N) = Scanner.Scan<int, int>();
+            var V = new int[N][];
+            var W = new string[N];
+            for (var i = 0; i < N; i++)
+            {
+                var (v, w) = Scanner.Scan<string, string>();
+                V[i] = v.Select(x => x - '1').ToArray();
+                W[i] = w;
+            }
+
+            for (var b = 0; b < Math.Pow(3, K); b++)
+            {
+                var lengths = new List<int>();
+                var tmp = b;
+                for (var i = 0; i < K; i++)
+                {
+                    lengths.Add(tmp % 3 + 1);
+                    tmp /= 3;
+                }
+
+                var ok = true;
+                for (var i = 0; i < N && ok; i++)
+                {
+                    if (V[i].Sum(x => lengths[x]) != W[i].Length) ok = false;
+                }
+                if (!ok) continue;
+
+                var words = new string[K];
+                for (var i = 0; i < N && ok; i++)
+                {
+                    var (v, w) = (V[i], W[i]);
+                    var l = 0;
+                    for (var j = 0; j < v.Length && ok; j++)
+                    {
+                        var vj = v[j];
+                        var ss = w.Substring(l, lengths[vj]);
+                        if (string.IsNullOrEmpty(words[vj])) words[vj] = ss;
+                        else if (words[vj] != ss) ok = false;
+                        l += lengths[vj];
+                    }
+                }
+                if (!ok) continue;
+
+                Console.WriteLine(string.Join("\n", words));
+                return;
+            }
         }
 
         public static class Scanner
@@ -34,6 +79,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }
