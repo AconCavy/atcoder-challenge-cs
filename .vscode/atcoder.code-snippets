@@ -336,6 +336,31 @@
 			"}"
 		]
 	},
+	"loop": {
+		"scope": "csharp",
+		"prefix": "loop",
+		"body": [
+			"var dict = new Dictionary<int, int>();",
+			"var steps = new List<int>();",
+			"var ${1:current} = ${2:0};",
+			"for (var i = 0; i < ${3:N}; i++)",
+			"{",
+			"    if (dict.ContainsKey(current))",
+			"    {",
+			"        var noloop = dict[current];",
+			"        var loop = i - dict[current];",
+			"        var mod = (${4:K} - noloop) % loop;",
+			"        if (mod < 0) mod += loop;",
+			"        current = steps[noloop + mod];",
+			"        break;",
+			"    }",
+			"",
+			"    dict[current] = i;",
+			"    steps.Add(current);",
+			"    current = ${5:G}[current];",
+			"}"
+		]
+	},
 	"TestMethod": {
 		"scope": "csharp",
 		"prefix": "testmethod",
