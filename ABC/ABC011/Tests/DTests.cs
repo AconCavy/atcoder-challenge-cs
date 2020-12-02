@@ -5,31 +5,40 @@ namespace Tests
     [TestClass]
     public class DTests
     {
-        [TestMethod]
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
         public void TestMethod1()
         {
-            var input = @"2 10000000
-10000000 10000000";
-            var output = @"0.125";
-            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
+            const string input = @"2 10000000
+10000000 10000000
+";
+            const string output = @"0.125
+";
+            Tester.InOutTest(Tasks.D.Solve, input, output, RelativeError);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(TimeLimit)]
         public void TestMethod2()
         {
-            var input = @"100 2
-3 7";
-            var output = @"0.0";
-            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
+            const string input = @"100 2
+3 7
+";
+            const string output = @"0.0
+";
+            Tester.InOutTest(Tasks.D.Solve, input, output, RelativeError);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(TimeLimit)]
         public void TestMethod3()
         {
-            var input = @"11 8562174
-25686522 17124348";
-            var output = @"0.018174648284912";
-            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
+            const string input = @"11 8562174
+25686522 17124348
+";
+            const string output = @"0.018174648284912
+";
+            Tester.InOutTest(Tasks.D.Solve, input, output, RelativeError);
         }
     }
 }
