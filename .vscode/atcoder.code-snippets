@@ -382,7 +382,7 @@
 		"prefix": "testmethod",
 		"body": [
 			"[TestMethod, Timeout(TimeLimit)]",
-			"public void TestMethod${1:number}()",
+			"public void Test${1:number}()",
 			"{",
 			"    const string input = @\"\";",
 			"    const string output = @\"\";",
