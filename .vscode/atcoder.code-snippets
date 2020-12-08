@@ -24,58 +24,85 @@
 	"Scan1": {
 		"scope": "csharp",
 		"prefix": "scan1",
-		"body": [
-			"var ${1:val} = Scanner.Scan<${2:int}>();"
-		]
+		"body": "var ${1:val} = Scanner.Scan<${2:int}>();"
 	},
 	"Scan2": {
 		"scope": "csharp",
 		"prefix": "scan2",
-		"body": [
-			"var (${1:val1}, ${3:val2}) = Scanner.Scan<${2:int}, ${4:int}>();"
-		]
+		"body": "var (${1:val1}, ${3:val2}) = Scanner.Scan<${2:int}, ${4:int}>();"
 	},
 	"Scan3": {
 		"scope": "csharp",
 		"prefix": "scan3",
-		"body": [
-			"var (${1:val1}, ${3:val2}, ${5:val3}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}>();"
-		]
+		"body": "var (${1:val1}, ${3:val2}, ${5:val3}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}>();"
 	},
 	"Scan4": {
 		"scope": "csharp",
 		"prefix": "scan4",
-		"body": [
-			"var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}>();"
-		]
+		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}>();"
 	},
 	"Scan5": {
 		"scope": "csharp",
 		"prefix": "scan5",
-		"body": [
-			"var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}>();"
-		]
+		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}>();"
 	},
 	"Scan6": {
 		"scope": "csharp",
 		"prefix": "scan6",
-		"body": [
-			"var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}, ${11:val6}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}, ${12:int}>();"
-		]
+		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}, ${11:val6}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}, ${12:int}>();"
 	},
 	"ScanArray": {
 		"scope": "csharp",
 		"prefix": "scanarray",
-		"body": [
-			"var ${1:array} = Scanner.ScanEnumerable<${2:int}>().ToArray();"
-		]
+		"body": "var ${1:array} = Scanner.ScanEnumerable<${2:int}>().ToArray();"
 	},
 	"ScanList": {
 		"scope": "csharp",
 		"prefix": "scanlist",
+		"body": "var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
+	},
+	"Printer": {
+		"scope": "csharp",
+		"prefix": "printer",
 		"body": [
-			"var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
+			"public static class Printer",
+			"{",
+			"    public static void Print<T>(T[,] source, string separator = \"\")",
+			"    {",
+			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
+			"        for (var i = 0; i < h; i++)",
+			"            for (var j = 0; j < w; j++)",
+			"            {",
+			"                Console.Write(source[i, j]);",
+			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
+			"            }",
+			"    }",
+			"    public static void Print<T, U>(T[,] source, Func<T, U> selector, string separator = \"\")",
+			"    {",
+			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
+			"        for (var i = 0; i < h; i++)",
+			"            for (var j = 0; j < w; j++)",
+			"            {",
+			"                Console.Write(selector(source[i, j]));",
+			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
+			"            }",
+			"    }",
+			"    public static void Print(ReadOnlySpan<char> source) => Console.WriteLine(source.ToString());",
+			"    public static void Print<T>(IEnumerable<T> source, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(separator, source));",
+			"    public static void Print<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(separator, source.Select(selector)));",
+			"    public static void Print<T>(IEnumerable<IEnumerable<T>> source, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x))));",
+			"    public static void Print<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x.Select(selector)))));",
+			"}"
 		]
+	},
+	"Print": {
+		"scope": "csharp",
+		"prefix": "print",
+		"body": "Printer.Print(${1});"
 	},
 	"Inf": {
 		"scope": "csharp",
@@ -101,6 +128,14 @@
 			"    if (${5} < 0 || ${7:H} <= ${5} || ${6} < 0 || ${8:W} <= ${6}) continue;",
 			"}",
 		]
+	},
+	"Delta8d": {
+		"scope": "csharp",
+		"prefix": [
+			"delta8d",
+			"d8"
+		],
+		"body": "var D8 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1) };"
 	},
 	"GreatestCommonDivisor": {
 		"scope": "csharp",
