@@ -67,7 +67,16 @@
 		"body": [
 			"public static class Printer",
 			"{",
-			"    public static void Print<T>(T[,] source, string separator = \"\")",
+			"    public static void Print<T>(T source) => Console.WriteLine(source);",
+			"    public static void Print1D<T>(IEnumerable<T> source, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(separator, source));",
+			"    public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(separator, source.Select(selector)));",
+			"    public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x))));",
+			"    public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = \"\") =>",
+			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x.Select(selector)))));",
+			"    public static void Print2D<T>(T[,] source, string separator = \"\")",
 			"    {",
 			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
 			"        for (var i = 0; i < h; i++)",
@@ -77,7 +86,7 @@
 			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
 			"            }",
 			"    }",
-			"    public static void Print<T, U>(T[,] source, Func<T, U> selector, string separator = \"\")",
+			"    public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = \"\")",
 			"    {",
 			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
 			"        for (var i = 0; i < h; i++)",
@@ -87,15 +96,6 @@
 			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
 			"            }",
 			"    }",
-			"    public static void Print(ReadOnlySpan<char> source) => Console.WriteLine(source.ToString());",
-			"    public static void Print<T>(IEnumerable<T> source, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(separator, source));",
-			"    public static void Print<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(separator, source.Select(selector)));",
-			"    public static void Print<T>(IEnumerable<IEnumerable<T>> source, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x))));",
-			"    public static void Print<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x.Select(selector)))));",
 			"}"
 		]
 	},
@@ -103,6 +103,16 @@
 		"scope": "csharp",
 		"prefix": "print",
 		"body": "Printer.Print(${1});"
+	},
+	"Print1D": {
+		"scope": "csharp",
+		"prefix": "print1d",
+		"body": "Printer.Print1D(${1});"
+	},
+	"Print2D": {
+		"scope": "csharp",
+		"prefix": "print2d",
+		"body": "Printer.Print2D(${1});"
 	},
 	"Inf": {
 		"scope": "csharp",
@@ -376,15 +386,9 @@
 		],
 		"body": [
 			"for (var k = 0; k < ${1:N}; k++)",
-			"{",
 			"    for (var i = 0; i < ${1}; i++)",
-			"    {",
 			"        for (var j = 0; j < ${1}; j++)",
-			"        {",
-			"            ${2:G}[i][j] = Math.Min(${2}[i][k], ${2}[k][j]);",
-			"        }",
-			"    }",
-			"}"
+			"            ${2:G}[i][j] = Math.Min(${2}[i, j], ${2}[i][k] + ${2}[k][j]);"
 		]
 	},
 	"loop": {
