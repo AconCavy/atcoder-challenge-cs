@@ -21,50 +21,29 @@ namespace Tasks
         {
             var (N, Q) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
-            var lst = new LazySegmentTree<Monoid, long>(A.Select(x => new Monoid(x, 1)), new Oracle());
+            var st = new SegmentTree<int>(A, new Oracle());
             while (Q-- > 0)
             {
                 var (T, X, Y) = Scanner.Scan<int, int, int>();
                 X--;
                 if (T == 1)
                 {
-                    var before = lst.Get(X);
-                    lst.Set(X, new Monoid(before.Value ^ Y, before.Size));
+                    st.Set(X, st.Get(X) ^ Y);
                 }
                 else
                 {
-                    Console.WriteLine(lst.Query(X, Y).Value);
+                    Console.WriteLine(st.Query(X, Y));
                 }
             }
         }
 
-        public readonly struct Monoid
+        public class Oracle : IOracle<int>
         {
-            public readonly long Value;
-            public readonly long Size;
-            public Monoid(long value, long size) => (Value, Size) = (value, size);
-        }
+            public int MonoidIdentity => 0;
 
-        public class Oracle : IOracle<Monoid, long>
-        {
-            public long MapIdentity => 0;
-
-            public Monoid MonoidIdentity => new Monoid(0, 0);
-
-            public long Compose(in long f, in long g)
+            public int Operate(in int a, in int b)
             {
-                return f == 0 ? g : f;
-            }
-
-            public Monoid Map(in long f, in Monoid x)
-            {
-                if (f != 0) return new Monoid((x.Size * f), x.Size);
-                return x;
-            }
-
-            public Monoid Operate(in Monoid a, in Monoid b)
-            {
-                return new Monoid(a.Value ^ b.Value, a.Size + b.Size);
+                return a ^ b;
             }
         }
 
@@ -73,71 +52,50 @@ namespace Tasks
             TMonoid MonoidIdentity { get; }
             TMonoid Operate(in TMonoid a, in TMonoid b);
         }
-        public interface IOracle<TMonoid, TMap> : IOracle<TMonoid> where TMap : struct where TMonoid : struct
-        {
-            TMap MapIdentity { get; }
-            TMonoid Map(in TMap f, in TMonoid x);
-            TMap Compose(in TMap f, in TMap g);
-        }
 
-
-        public class LazySegmentTree<TMonoid, TMap> where TMonoid : struct where TMap : struct
+        public class SegmentTree<TMonoid> where TMonoid : struct
         {
             private readonly int _length;
             private readonly int _size;
             private readonly int _log;
             private readonly TMonoid[] _data;
-            private readonly TMap[] _lazy;
             private readonly TMonoid _monoidId;
-            private readonly TMap _mapId;
-            private readonly IOracle<TMonoid, TMap> _oracle;
-            public LazySegmentTree(int length, IOracle<TMonoid, TMap> oracle)
+            private readonly IOracle<TMonoid> _oracle;
+            public SegmentTree(int length, IOracle<TMonoid> oracle)
                 : this(Enumerable.Repeat(oracle.MonoidIdentity, length), oracle)
             {
             }
-            public LazySegmentTree(IEnumerable<TMonoid> data, IOracle<TMonoid, TMap> oracle)
+            public SegmentTree(IEnumerable<TMonoid> data, IOracle<TMonoid> oracle)
             {
                 var d = data.ToArray();
                 _length = d.Length;
                 _oracle = oracle;
-                _monoidId = _oracle.MonoidIdentity;
-                _mapId = _oracle.MapIdentity;
+                _monoidId = oracle.MonoidIdentity;
                 while (1 << _log < _length) _log++;
                 _size = 1 << _log;
                 _data = new TMonoid[_size << 1];
                 Array.Fill(_data, _monoidId);
-                _lazy = new TMap[_size];
-                Array.Fill(_lazy, _mapId);
                 d.CopyTo(_data, _size);
                 for (var i = _size - 1; i >= 1; i--) Update(i);
             }
-            public void Set(int index, in TMonoid monoid)
+            public void Set(int index, TMonoid monoid)
             {
                 if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
                 index += _size;
-                for (var i = _log; i >= 1; i--) Push(index >> i);
                 _data[index] = monoid;
                 for (var i = 1; i <= _log; i++) Update(index >> i);
             }
             public TMonoid Get(int index)
             {
                 if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
-                index += _size;
-                for (var i = _log; i >= 1; i--) Push(index >> i);
-                return _data[index];
+                return _data[index + _size];
             }
             public TMonoid Query(int left, int right)
             {
                 if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
-                if (left == right) return _monoidId;
+                var (sml, smr) = (_monoidId, _monoidId);
                 left += _size;
                 right += _size;
-                for (var i = _log; i >= 1; i--)
-                {
-                    if ((left >> i) << i != left) Push(left >> i);
-                    if ((right >> i) << i != right) Push(right >> i);
-                }
-                var (sml, smr) = (_monoidId, _monoidId);
                 while (left < right)
                 {
                     if ((left & 1) == 1) sml = _oracle.Operate(sml, _data[left++]);
@@ -148,39 +106,6 @@ namespace Tasks
                 return _oracle.Operate(sml, smr);
             }
             public TMonoid QueryToAll() => _data[1];
-            public void Apply(int index, TMap map)
-            {
-                if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
-                index += _size;
-                for (var i = _log; i >= 1; i--) Push(index >> i);
-                _data[index] = _oracle.Map(map, _data[index]);
-                for (var i = 1; i <= _log; i++) Update(index >> i);
-            }
-            public void Apply(int left, int right, in TMap map)
-            {
-                if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
-                if (left == right) return;
-                left += _size;
-                right += _size;
-                for (var i = _log; i >= 1; i--)
-                {
-                    if ((left >> i) << i != left) Push(left >> i);
-                    if ((right >> i) << i != right) Push((right - 1) >> i);
-                }
-                var (l, r) = (left, right);
-                while (l < r)
-                {
-                    if ((l & 1) == 1) ApplyToAll(l++, map);
-                    if ((r & 1) == 1) ApplyToAll(--r, map);
-                    l >>= 1;
-                    r >>= 1;
-                }
-                for (var i = 1; i <= _log; i++)
-                {
-                    if ((left >> i) << i != left) Update(left >> i);
-                    if ((right >> i) << i != right) Update((right - 1) >> i);
-                }
-            }
             public int MaxRight(int left, Predicate<TMonoid> predicate)
             {
                 if (left < 0 || _length < left) throw new ArgumentOutOfRangeException(nameof(left));
@@ -188,7 +113,6 @@ namespace Tasks
                 if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
                 if (left == _length) return _length;
                 left += _size;
-                for (var i = _log; i >= 1; i--) Push(left >> i);
                 var sm = _monoidId;
                 do
                 {
@@ -197,7 +121,6 @@ namespace Tasks
                     {
                         while (left < _size)
                         {
-                            Push(left);
                             left <<= 1;
                             var tmp = _oracle.Operate(sm, _data[left]);
                             if (!predicate(tmp)) continue;
@@ -218,7 +141,6 @@ namespace Tasks
                 if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
                 if (right == 0) return 0;
                 right += _size;
-                for (var i = _log; i >= 1; i--) Push((right - 1) >> i);
                 var sm = _monoidId;
                 do
                 {
@@ -228,7 +150,6 @@ namespace Tasks
                     {
                         while (right < _size)
                         {
-                            Push(right);
                             right = (right << 1) + 1;
                             var tmp = _oracle.Operate(_data[right], sm);
                             if (!predicate(tmp)) continue;
@@ -242,17 +163,6 @@ namespace Tasks
                 return 0;
             }
             private void Update(int k) => _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
-            private void ApplyToAll(int k, in TMap map)
-            {
-                _data[k] = _oracle.Map(map, _data[k]);
-                if (k < _size) _lazy[k] = _oracle.Compose(map, _lazy[k]);
-            }
-            private void Push(int k)
-            {
-                ApplyToAll(k << 1, _lazy[k]);
-                ApplyToAll((k << 1) + 1, _lazy[k]);
-                _lazy[k] = _mapId;
-            }
         }
 
         public static class Scanner
