@@ -1,0 +1,108 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+namespace Tasks
+{
+    public class C
+    {
+        public static void Main(string[] args)
+        {
+            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            Console.SetOut(sw);
+            Solve();
+            Console.Out.Flush();
+        }
+
+        public static void Solve()
+        {
+            var (N, X) = Scanner.Scan<int, int>();
+            var W = new int[N].Select(_ => Scanner.Scan<int>()).ToArray();
+            var M1 = N / 2;
+            var M2 = N - M1;
+
+            var w1 = new List<long>();
+            var w2 = new List<long>();
+
+            for (var i = 0; i < 1 << M1; i++)
+            {
+                var sum = 0L;
+                for (var j = 0; j < M1; j++)
+                {
+                    if ((i >> j & 1) == 1) sum += W[j];
+                }
+                if (sum <= X) w1.Add(sum);
+            }
+
+            for (var i = 0; i < 1 << M2; i++)
+            {
+                var sum = 0L;
+                for (var j = 0; j < M2; j++)
+                {
+                    if ((i >> j & 1) == 1) sum += W[M1 + j];
+                }
+                if (sum <= X) w2.Add(sum);
+            }
+
+            var answer = 0L;
+            w2.Sort();
+            foreach (var w in w1)
+            {
+                var x = X - w;
+                answer += UpperBound(w2, x) - LowerBound(w2, x);
+            }
+
+            Console.WriteLine(answer);
+
+        }
+        public static int LowerBound<T>(List<T> source, T key, Comparison<T> comparison = null)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source.Count == 0) return 0;
+            comparison ??= Comparer<T>.Default.Compare;
+            var (l, r) = (-1, source.Count);
+            while (r - l > 1)
+            {
+                var m = l + (r - l) / 2;
+                if (comparison(source[m], key) >= 0) r = m;
+                else l = m;
+            }
+            return r;
+        }
+        public static int UpperBound<T>(List<T> source, T key, Comparison<T> comparison = null)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source.Count == 0) return 0;
+            comparison ??= Comparer<T>.Default.Compare;
+            var (l, r) = (-1, source.Count);
+            while (r - l > 1)
+            {
+                var m = l + (r - l) / 2;
+                if (comparison(source[m], key) > 0) r = m;
+                else l = m;
+            }
+            return r;
+        }
+
+
+        public static class Scanner
+        {
+            private static Queue<string> queue = new Queue<string>();
+            public static T Next<T>()
+            {
+                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
+            }
+            public static T Scan<T>() => Next<T>();
+            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
+            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
+        }
+    }
+}
