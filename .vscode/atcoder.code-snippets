@@ -388,7 +388,35 @@
 			"for (var k = 0; k < ${1:N}; k++)",
 			"    for (var i = 0; i < ${1}; i++)",
 			"        for (var j = 0; j < ${1}; j++)",
-			"            ${2:G}[i][j] = Math.Min(${2}[i, j], ${2}[i][k] + ${2}[k][j]);"
+			"            ${2:G}[i][j] = Math.Min(${2}[i][j], ${2}[i][k] + ${2}[k][j]);",
+			"            ${2:G}[i, j] = Math.Min(${2}[i, j], ${2}[i, k] + ${2}[k, j]);"
+		]
+	},
+	"LevenshteinDistance": {
+		"scope": "csharp",
+		"prefix": "levenshtein",
+		"body": [
+			"public static long LevenshteinDistance<T>(IReadOnlyList<T> a, IReadOnlyList<T> b,",
+			"long editCost = 1, long insertCost = 1, long deleteCost = 1) where T : IEquatable<T>",
+			"{",
+			"    var (n, m) = (a.Count + 1, b.Count + 1);",
+			"    var dp = new long[n * m];",
+			"    Array.Fill(dp, long.MaxValue);",
+			"    for (var i = 0; i < n; i++) dp[i * m] = i;",
+			"    for (var i = 0; i < m; i++) dp[i] = i;",
+			"    for (var i = 1; i < n; i++)",
+			"    {",
+			"        for (var j = 1; j < m; j++)",
+			"        {",
+			"            var ij = i * m + j;",
+			"            dp[ij] = Math.Min(dp[ij], dp[ij - m] + deleteCost);",
+			"            dp[ij] = Math.Min(dp[ij], dp[ij - 1] + insertCost);",
+			"            dp[ij] = Math.Min(dp[ij], dp[ij - m - 1] + (a[i - 1].Equals(b[j - 1]) ? 0 : editCost));",
+			"        }",
+			"    }",
+			"",
+			"    return dp[^1];",
+			"}"
 		]
 	},
 	"loop": {
