@@ -25,8 +25,6 @@ namespace Tasks
             var M2 = N - M1;
 
             var w1 = new List<long>();
-            var w2 = new List<long>();
-
             for (var i = 0; i < 1 << M1; i++)
             {
                 var sum = 0L;
@@ -37,6 +35,7 @@ namespace Tasks
                 if (sum <= X) w1.Add(sum);
             }
 
+            var w2 = new Dictionary<long, int>();
             for (var i = 0; i < 1 << M2; i++)
             {
                 var sum = 0L;
@@ -44,49 +43,22 @@ namespace Tasks
                 {
                     if ((i >> j & 1) == 1) sum += W[M1 + j];
                 }
-                if (sum <= X) w2.Add(sum);
+                if (sum <= X)
+                {
+                    if (!w2.ContainsKey(sum)) w2[sum] = 0;
+                    w2[sum]++;
+                }
             }
 
             var answer = 0L;
-            w2.Sort();
             foreach (var w in w1)
             {
                 var x = X - w;
-                answer += UpperBound(w2, x) - LowerBound(w2, x);
+                if (w2.ContainsKey(x)) answer += w2[x];
             }
 
             Console.WriteLine(answer);
-
         }
-        public static int LowerBound<T>(List<T> source, T key, Comparison<T> comparison = null)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (source.Count == 0) return 0;
-            comparison ??= Comparer<T>.Default.Compare;
-            var (l, r) = (-1, source.Count);
-            while (r - l > 1)
-            {
-                var m = l + (r - l) / 2;
-                if (comparison(source[m], key) >= 0) r = m;
-                else l = m;
-            }
-            return r;
-        }
-        public static int UpperBound<T>(List<T> source, T key, Comparison<T> comparison = null)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (source.Count == 0) return 0;
-            comparison ??= Comparer<T>.Default.Compare;
-            var (l, r) = (-1, source.Count);
-            while (r - l > 1)
-            {
-                var m = l + (r - l) / 2;
-                if (comparison(source[m], key) > 0) r = m;
-                else l = m;
-            }
-            return r;
-        }
-
 
         public static class Scanner
         {
