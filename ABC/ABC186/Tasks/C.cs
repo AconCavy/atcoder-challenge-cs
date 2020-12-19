@@ -27,20 +27,17 @@ namespace Tasks
                 if (i.ToString().Contains('7')) answer.Add(i);
                 else
                 {
-                    var builder = new StringBuilder();
                     var x8 = i;
                     var ng = false;
-                    while (x8 != 0)
+                    while (x8 != 0 && !ng)
                     {
                         ng = x8 % 8 == 7;
-                        if (ng) break;
-                        builder.Append(x8 % 8);
                         x8 /= 8;
                     }
                     if (ng) answer.Add(i);
                 }
             }
-            Console.WriteLine(N - answer.Distinct().Count());
+            Console.WriteLine(N - answer.Count());
         }
 
         public static class Scanner
