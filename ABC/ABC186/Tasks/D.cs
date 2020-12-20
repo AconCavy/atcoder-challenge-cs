@@ -23,10 +23,11 @@ namespace Tasks
             var A = Scanner.ScanEnumerable<long>().ToArray();
             var answer = 0L;
             Array.Sort(A);
-            var cum = A.Cumulate((x, y) => x + y).ToArray();
+            var sum = A.Sum();
             for (var i = 0; i < N - 1; i++)
             {
-                answer += Math.Abs(A[i] * (N - i - 1) - (cum[N] - cum[i + 1]));
+                sum -= A[i];
+                answer += Math.Abs(A[i] * (N - i - 1) - sum);
             }
             Console.WriteLine(answer);
         }
@@ -46,48 +47,6 @@ namespace Tasks
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
             public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
             public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
-        }
-    }
-
-    public static partial class EnumerableExtension
-    {
-        public static IEnumerable<TAccumulate> Cumulate<TSource, TAccumulate>(this IEnumerable<TSource> source,
-            TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (func == null) throw new ArgumentNullException(nameof(func));
-            IEnumerable<TAccumulate> Inner()
-            {
-                yield return seed;
-                foreach (var item in source) yield return seed = func(seed, item);
-            }
-            return Inner();
-        }
-        public static IEnumerable<TAccumulate> Cumulate<TSource, TAccumulate>(this IEnumerable<TSource> source,
-            Func<TAccumulate, TSource, TAccumulate> func)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (func == null) throw new ArgumentNullException(nameof(func));
-            IEnumerable<TAccumulate> Inner()
-            {
-                TAccumulate seed = default;
-                yield return seed;
-                foreach (var item in source) yield return seed = func(seed, item);
-            }
-            return Inner();
-        }
-        public static IEnumerable<TSource> Cumulate<TSource>(this IEnumerable<TSource> source,
-            Func<TSource, TSource, TSource> func)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (func == null) throw new ArgumentNullException(nameof(func));
-            IEnumerable<TSource> Inner()
-            {
-                TSource seed = default;
-                yield return seed;
-                foreach (var item in source) yield return seed = func(seed, item);
-            }
-            return Inner();
         }
     }
 }
