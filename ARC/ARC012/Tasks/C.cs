@@ -34,118 +34,55 @@ namespace Tasks
             if (a == 0 && b == 0) { Console.WriteLine("YES"); return; }
             if (Math.Abs(a - b) > 1 || a < b) { Console.WriteLine("NO"); return; }
 
-            var answer = true;
-            var D4 = new[] { (1, 0), (0, 1), (1, 1), (1, -1) };
-
-            int GetCount(int h, int w, int k)
+            var D8 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1) };
+            bool Check()
             {
-                var ret = 1;
-                var (dh, dw) = D4[k];
-                foreach (var d in new[] { 1, -1 })
+                for (var h = 0; h < N; h++)
                 {
-                    for (var m = 1; m <= 10; m++)
+                    for (var w = 0; w < N; w++)
                     {
-                        var (nh, nw) = (h + dh * d * m, w + dw * d * m);
-                        if (nh < 0 || N <= nh || nw < 0 || N <= nw) continue;
-                        if (G[h][w] == G[nh][nw]) continue;
-                        ret += m - 1;
-                        break;
-                    }
-                }
-
-                return ret;
-            }
-
-            var ca = new bool[N, N, 4];
-            var cb = new bool[N, N, 4];
-            var (a5, b5) = (0, 0);
-            for (var i = 0; i < N && answer; i++)
-            {
-                for (var j = 0; j < N && answer; j++)
-                {
-                    if (G[i][j] == '.') continue;
-                    for (var k = 0; k < 4 && answer; k++)
-                    {
-                        var count = GetCount(i, j, k);
-                        if (count > 9) answer = false;
-                        else if (count >= 5)
+                        if (G[h][w] == '.') continue;
+                        foreach (var (dh, dw) in D8)
                         {
-                            if (G[i][j] == 'o')
+                            var count = 0;
+                            for (var m = 0; m <= 4; m++)
                             {
-                                a5++;
-                                ca[i, j, k] = true;
+                                var (nh, nw) = (h + dh * m, w + dw * m);
+                                if (nh < 0 || N <= nh || nw < 0 || N <= nw) break;
+                                if (G[h][w] != G[nh][nw]) break;
+                                count++;
                             }
-                            else
-                            {
-                                b5++;
-                                cb[i, j, k] = true;
-                            }
+                            if (count == 5) return true;
                         }
                     }
-
                 }
+
+                return false;
             }
 
-            if (a5 > 0 && (b5 > 0 || a == b)) answer = false;
-
-            bool CrossCheck(int h, int w)
+            if (Check())
             {
-                var count = 0;
+                var c = a == b ? 'x' : 'o';
                 for (var i = 0; i < N; i++)
                 {
                     for (var j = 0; j < N; j++)
                     {
-                        if (G[i][j] == '.') continue;
-                        if (G[i][j] != G[h][w]) continue;
-                        for (var k = 0; k < 4; k++)
+                        if (G[i][j] != c) continue;
+                        G[i][j] = '.';
+                        if (!Check())
                         {
-                            if (G[i][j] == 'o')
-                            {
-                                if (ca[i, j, k] != ca[h, w, k]) count++;
-                            }
-                            else
-                            {
-                                if (cb[i, j, k] != cb[h, w, k]) count++;
-                            }
+                            Console.WriteLine("YES");
+                            return;
                         }
+                        G[i][j] = c;
                     }
                 }
-
-                return count <= 1;
+                Console.WriteLine("NO");
             }
-
-            if (answer)
+            else
             {
-                (a5, b5) = (0, 0);
-                for (var i = 0; i < N && answer; i++)
-                {
-                    for (var j = 0; j < N && answer; j++)
-                    {
-                        if (G[i][j] == '.') continue;
-                        answer = CrossCheck(i, j);
-                        var count = 0;
-                        for (var k = 0; k < 4; k++)
-                        {
-                            if (G[i][j] == 'o')
-                            {
-                                if (ca[i, j, k]) count++;
-                            }
-                            else
-                            {
-                                if (cb[i, j, k]) count++;
-                            }
-                        }
-                        if (count > 1)
-                        {
-                            if (G[i][j] == 'o') a5++;
-                            else b5++;
-                        }
-                    }
-                }
-                if (a5 > 1 || b5 > 1) answer = false;
+                Console.WriteLine("YES");
             }
-
-            Console.WriteLine(answer ? "YES" : "NO");
         }
 
         public static class Scanner
