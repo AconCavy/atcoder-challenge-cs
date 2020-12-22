@@ -19,36 +19,37 @@ namespace Tasks
 
         public static void Solve()
         {
-            var K = Scanner.Scan<long>();
+            var K = Scanner.Scan<ulong>();
             var N = Scanner.Scan<int>();
-            var B = new (long A, long D)[N];
+            var B = new (ulong A, ulong D)[N];
             for (var i = 0; i < N; i++)
             {
-                var (a, d) = Scanner.Scan<long, long>();
+                var (a, d) = Scanner.Scan<ulong, ulong>();
                 B[i] = (a, d);
             }
 
-            var (l, r) = (0L, (long)1e18);
+            var (l, r) = (0UL, (ulong)1e18);
             while (r - l > 1)
             {
                 var m = (l + r) / 2;
-                var count = 0L;
+                var count = 0UL;
                 foreach (var (a, d) in B)
                 {
-                    if (m >= a) count += (m - a) / d + 1;
+                    if (m < a) continue;
+                    count += (m - a) / d + 1;
                 }
                 if (count >= K) r = m;
                 else l = m;
             }
 
-            var answer = 0L;
-            var k = 0L;
+            var answer = 0UL;
+            var k = 0UL;
             foreach (var (a, d) in B)
             {
                 if (r < a) continue;
                 var n = (r - a) / d + 1;
                 k += n;
-                answer += n * a + n * (n - 1) / 2 * d;
+                answer += (n * a) + (n * (n - 1) / 2 * d);
             }
 
             answer += (K - k) * r;
