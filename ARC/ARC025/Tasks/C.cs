@@ -30,27 +30,29 @@ namespace Tasks
             }
 
             const long inf = (long)1e18;
-            var queue = new PriorityQueue<Edge>((x, y) => x.Cost.CompareTo(y.Cost));
+            var queue = new Queue<Edge>();
+            var depths = new long[N];
             var answer = 0L;
-            Span<long> span = stackalloc long[N];
             for (var a = 0; a < N; a++)
             {
                 queue.Enqueue(new Edge(a, 0));
-                span.Fill(inf);
-                span[a] = 0;
+                Array.Fill(depths, inf);
+                depths[a] = 0;
+                var inq = new bool[N];
                 while (queue.Count > 0)
                 {
                     var u = queue.Dequeue();
-                    if (span[u.Idx] < u.Cost) continue;
+                    inq[u.Idx] = false;
                     foreach (var v in G[u.Idx])
                     {
-                        if (span[v.Idx] <= span[u.Idx] + v.Cost) continue;
-                        span[v.Idx] = span[u.Idx] + v.Cost;
+                        if (depths[v.Idx] <= depths[u.Idx] + v.Cost) continue;
+                        depths[v.Idx] = depths[u.Idx] + v.Cost;
+                        if (inq[v.Idx]) continue;
+                        inq[v.Idx] = true;
                         queue.Enqueue(v);
                     }
                 }
 
-                var depths = span.ToArray();
                 Array.Sort(depths);
                 for (var c = 1; c < N; c++)
                 {
@@ -74,96 +76,6 @@ namespace Tasks
             public readonly int Idx;
             public readonly long Cost;
             public Edge(int v, long cost) => (Idx, Cost) = (v, cost);
-        }
-
-        public class PriorityQueue<T> : IReadOnlyCollection<T>
-        {
-            private readonly List<T> _heap;
-            private readonly Comparison<T> _comparison;
-            public int Count => _heap.Count;
-            public PriorityQueue() : this(items: null)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items) : this(items, Comparer<T>.Default)
-            {
-            }
-            public PriorityQueue(IComparer<T> comparer) : this(null, comparer)
-            {
-            }
-            public PriorityQueue(Comparison<T> comparison) : this(null, comparison)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer)
-                : this(items, (comparer ?? Comparer<T>.Default).Compare)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison)
-            {
-                _heap = new List<T>();
-                _comparison = comparison;
-                if (items == null) return;
-                foreach (var item in items) Enqueue(item);
-            }
-            public void Enqueue(T item)
-            {
-                var child = Count;
-                _heap.Add(item);
-                while (child > 0)
-                {
-                    var parent = (child - 1) / 2;
-                    if (_comparison(_heap[parent], _heap[child]) <= 0) break;
-                    (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
-                    child = parent;
-                }
-            }
-            public T Dequeue()
-            {
-                if (Count == 0) throw new InvalidOperationException();
-                var ret = _heap[0];
-                _heap[0] = _heap[Count - 1];
-                _heap.RemoveAt(Count - 1);
-                var parent = 0;
-                while (parent * 2 + 1 < Count)
-                {
-                    var left = parent * 2 + 1;
-                    var right = parent * 2 + 2;
-                    if (right < Count && _comparison(_heap[left], _heap[right]) > 0)
-                        left = right;
-                    if (_comparison(_heap[parent], _heap[left]) <= 0) break;
-                    (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
-                    parent = left;
-                }
-                return ret;
-            }
-            public T Peek()
-            {
-                if (Count == 0) throw new InvalidOperationException();
-                return _heap[0];
-            }
-            public bool TryDequeue(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Dequeue();
-                    return true;
-                }
-                result = default;
-                return false;
-            }
-            public bool TryPeek(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Peek();
-                    return true;
-                }
-                result = default;
-                return false;
-            }
-            public void Clear() => _heap.Clear();
-            public bool Contains(T item) => _heap.Contains(item);
-            public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         public static class Scanner
