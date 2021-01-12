@@ -453,7 +453,7 @@
 			"{",
 			"    const string input = @\"\";",
 			"    const string output = @\"\";",
-			"    Tester.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelaticeError});",
+			"    Tester.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelativeError});",
 			"}"
 		]
 	},
