@@ -419,7 +419,65 @@
 			"}"
 		]
 	},
-	"loop": {
+	"LowerBound": {
+		"scope": "csharp",
+		"prefix": [
+			"lb",
+			"lowerbound"
+		],
+		"body": [
+			"public static int LowerBound(long[] source, long key)",
+			"{",
+			"    var (l, r) = (-1, source.Length);",
+			"    while (r - l > 1)",
+			"    {",
+			"        var m = l + (r - l) / 2;",
+			"        if (source[m] >= key) r = m;",
+			"        else l = m;",
+			"    }",
+			"    return r;",
+			"}"
+		]
+	},
+	"UpperBound": {
+		"scope": "csharp",
+		"prefix": [
+			"ub",
+			"upperbound"
+		],
+		"body": [
+			"public static int LowerBound(long[] source, long key)",
+			"{",
+			"    var (l, r) = (-1, source.Length);",
+			"    while (r - l > 1)",
+			"    {",
+			"        var m = l + (r - l) / 2;",
+			"        if (source[m] > key) r = m;",
+			"        else l = m;",
+			"    }",
+			"    return r;",
+			"}"
+		]
+	},
+	"TernarySearch": {
+		"scope": "csharp",
+		"prefix": [
+			"ts",
+			"ternarysearch"
+		],
+		"body": [
+			"var (l, r) = (${1:0.0}, ${2:1e18});",
+			"const double eps = 1e-6;",
+			"while (r - l > eps)",
+			"{",
+			"    var d = (r - l) / 3;",
+			"    var (ml, mr) = (l + d, r - d);",
+			"    if (${3:F}(ml) < ${3}(mr)) r = mr;",
+			"    else l = ml;",
+			"}"
+		]
+	},
+	"Loop": {
 		"scope": "csharp",
 		"prefix": "loop",
 		"body": [
