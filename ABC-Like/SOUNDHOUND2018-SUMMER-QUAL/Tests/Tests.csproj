@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>SOUNDHOUND2018_SUMMER</RootNamespace>
+    <RootNamespace>SOUNDHOUND2018_SUMMER_QUAL</RootNamespace>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
