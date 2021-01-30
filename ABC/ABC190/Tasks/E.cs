@@ -19,6 +19,71 @@ namespace Tasks
 
         public static void Solve()
         {
+            var (N, M) = Scanner.Scan<int, int>();
+            var G = new List<int>[N].Select(x => new List<int>()).ToArray();
+            for (var i = 0; i < M; i++)
+            {
+                var (a, b) = Scanner.Scan<int, int>();
+                a--; b--;
+                G[a].Add(b);
+                G[b].Add(a);
+            }
+
+            var K = Scanner.Scan<int>();
+            var C = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToArray();
+
+            const int inf = (int)1e9;
+            IEnumerable<int> Bfs(int s)
+            {
+                var costs = new int[N];
+                Array.Fill(costs, inf);
+                costs[s] = 0;
+
+                var queue = new Queue<int>();
+                queue.Enqueue(s);
+                while (queue.Any())
+                {
+                    var u = queue.Dequeue();
+                    foreach (var v in G[u])
+                    {
+                        if (costs[u] + 1 >= costs[v]) continue;
+                        costs[v] = costs[u] + 1;
+                        queue.Enqueue(v);
+                    }
+                }
+
+                for (var i = 0; i < K; i++) yield return costs[C[i]];
+            }
+
+            var costs = new int[K][];
+            for (var i = 0; i < K; i++) costs[i] = Bfs(C[i]).ToArray();
+
+            var dp = new int[1 << K][];
+            for (var i = 0; i < 1 << K; i++)
+            {
+                dp[i] = new int[K];
+                Array.Fill(dp[i], inf);
+            }
+
+            for (var i = 0; i < K; i++) dp[1 << i][i] = 1;
+
+            for (var b1 = 0; b1 < 1 << K; b1++)
+            {
+                for (var i = 0; i < K; i++)
+                {
+                    if ((b1 >> i & 1) == 0) continue;
+                    var b2 = b1 ^ 1 << i;
+                    for (var j = 0; j < K; j++)
+                    {
+                        if ((b2 >> j & 1) == 0) continue;
+                        dp[b1][i] = Math.Min(dp[b1][i], dp[b2][j] + costs[i][j]);
+                    }
+                }
+            }
+
+            var answer = dp[^1].Min();
+
+            Console.WriteLine(answer == inf ? -1 : answer);
         }
 
         public static class Scanner
