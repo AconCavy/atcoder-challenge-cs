@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
-namespace B
+namespace Tasks
 {
-    public class Program
+    public class B
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
@@ -18,10 +19,6 @@ namespace B
 
         public static void Solve()
         {
-            var n = int.Parse(Console.ReadLine());
-            var s = Console.ReadLine();
-            var mod = 998244353;
-
         }
     }
 }
