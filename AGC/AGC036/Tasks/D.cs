@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
-namespace A
+namespace Tasks
 {
-    public class Program
+    public class D
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
@@ -18,11 +19,6 @@ namespace A
 
         public static void Solve()
         {
-            var n = long.Parse(Console.ReadLine());
-            var max = (long)Math.Pow(10, 9);
-            var x = (max - n % max) % max;
-            var y = (n + x) / max;
-            Console.WriteLine($"0 0 {max} 1 {x} {y}");
         }
     }
 }
