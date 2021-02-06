@@ -20,11 +20,35 @@ namespace Tasks
         public static void Solve()
         {
             var (X, Y, R) = Scanner.Scan<decimal, decimal, decimal>();
-            var x = (long)(X * 1000);
-            var y = (long)(Y * 1000);
-            var r = (long)(R * 1000);
+            var m = (long)1e4;
+            var rx = (long)(X * m);
+            var ry = (long)(Y * m);
+            var r = (long)(R * m);
             var rr = r * r;
 
+            long Count(long l, long r)
+            {
+                if (r < 0) return (r + 1) / m - l / m;
+                if (l > 0) return r / m - (l - 1) / m;
+                return r / m - l / m + 1;
+            }
+
+            long Sqrt(long x)
+            {
+                var r = (long)Math.Sqrt(x) - 1;
+                while ((r + 1) * (r + 1) <= x) r++;
+                return r;
+            }
+
+            var answer = 0L;
+            for (var x = (rx - r) / m; x <= (rx + r) / m; x++)
+            {
+                var dx = rx - x * m;
+                var dy = Sqrt(rr - dx * dx);
+                answer += Count(ry - dy, ry + dy);
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
