@@ -39,8 +39,7 @@ namespace Tasks
             {
                 for (var j = 0; j < N; j++)
                 {
-                    if (i == j) continue;
-                    if (min[i, j] == inf) continue;
+                    if (i == j || min[i, j] == inf) continue;
                     G[i].Add((j, min[i, j]));
                 }
             }
@@ -64,13 +63,11 @@ namespace Tasks
                     }
                 }
 
-                var cost = inf;
+                var answer = min[i, i];
                 for (var j = 0; j < N; j++)
                 {
-                    if (i == j) continue;
-                    if (depths[j] != inf && min[j, i] != inf) cost = Math.Min(cost, depths[j] + min[j, i]);
+                    answer = Math.Min(answer, depths[j] + min[j, i]);
                 }
-                var answer = Math.Min(min[i, i], cost);
                 Console.WriteLine(answer == inf ? -1 : answer);
             }
         }
