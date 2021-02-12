@@ -5,47 +5,56 @@ namespace Tests
     [TestClass]
     public class HTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"3 4
+            const string input = @"3 4
 ...#
 .#..
-....";
-            var output = @"3";
-            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
+....
+";
+            const string output = @"3
+";
+            Tester.InOutTest(Tasks.H.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"5 2
+            const string input = @"5 2
 ..
 #.
 ..
 .#
-..";
-            var output = @"0";
-            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
+..
+";
+            const string output = @"0
+";
+            Tester.InOutTest(Tasks.H.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
         {
-            var input = @"5 5
+            const string input = @"5 5
 ..#..
 .....
 #...#
 .....
-..#..";
-            var output = @"24";
-            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
+..#..
+";
+            const string output = @"24
+";
+            Tester.InOutTest(Tasks.H.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test4()
         {
-            var input = @"20 20
+            const string input = @"20 20
 ....................
 ....................
 ....................
@@ -65,9 +74,11 @@ namespace Tests
 ....................
 ....................
 ....................
-....................";
-            var output = @"345263555";
-            Tester.InOutTest(() => Tasks.H.Solve(), input, output);
+....................
+";
+            const string output = @"345263555
+";
+            Tester.InOutTest(Tasks.H.Solve, input, output);
         }
     }
 }

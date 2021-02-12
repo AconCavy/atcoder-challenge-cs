@@ -18,48 +18,38 @@ namespace Tasks
 
         public static void Solve()
         {
-            var NM = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var (N, M) = (NM[0], NM[1]);
-
-            var graph = new List<int>[N].Select(x => new List<int>()).ToArray();
+            var (N, M) = Scanner.Scan<int, int>();
+            var G = new List<int>[N].Select(x => new List<int>()).ToArray();
             for (var i = 0; i < M; i++)
             {
-                var ab = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-                var a = ab[0] - 1;
-                var b = ab[1] - 1;
-                graph[a].Add(b);
+                var (x, y) = Scanner.Scan<int, int>();
+                x--; y--;
+                G[x].Add(y);
             }
 
             var used = new bool[N];
-            var nodes = new List<int>();
+            var verts = new List<int>();
 
             void Dfs(int u)
             {
                 if (used[u]) return;
                 used[u] = true;
-                foreach (var v in graph[u])
-                {
-                    Dfs(v);
-                }
-                nodes.Add(u);
+                foreach (var v in G[u]) Dfs(v);
+                verts.Add(u);
             }
 
-            for (var i = 0; i < N; i++)
-            {
-                Dfs(i);
-            }
+            for (var i = 0; i < N; i++) Dfs(i);
 
-            var answer = 0;
             var dp = new int[N];
-            foreach (var u in nodes)
+            foreach (var u in verts)
             {
-                foreach (var v in graph[u])
+                foreach (var v in G[u])
                 {
                     dp[u] = Math.Max(dp[u], dp[v] + 1);
                 }
-                answer = Math.Max(answer, dp[u]);
             }
 
+            var answer = dp.Max();
             Console.WriteLine(answer);
         }
 
@@ -76,6 +66,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }

@@ -5,41 +5,50 @@ namespace Tests
     [TestClass]
     public class FTests
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-            var input = @"axyb
-abyxb";
-            var output = @"axb";
-            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
-        }
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"aa
-xayaz";
-            var output = @"aa";
-            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
-        }
-
-        [TestMethod]
-        public void TestMethod3()
-        {
-            var input = @"a
-z";
-            var output = @"
+            const string input = @"axyb
+abyxb
 ";
-            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
+            const string output = @"axb
+";
+            Tester.InOutTest(Tasks.F.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"abracadabra
-avadakedavra";
-            var output = @"aaadara";
-            Tester.InOutTest(() => Tasks.F.Solve(), input, output);
+            const string input = @"aa
+xayaz
+";
+            const string output = @"aa";
+            Tester.InOutTest(Tasks.F.Solve, input, output);
+        }
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
+        {
+            const string input = @"a
+z
+";
+            const string output = @"
+";
+            Tester.InOutTest(Tasks.F.Solve, input, output);
+        }
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test4()
+        {
+            const string input = @"abracadabra
+avadakedavra
+";
+            const string output = @"aaadara
+";
+            Tester.InOutTest(Tasks.F.Solve, input, output);
         }
     }
 }

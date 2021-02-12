@@ -5,40 +5,51 @@ namespace Tests
     [TestClass]
     public class JTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"3
-1 1 1";
-            var output = @"5.5";
-            Tester.InOutTest(() => Tasks.J.Solve(), input, output, -9);
+            const string input = @"3
+1 1 1
+";
+            const string output = @"5.5
+";
+            Tester.InOutTest(Tasks.J.Solve, input, output, RelativeError);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"1
-3";
-            var output = @"3";
-            Tester.InOutTest(() => Tasks.J.Solve(), input, output, -9);
+            const string input = @"1
+3
+";
+            const string output = @"3
+";
+            Tester.InOutTest(Tasks.J.Solve, input, output, RelativeError);
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
         {
-            var input = @"2
-1 2";
-            var output = @"4.5";
-            Tester.InOutTest(() => Tasks.J.Solve(), input, output, -9);
+            const string input = @"2
+1 2
+";
+            const string output = @"4.5
+";
+            Tester.InOutTest(Tasks.J.Solve, input, output, RelativeError);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test4()
         {
-            var input = @"10
-1 3 2 3 3 2 3 2 1 3";
-            var output = @"54.48064457488221";
-            Tester.InOutTest(() => Tasks.J.Solve(), input, output, -9);
+            const string input = @"10
+1 3 2 3 3 2 3 2 1 3
+";
+            const string output = @"54.48064457488221
+";
+            Tester.InOutTest(Tasks.J.Solve, input, output, RelativeError);
         }
     }
 }

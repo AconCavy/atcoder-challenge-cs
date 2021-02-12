@@ -5,40 +5,51 @@ namespace Tests
     [TestClass]
     public class BTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"5 3
-10 30 40 50 20";
-            var output = @"30";
-            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
+            const string input = @"5 3
+10 30 40 50 20
+";
+            const string output = @"30
+";
+            Tester.InOutTest(Tasks.B.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"3 1
-10 20 10";
-            var output = @"20";
-            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
+            const string input = @"3 1
+10 20 10
+";
+            const string output = @"20
+";
+            Tester.InOutTest(Tasks.B.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
         {
-            var input = @"2 100
-10 10";
-            var output = @"0";
-            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
+            const string input = @"2 100
+10 10
+";
+            const string output = @"0
+";
+            Tester.InOutTest(Tasks.B.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test4()
         {
-            var input = @"10 4
-40 10 20 70 80 10 20 70 80 60";
-            var output = @"40";
-            Tester.InOutTest(() => Tasks.B.Solve(), input, output);
+            const string input = @"10 4
+40 10 20 70 80 10 20 70 80 60
+";
+            const string output = @"40
+";
+            Tester.InOutTest(Tasks.B.Solve, input, output);
         }
     }
 }

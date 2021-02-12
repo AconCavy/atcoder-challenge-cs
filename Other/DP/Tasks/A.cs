@@ -18,19 +18,22 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = int.Parse(Console.ReadLine());
-            var H = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var dp = Enumerable.Repeat((int)1e9, N).ToArray();
+            var N = Scanner.Scan<int>();
+            var H = Scanner.ScanEnumerable<int>().ToArray();
+            const long inf = (long)1e18;
+            var dp = new long[N];
+            Array.Fill(dp, inf);
             dp[0] = 0;
-            dp[1] = Math.Abs(H[1] - H[0]);
-            for (var i = 2; i < N; i++)
+            for (var i = 0; i < N - 1; i++)
             {
-                dp[i] = Math.Min(dp[i], dp[i - 1] + Math.Abs(H[i - 1] - H[i]));
-                dp[i] = Math.Min(dp[i], dp[i - 2] + Math.Abs(H[i - 2] - H[i]));
+                for (var j = 1; j <= 2; j++)
+                {
+                    if (i + j < N) dp[i + j] = Math.Min(dp[i + j], dp[i] + Math.Abs(H[i] - H[i + j]));
+                }
             }
 
-            // Console.WriteLine(string.Join(" ", dp));
-            Console.WriteLine(dp[N - 1]);
+            var answer = dp[^1];
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
@@ -46,6 +49,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }

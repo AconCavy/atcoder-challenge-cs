@@ -18,14 +18,12 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = int.Parse(Console.ReadLine());
-            var A = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var counts = new int[3];
-            for (var i = 0; i < A.Length; i++)
-            {
-                counts[A[i] - 1]++;
-            }
-            var ep = 1.0 / N;
+            var N = Scanner.Scan<int>();
+            var A = Scanner.ScanEnumerable<int>().ToArray();
+            var count = new int[3];
+            foreach (var a in A) count[a - 1]++;
+
+            var ep = 1d / N;
             var dp = new double[N + 1, N + 1, N + 1];
             for (var k = 0; k <= N; k++)
             {
@@ -33,20 +31,21 @@ namespace Tasks
                 {
                     for (var i = 0; i <= N; i++)
                     {
-                        var z = N - i - j - k;
-                        if (z < 0) break;
-                        if (z == N) continue;
-                        var x = 1 - z * ep;
+                        var p = N - i - j - k;
+                        if (p < 0) break;
+                        if (p == N) continue;
+                        var q = 1d - p * ep;
                         if (i > 0) dp[i, j, k] += dp[i - 1, j, k] * i * ep;
                         if (j > 0) dp[i, j, k] += dp[i + 1, j - 1, k] * j * ep;
                         if (k > 0) dp[i, j, k] += dp[i, j + 1, k - 1] * k * ep;
-                        dp[i, j, k] += 1;
-                        dp[i, j, k] /= x;
+                        dp[i, j, k]++;
+                        dp[i, j, k] /= q;
                     }
                 }
             }
 
-            Console.WriteLine(dp[counts[0], counts[1], counts[2]]);
+            var answer = dp[count[0], count[1], count[2]];
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
@@ -62,6 +61,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }

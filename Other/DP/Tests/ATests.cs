@@ -5,31 +5,40 @@ namespace Tests
     [TestClass]
     public class ATests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"4
-10 30 40 20";
-            var output = @"30";
-            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
+            const string input = @"4
+10 30 40 20
+";
+            const string output = @"30
+";
+            Tester.InOutTest(Tasks.A.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"2
-10 10";
-            var output = @"0";
-            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
+            const string input = @"2
+10 10
+";
+            const string output = @"0
+";
+            Tester.InOutTest(Tasks.A.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
         {
-            var input = @"6
-30 10 60 10 60 50";
-            var output = @"40";
-            Tester.InOutTest(() => Tasks.A.Solve(), input, output);
+            const string input = @"6
+30 10 60 10 60 50
+";
+            const string output = @"40
+";
+            Tester.InOutTest(Tasks.A.Solve, input, output);
         }
     }
 }

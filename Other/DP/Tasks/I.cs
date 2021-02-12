@@ -18,25 +18,22 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = int.Parse(Console.ReadLine());
-            var P = Console.ReadLine().Trim().Split(' ').Select(double.Parse).ToArray();
-            var dp = new double[N + 1][].Select(x => x = new double[N + 1]).ToArray();
-            dp[0][0] = 1;
+            var N = Scanner.Scan<int>();
+            var P = Scanner.ScanEnumerable<double>().ToArray();
+            var dp = new double[N + 1, N + 1];
+            dp[0, 0] = 1;
             for (var i = 0; i < N; i++)
             {
-                var p = P[i];
-                var q = 1 - p;
+                var (p, q) = (P[i], 1 - P[i]);
                 for (var j = 0; j <= i; j++)
                 {
-                    dp[i + 1][j + 1] += dp[i][j] * p;
-                    dp[i + 1][j] += dp[i][j] * q;
+                    dp[i + 1, j + 1] += dp[i, j] * p;
+                    dp[i + 1, j] += dp[i, j] * q;
                 }
             }
-            var answer = 0d;
-            for (var i = N / 2 + 1; i <= N; i++)
-            {
-                answer += dp[N][i];
-            }
+
+            var answer = 0.0;
+            for (var i = N / 2 + 1; i <= N; i++) answer += dp[N, i];
 
             Console.WriteLine(answer);
         }
@@ -54,6 +51,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }

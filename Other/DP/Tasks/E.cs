@@ -18,38 +18,37 @@ namespace Tasks
 
         public static void Solve()
         {
-            var NW = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-            var (N, W) = (NW[0], NW[1]);
-            var w = new int[N];
-            var v = new int[N];
-            var maxV = 0;
+            var (N, W) = Scanner.Scan<int, int>();
+            var X = new (int W, int V)[N];
             for (var i = 0; i < N; i++)
             {
-                var wv = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray();
-                (w[i], v[i]) = (wv[0], wv[1]);
-                maxV = Math.Max(maxV, v[i]);
+                var (w, v) = Scanner.Scan<int, int>();
+                X[i] = (w, v);
             }
 
-            const long Infinity = (long)1e18;
-            var dp = (new long[2][]).Select(x => x = Enumerable.Repeat(Infinity, N * maxV + 1).ToArray()).ToArray();
+            var max = N * (int)1e3;
+            const long inf = (long)1e18;
+            var dp = new long[2][].Select(_ => new long[max + 1]).ToArray();
+            Array.Fill(dp[0], inf);
+            Array.Fill(dp[1], inf);
             dp[0][0] = 0;
             var t = 1;
             for (var i = 0; i < N; i++)
             {
                 t ^= 1;
-                for (var j = 0; j <= N * maxV; j++)
+                var (w, v) = X[i];
+                for (var j = 0; j <= max; j++)
                 {
-                    if (j < v[i]) dp[t ^ 1][j] = dp[t][j];
-                    else dp[t ^ 1][j] = Math.Min(dp[t][j], dp[t][j - v[i]] + w[i]);
+                    if (j < v) dp[t ^ 1][j] = dp[t][j];
+                    else dp[t ^ 1][j] = Math.Min(dp[t][j], dp[t][j - v] + w);
                 }
             }
 
-            // Console.WriteLine(string.Join("\n", dp.Select(x => string.Join(" ", x))));
-            var answer = 0L;
-            for (var i = 0; i <= N * maxV; i++)
+            var answer = 0;
+            t ^= 1;
+            for (var i = 0; i <= max; i++)
             {
-                var val = dp[t ^ 1][i];
-                if (val <= W) answer = i;
+                if (dp[t][i] <= W) answer = i;
             }
 
             Console.WriteLine(answer);
@@ -68,6 +67,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }

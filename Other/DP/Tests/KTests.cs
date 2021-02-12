@@ -5,58 +5,73 @@ namespace Tests
     [TestClass]
     public class KTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
-            var input = @"2 4
-2 3";
-            var output = @"First";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"2 4
+2 3
+";
+            const string output = @"First
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
-            var input = @"2 5
-2 3";
-            var output = @"Second";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"2 5
+2 3
+";
+            const string output = @"Second
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test3()
         {
-            var input = @"2 7
-2 3";
-            var output = @"First";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"2 7
+2 3
+";
+            const string output = @"First
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test4()
         {
-            var input = @"3 20
-1 2 3";
-            var output = @"Second";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"3 20
+1 2 3
+";
+            const string output = @"Second
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod5()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test5()
         {
-            var input = @"3 21
-1 2 3";
-            var output = @"First";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"3 21
+1 2 3
+";
+            const string output = @"First
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod6()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test6()
         {
-            var input = @"1 100000
-1";
-            var output = @"Second";
-            Tester.InOutTest(() => Tasks.K.Solve(), input, output);
+            const string input = @"1 100000
+1
+";
+            const string output = @"Second
+";
+            Tester.InOutTest(Tasks.K.Solve, input, output);
         }
     }
 }

@@ -18,27 +18,22 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = int.Parse(Console.ReadLine());
-            var ABC = (new int[N][]).Select(x => x = Console.ReadLine().Trim().Split(' ').Select(int.Parse).ToArray()).ToArray();
-            var dp = (new int[3][]).Select(x => x = new int[N + 1]).ToArray();
-
+            var N = Scanner.Scan<int>();
+            var dp = new long[N + 1][].Select(_ => new long[3]).ToArray();
             for (var i = 0; i < N; i++)
             {
+                var abc = Scanner.ScanEnumerable<int>().ToArray();
                 for (var j = 0; j < 3; j++)
                 {
-                    var k1 = (j + 1) % 3;
-                    var k2 = (j + 2) % 3;
-                    dp[j][i + 1] = Math.Max(dp[j][i + 1], dp[k1][i] + ABC[i][k1]);
-                    dp[j][i + 1] = Math.Max(dp[j][i + 1], dp[k2][i] + ABC[i][k2]);
+                    for (var k = 1; k <= 2; k++)
+                    {
+                        var next = (j + k) % 3;
+                        dp[i + 1][next] = Math.Max(dp[i + 1][next], dp[i][j] + abc[j]);
+                    }
                 }
             }
 
-            // Console.WriteLine(string.Join("\n", dp.Select(x => string.Join(" ", x))));
-            var answer = 0;
-            for (var i = 0; i < 3; i++)
-            {
-                answer = Math.Max(answer, dp[i][N]);
-            }
+            var answer = dp[^1].Max();
             Console.WriteLine(answer);
         }
 
@@ -55,6 +50,8 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
+            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
 }
