@@ -22,28 +22,18 @@ namespace Tasks
             var (B, C) = Scanner.Scan<long, long>();
             var answer = 1L; // default
 
-            // to neg
-            if (B > 0) answer += (C - 1) / 2;
-            else answer += C / 2;
-
-            // to pos
-            if (B > 0) answer += (C - 2) / 2;
-            else answer += (C - 1) / 2;
+            var c = C;
+            if (B > 0) c--;
+            answer += c / 2; // neg
+            answer += (c - 1) / 2; // pos
 
             var b = Math.Abs(B);
             if (b > 0)
             {
                 answer++; // rev
-                if (B > 0)
-                {
-                    answer += Math.Min(b, C / 2);
-                    answer += Math.Min(b - 1, (C - 1) / 2);
-                }
-                else
-                {
-                    answer += Math.Min(b, (C - 1) / 2);
-                    answer += Math.Min(b - 1, (C - 2) / 2);
-                }
+                if (B < 0) C--;
+                answer += Math.Min(b, C / 2);
+                answer += Math.Min(b - 1, (C - 1) / 2);
             }
 
             Console.WriteLine(answer);
