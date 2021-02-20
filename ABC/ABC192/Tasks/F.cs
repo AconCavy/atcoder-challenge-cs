@@ -21,24 +21,26 @@ namespace Tasks
         {
             var (N, X) = Scanner.Scan<int, long>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
-            Array.Sort(A, (x, y) => y.CompareTo(x));
-            var even = new List<long>();
-            var odd = new List<long>();
-            foreach (var a in A) (a % 2 == 0 ? even : odd).Add(a);
-            var ecum = new long[even.Count + 1];
-            var ocum = new long[odd.Count + 1];
-            for (var i = 0; i < even.Count; i++) ecum[i + 1] = ecum[i] + even[i];
-            for (var i = 0; i < odd.Count; i++) ocum[i + 1] = ocum[i] + odd[i];
-
-            var answer = X;
-            for (var i = 0; i <= even.Count; i++)
+            const long inf = (long)1e18;
+            var answer = inf;
+            var dp = new long[N + 1][].Select(_ => new long[N]).ToArray();
+            for (var k = 1; k <= N; k++)
             {
-                for (var j = 0; j <= odd.Count; j++)
+                for (var i = 0; i <= k; i++) Array.Fill(dp[i], -inf);
+                dp[0][0] = 0;
+                foreach (var a in A)
                 {
-                    if (i + j == 0) continue;
-                    var x = X - (ecum[i] + ocum[j]);
-                    if (x % (i + j) == 0) answer = Math.Min(answer, x / (i + j));
+                    for (var i = k - 1; i >= 0; i--)
+                    {
+                        for (var j = 0; j < k; j++)
+                        {
+                            if (dp[i][j] == -inf) continue;
+                            var x = dp[i][j] + a;
+                            dp[i + 1][x % k] = Math.Max(dp[i + 1][x % k], x);
+                        }
+                    }
                 }
+                if (dp[k][X % k] != -inf) answer = Math.Min(answer, (X - dp[k][X % k]) / k);
             }
 
             Console.WriteLine(answer);
