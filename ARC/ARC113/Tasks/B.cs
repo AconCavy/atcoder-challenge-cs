@@ -21,26 +21,30 @@ namespace Tasks
         {
             var (A, B, C) = Scanner.Scan<long, long, long>();
 
-            const long k = 40;
-
             long F(long x, long n)
             {
-                x %= k;
-                n %= k;
-                if (n == 0) n += k;
-                var y = 1L;
-                for (var i = 1; i <= n; i++)
-                {
-                    y *= x;
-                    y %= k;
-                }
-
-                return y;
+                const long m = 40;
+                x %= m;
+                n = n % m == 0 ? m : n % m;
+                return PowerModulo(x, n, m);
             }
 
             var answer = F(A, F(B, C)) % 10;
-
             Console.WriteLine(answer);
+        }
+
+        public static long PowerModulo(long x, long n, long m)
+        {
+            if (m == 1) return 0;
+            var ret = 1L;
+            var y = x >= 0 ? x % m : x % m + m;
+            while (n > 0)
+            {
+                if ((n & 1) == 1) ret = ret * y % m;
+                y = y * y % m;
+                n >>= 1;
+            }
+            return ret;
         }
 
         public static class Scanner
