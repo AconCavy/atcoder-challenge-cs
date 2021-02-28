@@ -1,6 +1,6 @@
 # Overview
 
-The repository for storing task programs (C#) solved in AtCoder.
+The repository for C# solutions submitted to AtCoder.
 
 ## Environment
 
