@@ -151,27 +151,18 @@
 		"scope": "csharp",
 		"prefix": [
 			"gcd",
-			"greatestcommondivisor"
 		],
 		"body": [
-			"private static long GreatestCommonDivisor(long a, long b)",
-			"{",
-			"    while (true)",
-			"    {",
-			"        if (b == 0) return a;",
-			"        (a, b) = (b, a % b);",
-			"    }",
-			"}"
+			"public static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);"
 		]
 	},
 	"LeastCommonMultiple": {
 		"scope": "csharp",
 		"prefix": [
 			"lcm",
-			"leastcommonmultiple"
 		],
 		"body": [
-			"public static long LeastCommonMultiple(long a, long b) => a * b / GreatestCommonDivisor(a, b);"
+			"public static long Lcm(long a, long b) => a * b / Gcd(a, b);"
 		]
 	},
 	"Enumeration": {
@@ -368,12 +359,35 @@
 			"depths[0] = 0;",
 			"while (queue.Any())",
 			"{",
-			"    var current = queue.Dequeue();",
-			"    foreach (var next in G[current])",
+			"    var u = queue.Dequeue();",
+			"    foreach (var v in G[u])",
 			"    {",
-			"        if (depths[next] != -1) continue;",
-			"        depths[next] = depths[current] + 1;",
-			"        queue.Enqueue(next);",
+			"        if (depths[v] != -1) continue;",
+			"        depths[v] = depths[u] + 1;",
+			"        queue.Enqueue(v);",
+			"    }",
+			"}"
+		]
+	},
+	"Dijkstra": {
+		"scope": "csharp",
+		"prefix": "dijkstra",
+		"body": [
+			"var costs = new long[${1:N}];",
+			"Array.Fill(costs, long.MaxValue);",
+			"costs[${2:0}] = 0;",
+			"var queue = new PriorityQueue<(int U, long Cost)>((x, y) => x.Cost.CompareTo(y.Cost));",
+			"queue.Enqueue((${2}, 0));",
+			"while (queue.Any())",
+			"{",
+			"    var (u, cu) = queue.Dequeue();",
+			"    if (costs[u] <= cu) continue;",
+			"    foreach (var (v, cv) in _data[u])",
+			"    {",
+			"        var c = ${3:costs[u] + cv};",
+			"        if (costs[v] <= c) continue;",
+			"        costs[v] = c;",
+			"        queue.Enqueue((v, c));",
 			"    }",
 			"}"
 		]
