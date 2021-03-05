@@ -3,19 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <!-- <StartupObject>Tasks.A</StartupObject> -->
-    <!-- <StartupObject>Tasks.B</StartupObject> -->
-    <!-- <StartupObject>Tasks.C</StartupObject> -->
-    <!-- <StartupObject>Tasks.D</StartupObject> -->
-    <!-- <StartupObject>Tasks.E</StartupObject> -->
-    <!-- <StartupObject>Tasks.F</StartupObject> -->
-    <!-- <StartupObject>Tasks.G</StartupObject> -->
-    <!-- <StartupObject>Tasks.H</StartupObject> -->
-    <!-- <StartupObject>Tasks.I</StartupObject> -->
-    <!-- <StartupObject>Tasks.J</StartupObject> -->
-    <!-- <StartupObject>Tasks.K</StartupObject> -->
-    <!-- <StartupObject>Tasks.L</StartupObject> -->
-    <StartupObject>Tasks.M</StartupObject>
+    <StartupObject>Tasks.O</StartupObject>
   </PropertyGroup>
 
 </Project>
