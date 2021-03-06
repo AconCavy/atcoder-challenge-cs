@@ -19,7 +19,13 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = Scanner.Scan<int>();
+            var N = Scanner.Scan<long>();
+            var answer = 0d;
+            for (var i = 1; i < N; i++)
+            {
+                answer += (double)N / i;
+            }
+            Console.WriteLine(answer);
         }
 
         public static class Scanner

@@ -20,27 +20,34 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            var A = Scanner.ScanEnumerable<int>().ToList();
-            var min = 0;
-            var used = new int[N + 1];
-            var mex = new int[N];
-            for (var i = 0; i < N; i++)
-            {
-                used[A[i]]++;
-                while (used[min] > 0) min++;
-                mex[i] = min;
-            }
+            var A = Scanner.ScanEnumerable<int>().ToArray();
 
-            var answer = mex[M - 1];
-            for (var i = M; i < N; i++)
+            var count = new int[N + 1];
+            for (var i = 0; i < M; i++) count[A[i]]++;
+            var mex = 0L;
+            while (count[mex] > 0) mex++;
+
+            var answer = mex;
+            for (var i = 1; i < N - M + 1; i++)
             {
-                var a = A[i - M];
-                used[a]--;
-                if (used[a] == 0) answer = Math.Min(answer, a);
+                count[A[i - 1]]--;
+                count[A[i + M - 1]]++;
+
+                if (count[A[i - 1]] == 0)
+                {
+                    mex = Math.Min(mex, A[i - 1]);
+                    answer = Math.Min(answer, mex);
+                }
+
+                if (count[A[i + M - 1]] == mex)
+                {
+                    while (count[mex] > 0) mex++;
+                }
             }
 
             Console.WriteLine(answer);
         }
+
 
         public static class Scanner
         {
