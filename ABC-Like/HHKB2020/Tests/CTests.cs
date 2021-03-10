@@ -5,8 +5,11 @@ namespace Tests
     [TestClass]
     public class CTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
             const string input = @"4
 1 1 0 2";
@@ -14,11 +17,11 @@ namespace Tests
 0
 2
 3";
-            Tester.InOutTest(() => Tasks.C.Solve(), input, output);
+            Tester.InOutTest(Tasks.C.Solve, input, output);
         }
 
-        [TestMethod]
-        public void TestMethod2()
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test2()
         {
             const string input = @"10
 5 4 3 2 1 0 7 7 6 6";
@@ -32,7 +35,7 @@ namespace Tests
 6
 8
 8";
-            Tester.InOutTest(() => Tasks.C.Solve(), input, output);
+            Tester.InOutTest(Tasks.C.Solve, input, output);
         }
     }
 }

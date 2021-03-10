@@ -5,8 +5,11 @@ namespace Tests
     [TestClass]
     public class DTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        const int TimeLimit = 2000;
+        const double RelativeError = 1e-9;
+
+        [TestMethod, Timeout(TimeLimit)]
+        public void Test1()
         {
             const string input = @"3
 3 1 2
@@ -15,7 +18,7 @@ namespace Tests
             const string output = @"20
 32
 409369707";
-            Tester.InOutTest(() => Tasks.D.Solve(), input, output);
+            Tester.InOutTest(Tasks.D.Solve, input, output);
         }
     }
 }
