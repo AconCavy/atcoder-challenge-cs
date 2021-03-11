@@ -11,24 +11,24 @@ namespace Tests
         [TestMethod, Timeout(TimeLimit)]
         public void Test1()
         {
-            const string input = @"";
-            const string output = @"";
+            const string input = @"3
+";
+            const string output = @"Yes
+3
+2 1 2
+2 3 1
+2 2 3
+";
             Tester.InOutTest(Tasks.D.Solve, input, output);
         }
 
         [TestMethod, Timeout(TimeLimit)]
         public void Test2()
         {
-            const string input = @"";
-            const string output = @"";
-            Tester.InOutTest(Tasks.D.Solve, input, output);
-        }
-
-        [TestMethod, Timeout(TimeLimit)]
-        public void Test3()
-        {
-            const string input = @"";
-            const string output = @"";
+            const string input = @"4
+";
+            const string output = @"No
+";
             Tester.InOutTest(Tasks.D.Solve, input, output);
         }
     }
