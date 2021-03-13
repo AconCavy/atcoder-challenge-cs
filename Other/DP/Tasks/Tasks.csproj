@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>Tasks.O</StartupObject>
+    <StartupObject>Tasks.S</StartupObject>
   </PropertyGroup>
 
 </Project>
