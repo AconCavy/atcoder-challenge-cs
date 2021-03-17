@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>CPSCO2019_S2</RootNamespace>
+    <StartupObject>Tasks.D</StartupObject>
+  </PropertyGroup>
+
+</Project>
