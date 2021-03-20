@@ -310,6 +310,7 @@
 			"    fact[i] = fact[i - 1] * i;",
 			"    ifact[i] = 1 / fact[i];",
 			"}",
+			"",
 			"mint Combination(int n, int k)",
 			"{",
 			"    if(n < k || n < 0 || k < 0) return 0;",
@@ -449,6 +450,24 @@
 			"    }",
 			"",
 			"    return dp[^1];",
+			"}"
+		]
+	},
+	"LongestCommonSubsequence": {
+		"scope": "csharp",
+		"prefix": [
+			"longestcommonsubsequence",
+			"lcs"
+		],
+		"body": [
+			"var lcs = new int[${1:N} + 1, ${2:M} + 1];",
+			"for (var i = 0; i < ${1}; i++)",
+			"{",
+			"    for (var j = 0; j < ${2}; j++)",
+			"    {",
+			"        if (${3:S}[i] == ${4:T}[j]) lcs[i + 1, j + 1] = lcs[i, j] + 1;",
+			"        else lcs[i + 1, j + 1] = Math.Max(lcs[i + 1, j], lcs[i, j + 1]);",
+			"    }",
 			"}"
 		]
 	},
