@@ -21,32 +21,51 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var A = new int[N + 1];
-            A[1] = 1;
+            Array.Fill(A, 1);
 
-            for (var i = 2; i <= N; i++)
+            foreach (var p in GetPrimes(N))
             {
-                var x = i;
-
-                void CountUp(int n)
+                for (var i = (long)p; i <= N; i *= p)
                 {
-                    if (x % n != 0) return;
-                    while (x % n == 0)
+                    for (var j = i; j <= N; j += i)
                     {
-                        x /= n;
-                        A[i]++;
+                        A[j]++;
                     }
                 }
-
-                CountUp(2);
-                for (var j = 3; j * j <= i; j += 2) CountUp(j);
-                if (x > 1) A[i]++;
-
-                A[i]++;
             }
 
             Console.WriteLine(string.Join(" ", A[1..]));
         }
 
+        public static int[] GetPrimes(int value)
+        {
+            if (value < 2) return Array.Empty<int>();
+            if (value == 2) return new[] { 2 };
+            const int bit = 32;
+            const int limit = 1024;
+            value = (value + 1) / 2;
+            var length = (value + bit) / bit;
+            var sieve = length < limit ? stackalloc uint[length] : new uint[length];
+            for (var i = value % bit; i < bit; i++) sieve[^1] |= 1U << i;
+            for (var i = 1; i * i <= value;)
+            {
+                for (var j = i; j <= value; j += i * 2 + 1) sieve[j / bit] |= 1U << (j % bit);
+                sieve[i / bit] &= ~(1U << (i % bit));
+                do
+                {
+                    i++;
+                } while (i * i <= value && ((sieve[i / bit] >> (i % bit)) & 1) == 1);
+            }
+            var count = bit * length;
+            foreach (var flags in sieve) count -= BitOperations.PopCount(flags);
+            var primes = count < limit ? stackalloc int[count] : new int[count];
+            primes[0] = 2;
+            var index = 1;
+            for (var i = 1; index < count && i <= value; i++)
+                if (((sieve[i / bit] >> (i % bit)) & 1U) == 0)
+                    primes[index++] = i * 2 + 1;
+            return primes.ToArray();
+        }
 
         public static class Scanner
         {
