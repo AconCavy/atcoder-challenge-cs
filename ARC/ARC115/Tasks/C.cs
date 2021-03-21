@@ -23,7 +23,7 @@ namespace Tasks
             var A = new int[N + 1];
             Array.Fill(A, 1);
 
-            foreach (var p in GetPrimes(N))
+            foreach (var p in Prime.Sieve(N))
             {
                 for (var i = (long)p; i <= N; i *= p)
                 {
@@ -37,34 +37,67 @@ namespace Tasks
             Console.WriteLine(string.Join(" ", A[1..]));
         }
 
-        public static int[] GetPrimes(int value)
+        public static class Prime
         {
-            if (value < 2) return Array.Empty<int>();
-            if (value == 2) return new[] { 2 };
-            const int bit = 32;
-            const int limit = 1024;
-            value = (value + 1) / 2;
-            var length = (value + bit) / bit;
-            var sieve = length < limit ? stackalloc uint[length] : new uint[length];
-            for (var i = value % bit; i < bit; i++) sieve[^1] |= 1U << i;
-            for (var i = 1; i * i <= value;)
+            public static IEnumerable<long> GetFactors(long value)
             {
-                for (var j = i; j <= value; j += i * 2 + 1) sieve[j / bit] |= 1U << (j % bit);
-                sieve[i / bit] &= ~(1U << (i % bit));
-                do
+                if (value < 2) yield break;
+                while (value % 2 == 0)
                 {
-                    i++;
-                } while (i * i <= value && ((sieve[i / bit] >> (i % bit)) & 1) == 1);
+                    yield return 2;
+                    value /= 2;
+                }
+                for (var i = 3L; i * i <= value; i++)
+                {
+                    while (value % i == 0)
+                    {
+                        yield return i;
+                        value /= i;
+                    }
+                }
+                if (value > 1) yield return value;
             }
-            var count = bit * length;
-            foreach (var flags in sieve) count -= BitOperations.PopCount(flags);
-            var primes = count < limit ? stackalloc int[count] : new int[count];
-            primes[0] = 2;
-            var index = 1;
-            for (var i = 1; index < count && i <= value; i++)
-                if (((sieve[i / bit] >> (i % bit)) & 1U) == 0)
-                    primes[index++] = i * 2 + 1;
-            return primes.ToArray();
+            public static IDictionary<long, int> GetFactorDictionary(long value)
+            {
+                var factors = new Dictionary<long, int>();
+                if (value < 2) return factors;
+                void CountUp(long n)
+                {
+                    if (value % n != 0) return;
+                    factors[n] = 0;
+                    while (value % n == 0)
+                    {
+                        value /= n;
+                        factors[n]++;
+                    }
+                }
+                CountUp(2);
+                for (var i = 3L; i * i <= value; i += 2) CountUp(i);
+                if (value > 1) factors[value] = 1;
+                return factors;
+            }
+            public static IEnumerable<int> Sieve(int value)
+            {
+                if (value < 2) yield break;
+                yield return 2;
+                var sieve = new bool[(value + 1) / 2];
+                for (var i = 1; i < sieve.Length; i++)
+                {
+                    if (sieve[i]) continue;
+                    yield return i * 2 + 1;
+                    for (var j = i; j < sieve.Length; j += i * 2 + 1) sieve[j] = true;
+                }
+            }
+            public static bool IsPrime(long value)
+            {
+                if (value == 2) return true;
+                if (value < 2 || value % 2 == 0) return false;
+                for (var i = 3L; i * i <= value; i += 2)
+                {
+                    if (value % i == 0) return false;
+                }
+                return true;
+            }
         }
 
         public static class Scanner
