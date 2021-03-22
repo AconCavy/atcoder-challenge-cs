@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>IROHA2019_DAY3</RootNamespace>
+    <StartupObject>Tasks.I</StartupObject>
+  </PropertyGroup>
+
+</Project>
