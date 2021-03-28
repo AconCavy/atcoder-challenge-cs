@@ -19,6 +19,38 @@ namespace Tasks
 
         public static void Solve()
         {
+            var N = Scanner.Scan<int>();
+            var B = new List<int>[N].Select(_ => new List<int>()).ToArray();
+            for (var i = 0; i < N; i++)
+            {
+                var (x, c) = Scanner.Scan<int, int>();
+                B[c - 1].Add(x);
+            }
+
+            const int inf = (int)1e9;
+            var (l, r) = (0, 0);
+            var (cl, cr) = (0L, 0L);
+            for (var i = 0; i < N; i++)
+            {
+                if (!B[i].Any()) continue;
+
+                var (min, max) = (inf, -inf);
+                foreach (var x in B[i])
+                {
+                    min = Math.Min(min, x);
+                    max = Math.Max(max, x);
+                }
+
+
+                var nr = Math.Min(cl + Math.Abs(l - min), cr + Math.Abs(r - min)) + max - min;
+                var nl = Math.Min(cl + Math.Abs(l - max), cr + Math.Abs(r - max)) + max - min;
+
+                (l, r) = (min, max);
+                (cl, cr) = (nl, nr);
+            }
+
+            var answer = Math.Min(cl + Math.Abs(l), cr + Math.Abs(r));
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
