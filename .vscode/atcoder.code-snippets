@@ -498,7 +498,7 @@
 			"upperbound"
 		],
 		"body": [
-			"public static int LowerBound(long[] source, long key)",
+			"public static int UpperBound(long[] source, long key)",
 			"{",
 			"    var (l, r) = (-1, source.Length);",
 			"    while (r - l > 1)",
