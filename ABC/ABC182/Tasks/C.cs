@@ -18,36 +18,30 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = Scanner.Scan<string>().Select(x => x - '0').ToArray();
-            const long inf = (long)1e18;
-            var answer = inf;
-
-            for (var s = 1; s < 1 << N.Length; s++)
+            var N = Scanner.Scan<string>().Select(x => (x - '0') % 3).ToArray();
+            var sum = N.Sum();
+            var count = new int[3];
+            foreach (var x in N) count[x]++;
+            for (var i = 0; i < N.Length; i++)
             {
-                var count = 0;
-                var mod = 0;
-                for (var i = 0; i < N.Length; i++)
+                var m = sum % 3;
+                if (m == 0) { Console.WriteLine(i); return; }
+
+                if (count[m] > 0)
                 {
-                    if ((s >> i & 1) == 1) mod = (mod + N[i]) % 3;
-                    else count++;
+                    sum -= m;
+                    count[m]--;
                 }
-                if (mod == 0) answer = Math.Min(answer, count);
+                else
+                {
+                    var k = m % 2 + 1;
+                    sum -= k;
+                    count[k]--;
+                    if (count[k] < 0) { Console.WriteLine(-1); return; }
+                }
             }
 
-            // void Dfs(int step, int ignore, int sum)
-            // {
-            //     if (step >= N.Length)
-            //     {
-            //         if (sum > 0 && sum % 3 == 0) answer = Math.Min(answer, ignore);
-            //         return;
-            //     }
-            //     Dfs(step + 1, ignore, sum);
-            //     Dfs(step + 1, ignore + 1, sum - N[step]);
-            // }
-
-            // Dfs(0, 0, N.Sum());
-
-            Console.WriteLine(answer == inf ? -1 : answer);
+            Console.WriteLine(-1);
         }
 
         public static class Scanner
