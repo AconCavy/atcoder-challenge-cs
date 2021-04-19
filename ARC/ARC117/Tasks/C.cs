@@ -21,68 +21,68 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>();
-            var li0 = new List<char>();
 
-            char XorBlock(char b0, char b1)
+            var f = new long[N + 1];
+            var g = new long[N + 1];
+            g[0] = 1;
+            for (var i = 1; i <= N; i++)
             {
-                if (b0 == 'B')
+                var k = i;
+                while (k % 3 == 0)
                 {
-                    if (b1 == 'W') return 'R';
-                    else if (b1 == 'R') return 'W';
-                }
-                else if (b0 == 'W')
-                {
-                    if (b1 == 'B') return 'R';
-                    else if (b1 == 'R') return 'B';
-                }
-                else if (b0 == 'R')
-                {
-                    if (b1 == 'B') return 'W';
-                    else if (b1 == 'W') return 'B';
+                    k /= 3;
+                    f[i]++;
                 }
 
-                return b0;
+                f[i] += f[i - 1];
+                g[i] = k % 3 * g[i - 1] % 3;
             }
 
-            foreach (var c in S) li0.Add(c);
-
-            while (li0.Count % 3 != 1)
+            int Combination3(int n, int r)
             {
-                var li1 = new List<char>();
-                for (var i = 0; i < li0.Count - 1; i++)
-                {
-                    li1.Add(XorBlock(li0[i], li0[i + 1]));
-                }
+                if (f[n] != f[r] + f[n - r]) return 0;
+                var (gn, gr, gnr) = (g[n], g[r], g[n - r]);
+                if (gn == 1 && gr * gnr == 1) return 1;
+                if (gn == 1 && gr * gnr == 2) return 2;
+                if (gn == 1 && gr * gnr == 4) return 1;
+                if (gn == 2 && gr * gnr == 1) return 2;
+                if (gn == 2 && gr * gnr == 2) return 1;
+                if (gn == 2 && gr * gnr == 4) return 2;
 
-                li0 = li1;
+                return -1;
             }
 
-            if (li0.Count == 1)
+            int ToNumber(char c) => c switch
             {
-                Console.WriteLine(li0[0]);
-                return;
-            }
+                'R' => 0,
+                'W' => 1,
+                'B' => 2,
+                _ => -1
+            };
 
-            var li2 = new List<char>();
-            for (var i = 0; i + 3 < li0.Count; i += 3)
+            char ToBlock(long x) => x switch
             {
-                li2.Add(XorBlock(li0[i], li0[i + 3]));
-            }
+                0 => 'R',
+                1 => 'W',
+                2 => 'B',
+                _ => '-'
+            };
 
 
-            while (li2.Count > 1)
+            var answer = 0L;
+            for (var i = 0; i < N; i++)
             {
-                var li1 = new List<char>();
-                for (var i = 0; i < li2.Count - 1; i++)
-                {
-                    li1.Add(XorBlock(li2[i], li2[i + 1]));
-
-                }
-                li2 = li1;
+                var x = ToNumber(S[i]);
+                var y = Combination3(N - 1, i);
+                answer += x * y;
+                answer %= 3;
             }
 
-            Console.WriteLine(li2[0]);
+            if (N % 2 == 0) answer = (3 - answer) % 3;
+
+            Console.WriteLine(ToBlock(answer));
         }
+
 
         public static class Scanner
         {
