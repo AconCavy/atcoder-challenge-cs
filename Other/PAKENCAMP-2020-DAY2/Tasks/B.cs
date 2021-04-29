@@ -26,131 +26,40 @@ namespace Tasks
                 G[i] = Scanner.Scan<string>().ToCharArray();
             }
 
-            var P = new bool[H, W];
-            var q = new Queue<(int, int)>();
-            q.Enqueue((0, 0));
-            while (q.Any())
-            {
-                var (ch, cw) = q.Dequeue();
-                P[ch, cw] = true;
-                if (ch + 1 < H && G[ch][cw] == 'S') q.Enqueue((ch + 1, cw));
-                if (cw + 1 < W && G[ch][cw] == 'E') q.Enqueue((ch, cw + 1));
-            }
-
+            var memo = new int[H, W];
             const int inf = (int)1e9;
-            var answer = inf;
-            var memo = new bool[H, W];
-
-            var pq = new PriorityQueue<(int, int, int Cost)>((x, y) => x.Cost.CompareTo(y.Cost));
-            pq.Enqueue((H - 1, W - 1, 0));
-            while (pq.Any())
+            for (var i = 0; i < H; i++)
             {
-                var (ch, cw, cc) = pq.Dequeue();
-                if (P[ch, cw])
+                for (var j = 0; j < W; j++)
                 {
-                    answer = Math.Min(answer, cc);
-                    continue;
+                    memo[i, j] = inf;
                 }
-
-                if (memo[ch, cw]) continue;
-                memo[ch, cw] = true;
-                if (ch - 1 >= 0) pq.Enqueue((ch - 1, cw, G[ch - 1][cw] == 'S' ? cc : cc + 1));
-                if (cw - 1 >= 0) pq.Enqueue((ch, cw - 1, G[ch][cw - 1] == 'E' ? cc : cc + 1));
             }
 
-            if (G[H - 1][W - 1] == 'S') answer++;
+            memo[H - 1, W - 1] = G[H - 1][W - 1] == 'E' ? 0 : 1;
+
+            for (var j = W - 1; j >= 0; j--)
+            {
+                for (var i = H - 1; i >= 0; i--)
+                {
+                    if (i + 1 < H)
+                    {
+                        var cost = G[i][j] == 'S' ? 0 : 1;
+                        memo[i, j] = Math.Min(memo[i, j], memo[i + 1, j] + cost);
+                    }
+
+                    if (j + 1 < W)
+                    {
+                        var cost = G[i][j] == 'E' ? 0 : 1;
+                        memo[i, j] = Math.Min(memo[i, j], memo[i, j + 1] + cost);
+                    }
+                }
+            }
+
+            var answer = memo[0, 0];
             Console.WriteLine(answer);
         }
 
-        public class PriorityQueue<T> : IReadOnlyCollection<T>
-        {
-            private readonly Comparison<T> _comparison;
-            private readonly List<T> _heap;
-            public PriorityQueue() : this(items: null)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items) : this(items, Comparer<T>.Default)
-            {
-            }
-            public PriorityQueue(IComparer<T> comparer) : this(null, comparer)
-            {
-            }
-            public PriorityQueue(Comparison<T> comparison) : this(null, comparison)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer)
-                : this(items, (comparer ?? Comparer<T>.Default).Compare)
-            {
-            }
-            public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison)
-            {
-                _heap = new List<T>();
-                _comparison = comparison;
-                if (items == null) return;
-                foreach (var item in items) Enqueue(item);
-            }
-            public int Count => _heap.Count;
-            public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-            public void Enqueue(T item)
-            {
-                var child = Count;
-                _heap.Add(item);
-                while (child > 0)
-                {
-                    var parent = (child - 1) / 2;
-                    if (_comparison(_heap[parent], _heap[child]) <= 0) break;
-                    (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
-                    child = parent;
-                }
-            }
-            public T Dequeue()
-            {
-                if (Count == 0) throw new InvalidOperationException();
-                var ret = _heap[0];
-                _heap[0] = _heap[Count - 1];
-                _heap.RemoveAt(Count - 1);
-                var parent = 0;
-                while (parent * 2 + 1 < Count)
-                {
-                    var left = parent * 2 + 1;
-                    var right = parent * 2 + 2;
-                    if (right < Count && _comparison(_heap[left], _heap[right]) > 0)
-                        left = right;
-                    if (_comparison(_heap[parent], _heap[left]) <= 0) break;
-                    (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
-                    parent = left;
-                }
-                return ret;
-            }
-            public T Peek()
-            {
-                if (Count == 0) throw new InvalidOperationException();
-                return _heap[0];
-            }
-            public bool TryDequeue(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Dequeue();
-                    return true;
-                }
-                result = default;
-                return false;
-            }
-            public bool TryPeek(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Peek();
-                    return true;
-                }
-                result = default;
-                return false;
-            }
-            public void Clear() => _heap.Clear();
-            public bool Contains(T item) => _heap.Contains(item);
-        }
 
         public static class Scanner
         {
