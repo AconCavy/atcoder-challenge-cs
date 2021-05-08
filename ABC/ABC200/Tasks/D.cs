@@ -21,56 +21,45 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<int>().Select(x => x % 200).ToArray();
-            var dp = new List<int>[200].Select(_ => new List<int>()).ToArray();
 
             void Print(IEnumerable<int> x, IEnumerable<int> y)
             {
                 Console.WriteLine("Yes");
 
-                Console.Write(x.Count());
-                Console.Write(" ");
-                Console.WriteLine(string.Join(" ", x.Select(x => x + 1)));
+                void Inner(IEnumerable<int> source)
+                {
+                    Console.Write(source.Count());
+                    Console.Write(" ");
+                    Console.WriteLine(string.Join(" ", source.Select(e => e + 1)));
+                }
 
-                Console.Write(y.Count());
-                Console.Write(" ");
-                Console.WriteLine(string.Join(" ", y.Select(x => x + 1)));
+                Inner(x);
+                Inner(y);
             }
 
-            for (var i = 0; i < N; i++)
+            var dp = new List<int>[200].Select(_ => new List<int>()).ToArray();
+            var max = Math.Min(N, 8);
+            for (var i = 0; i < 1 << max; i++)
             {
-                var a = A[i];
-                if (dp[a].Any())
+                var sum = 0;
+                var tmp = new List<int>();
+                for (var j = 0; j < max; j++)
                 {
-                    Print(dp[a], new[] { i });
+                    if ((i >> j & 1) == 1)
+                    {
+                        tmp.Add(j);
+                        sum += A[j];
+                        sum %= 200;
+                    }
+                }
+
+                if (dp[sum].Any())
+                {
+                    Print(dp[sum], tmp);
                     return;
                 }
 
-                var used = new bool[200];
-
-                dp[a].Clear();
-                dp[a].Add(i);
-                used[a] = true;
-
-                for (var j = 0; j < 200; j++)
-                {
-                    if (!dp[j].Any()) continue;
-                    var k = (j + a) % 200;
-
-                    if (used[j]) continue;
-
-                    if (dp[k].Any())
-                    {
-                        dp[j].Add(i);
-                        Print(dp[j], dp[k]);
-                        return;
-                    }
-
-                    dp[k] = dp[j].ToList();
-                    dp[k].Add(i);
-
-                    used[j] = true;
-                    used[k] = true;
-                }
+                dp[sum] = tmp;
             }
 
             Console.WriteLine("No");
