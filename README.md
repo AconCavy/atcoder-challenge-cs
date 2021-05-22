@@ -12,7 +12,7 @@ Installs [AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/Acon
 
 ## Create project
 
-Creates base project with a project name using the `atcoder.bat` on Windows, the `atcoder.sh` on Mac Os or Linux.
+Creates base project with a project name using the `atcoder.bat` on Windows, the `atcoder.sh` on macOS or Linux.
 After that, the specified contest web site will be opened.
 
 ### Windows
@@ -21,7 +21,7 @@ After that, the specified contest web site will be opened.
 ./atcoder.bat ABC177
 ```
 
-### Mac OS or Linux
+### macOS or Linux
 
 ```sh
 ./atcoder.sh ABC177
@@ -29,7 +29,7 @@ After that, the specified contest web site will be opened.
 
 ## Append task
 
-Creates solver items with a task name under the `Tasks` and the `Tests` using the `add-task.bat` on Windows, the `add-task.sh` on Mac Os or Linux.
+Creates solver items with a task name under the `Tasks` and the `Tests` using the `add-task.bat` on Windows, the `add-task.sh` on macOS or Linux.
 
 For example, `(root)/ABC177/Tasks/E.cs` and `(root)/ABC177/Tests/ETests.cs` will be created if the current directory is `(root)/ABC177`.
 
@@ -39,7 +39,7 @@ For example, `(root)/ABC177/Tasks/E.cs` and `(root)/ABC177/Tests/ETests.cs` will
 ../add-task.bat E
 ```
 
-### Mac OS or Linux
+### macOS or Linux
 
 ```sh
 ../add-task.sh E
