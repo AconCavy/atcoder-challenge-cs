@@ -23,15 +23,31 @@ namespace Tasks
             var A = Scanner.ScanEnumerable<long>().ToArray();
             var B = Scanner.ScanEnumerable<long>().ToArray();
 
+            var dict = new Dictionary<long, Queue<int>>();
+
             var AA = new long[N];
             var BB = new long[N];
             for (var i = 0; i < N; i++)
             {
                 AA[i] = A[i] + i;
                 BB[i] = B[i] + i;
+
+                if (!dict.ContainsKey(BB[i])) dict[BB[i]] = new Queue<int>();
+                dict[BB[i]].Enqueue(i);
             }
 
             if (AA.Except(BB).Any()) { Console.WriteLine(-1); return; }
+
+            var ft = new FenwickTree(N);
+            var answer = 0L;
+            for (var i = 0; i < N; i++)
+            {
+                var a = dict[AA[i]].Dequeue();
+                answer += i - ft.Sum(a);
+                ft.Add(a, 1);
+            }
+
+            Console.WriteLine(answer);
         }
 
         public class FenwickTree
