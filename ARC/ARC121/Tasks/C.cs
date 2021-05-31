@@ -24,38 +24,74 @@ namespace Tasks
             {
                 var N = Scanner.Scan<int>();
                 var P = Scanner.ScanEnumerable<int>().ToArray();
-                var answer = new List<int>();
 
+                var answer = new List<int>();
                 var k = 0;
-                for (var x = N; x >= 3; x--)
+
+                int GetIdx(int x)
                 {
                     var idx = 0;
                     while (P[idx] != x) idx++;
-                    if (idx % 2 != k % 2)
+                    return idx;
+                }
+
+                void Swap(int idx)
+                {
+                    (P[idx], P[idx + 1]) = (P[idx + 1], P[idx]);
+                    answer.Add(idx + 1);
+                    k ^= 1;
+                }
+
+                for (var x = N; x >= 5; x--)
+                {
+                    var idx = GetIdx(x);
+                    if (idx % 2 != k)
                     {
-                        var a = k % 2;
-                        (P[a], P[a + 1]) = (P[a + 1], P[a]);
-                        answer.Add(a + 1);
-                        k++;
+                        if (idx == 0) Swap(1);
+                        else if (idx == 1) Swap(2);
+                        else if (idx == 2) Swap(3);
+                        else Swap(k);
                     }
 
                     for (var i = idx; i + 1 < x; i++)
                     {
-                        (P[i], P[i + 1]) = (P[i + 1], P[i]);
-                        answer.Add(i + 1);
-                        k++;
+                        Swap(i);
                     }
                 }
 
-                if (N > 2)
+                if (N >= 4)
                 {
-                    while ((P[0], P[1]) != (1, 2))
+                    var idx = GetIdx(4);
+                    if (idx % 2 != k)
                     {
-                        var a = k % 2;
-                        (P[a], P[a + 1]) = (P[a + 1], P[a]);
-                        answer.Add(a + 1);
-                        k++;
+                        if (idx == 0 || idx == 1)
+                        {
+                            Swap(idx % 2 + 1);
+                            for (var i = idx; i + 1 < 4; i++)
+                            {
+                                Swap(i);
+                            }
+                        }
+                        else if (idx == 2)
+                        {
+                            Swap(1);
+                            Swap(2);
+                            Swap(1);
+                            Swap(2);
+                        }
                     }
+                    else
+                    {
+                        for (var i = idx; i + 1 < 4; i++)
+                        {
+                            Swap(i);
+                        }
+                    }
+                }
+
+                while ((P[0], P[1]) != (1, 2))
+                {
+                    Swap(k);
                 }
 
                 Console.WriteLine(answer.Count);
