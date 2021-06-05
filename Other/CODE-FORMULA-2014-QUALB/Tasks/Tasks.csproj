@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>CODE_FORMULA_2014_QUALB</RootNamespace>
+    <StartupObject>Tasks.C</StartupObject>
+  </PropertyGroup>
+
+</Project>
