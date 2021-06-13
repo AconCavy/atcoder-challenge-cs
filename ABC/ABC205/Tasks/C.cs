@@ -23,50 +23,11 @@ namespace Tasks
             var answer = '=';
             if (C != 0)
             {
-                if (A >= 0 && B >= 0)
-                {
-                    if (A > B) answer = '>';
-                    else if (A < B) answer = '<';
-                }
-                else if (A < 0 && B < 0)
-                {
-                    if (C % 2 == 0)
-                    {
-                        if (A > B) answer = '>';
-                        else if (A < B) answer = '<';
-                    }
-                    else
-                    {
-                        if (A < B) answer = '>';
-                        else if (A > B) answer = '<';
-                    }
-                }
-                else if (A >= 0 && B < 0)
-                {
-                    if (C % 2 == 0)
-                    {
-                        B = -B;
-                        if (A > B) answer = '>';
-                        else if (A < B) answer = '<';
-                    }
-                    else
-                    {
-                        answer = '>';
-                    }
-                }
-                else if (A < 0 && B >= 0)
-                {
-                    if (C % 2 == 0)
-                    {
-                        A = -A;
-                        if (A > B) answer = '>';
-                        else if (A < B) answer = '<';
-                    }
-                    else
-                    {
-                        answer = '<';
-                    }
-                }
+                C = C % 2 == 0 ? 2 : 1;
+                var a = (long)Math.Pow(A, C);
+                var b = (long)Math.Pow(B, C);
+                if (a > b) answer = '>';
+                if (a < b) answer = '<';
             }
 
             Console.WriteLine(answer);
