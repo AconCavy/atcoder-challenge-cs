@@ -33,19 +33,24 @@ namespace Tasks
                 return x + s / N;
             }
 
-            var (l, r) = (0d, 1e18);
-            const double eps = 1e-7;
-            while (r - l > eps)
-            {
-                var d = (r - l) / 3;
-                var (ml, mr) = (l + d, r - d);
-                if (F(ml) < F(mr)) r = mr;
-                else l = ml;
-            }
-
-            var answer = F((l + r) / 2);
+            var k = GoldenSearch(0, 1e18, F, 1e-6);
+            var answer = F(k);
 
             Console.WriteLine(answer);
+        }
+
+        public static double GoldenSearch(double ng, double ok, Func<double, double> func, double eps = 1e-9)
+        {
+            var (l, r) = (Math.Min(ok, ng), Math.Max(ok, ng));
+            var phi = (1.0 + Math.Sqrt(5)) / 2;
+            while (r - l > eps)
+            {
+                var d = (r - l) / (phi + 1);
+                var (ml, mr) = (l + d, r - d);
+                if (func(ml) < func(mr)) r = mr;
+                else l = ml;
+            }
+            return (l + r) / 2;
         }
 
         public static class Scanner
