@@ -511,6 +511,35 @@
 			"}"
 		]
 	},
+	"BinarySearch": {
+		"scope": "csharp",
+		"prefix": [
+			"bs",
+			"binarysearch"
+		],
+		"body": [
+			"public static long BinarySearch(long ng, long ok, Func<long, bool> func)",
+			"{",
+			"    while (Math.Abs(ok - ng) > 1)",
+			"    {",
+			"        var m = (ok + ng) / 2;",
+			"        if (func(m)) ok = m;",
+			"        else ng = m;",
+			"    }",
+			"    return ok;",
+			"}",
+			"public static double BinarySearch(double ng, double ok, Func<double, bool> func, double eps = 1e-9)",
+			"{",
+			"    while (Math.Abs(ok - ng) > eps)",
+			"    {",
+			"        var m = (ok + ng) / 2;",
+			"        if (func(m)) ok = m;",
+			"        else ng = m;",
+			"    }",
+			"    return ok;",
+			"}"
+		]
+	},
 	"TernarySearch": {
 		"scope": "csharp",
 		"prefix": [
@@ -518,14 +547,38 @@
 			"ternarysearch"
 		],
 		"body": [
-			"var (l, r) = (${1:0.0}, ${2:1e18});",
-			"const double eps = 1e-6;",
-			"while (r - l > eps)",
+			"public static double TernarySearch(double ng, double ok, Func<double, double> func, double eps = 1e-9)",
 			"{",
-			"    var d = (r - l) / 3;",
-			"    var (ml, mr) = (l + d, r - d);",
-			"    if (${3:F}(ml) < ${3}(mr)) r = mr;",
-			"    else l = ml;",
+			"    var (l, r) = (Math.Min(ok, ng), Math.Max(ok, ng));",
+			"    while (r - l > eps)",
+			"    {",
+			"        var d = (r - l) / 3;",
+			"        var (ml, mr) = (l + d, r - d);",
+			"        if (func(ml) < func(mr)) r = mr;",
+			"        else l = ml;",
+			"    }",
+			"}"
+		]
+	},
+	"GoldenSearch": {
+		"scope": "csharp",
+		"prefix": [
+			"gs",
+			"goldensearch"
+		],
+		"body": [
+			"public static double GoldenSearch(double ng, double ok, Func<double, double> func, double eps = 1e-9)",
+			"{",
+			"    var (l, r) = (Math.Min(ok, ng), Math.Max(ok, ng));",
+			"    var phi = (1.0 + Math.Sqrt(5)) / 2;",
+			"    while (r - l > eps)",
+			"    {",
+			"        var d = (r - l) / (phi + 1);",
+			"        var (ml, mr) = (l + d, r - d);",
+			"        if (func(ml) < func(mr)) r = mr;",
+			"        else l = ml;",
+			"    }",
+			"    return (l + r) / 2;",
 			"}"
 		]
 	},
