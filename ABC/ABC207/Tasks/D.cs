@@ -30,9 +30,7 @@ namespace Tasks
                 for (var i = 0; i < N; i++)
                 {
                     var (a, b) = Scanner.Scan<int, int>();
-                    a *= N;
-                    b *= N;
-                    var p = new Vector2(a, b);
+                    var p = new Vector2(a * N, b * N);
                     P[k][i] = p;
                     G[k] += p;
                 }
@@ -42,9 +40,12 @@ namespace Tasks
                 {
                     P[k][i] -= G[k];
                 }
-            }
 
-            Console.WriteLine(string.Join(" ", P[0]));
+                if ((P[k][0].X, P[k][0].Y) == (0, 0))
+                {
+                    (P[k][0], P[k][1]) = (P[k][1], P[k][0]);
+                }
+            }
 
             const double eps = 1e-6;
 
@@ -57,20 +58,20 @@ namespace Tasks
                 {
                     var x = P[0][j].X * cos - P[0][j].Y * sin;
                     var y = P[0][j].X * sin + P[0][j].Y * cos;
-                    Console.WriteLine($"{x} {y}");
-                    // var ok2 = false;
-                    // for (var k = 0; k < N; k++)
-                    // {
-                    //     ok |= Math.Abs(P[1][k].X - x) < eps && Math.Abs(P[1][k].Y - y) < eps;
-                    // }
+                    var exist = false;
+                    for (var k = 0; k < N; k++)
+                    {
+                        exist |= Math.Abs(P[1][k].X - x) < eps && Math.Abs(P[1][k].Y - y) < eps;
+                    }
+
+                    ok &= exist;
                 }
 
-                // if (ok)
-                // {
-                //     Console.WriteLine(rad);
-                //     Console.WriteLine("Yes");
-                //     return;
-                // }
+                if (ok)
+                {
+                    Console.WriteLine("Yes");
+                    return;
+                }
             }
 
             Console.WriteLine("No");
