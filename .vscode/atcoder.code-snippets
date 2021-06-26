@@ -547,9 +547,8 @@
 			"ternarysearch"
 		],
 		"body": [
-			"public static double TernarySearch(double ng, double ok, Func<double, double> func, double eps = 1e-9)",
+			"public static double TernarySearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
 			"{",
-			"    var (l, r) = (Math.Min(ok, ng), Math.Max(ok, ng));",
 			"    while (r - l > eps)",
 			"    {",
 			"        var d = (r - l) / 3;",
@@ -557,6 +556,7 @@
 			"        if (func(ml) < func(mr)) r = mr;",
 			"        else l = ml;",
 			"    }",
+			"    return (l + r) / 2;",
 			"}"
 		]
 	},
@@ -567,9 +567,8 @@
 			"goldensearch"
 		],
 		"body": [
-			"public static double GoldenSearch(double ng, double ok, Func<double, double> func, double eps = 1e-9)",
+			"public static double GoldenSearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
 			"{",
-			"    var (l, r) = (Math.Min(ok, ng), Math.Max(ok, ng));",
 			"    var phi = (1.0 + Math.Sqrt(5)) / 2;",
 			"    while (r - l > eps)",
 			"    {",
