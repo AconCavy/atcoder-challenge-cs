@@ -162,7 +162,7 @@
 			"lcm",
 		],
 		"body": [
-			"public static long Lcm(long a, long b) => a * b / Gcd(a, b);"
+			"public static long Lcm(long a, long b) => a / Gcd(a, b) * b;"
 		]
 	},
 	"Enumeration": {
@@ -420,10 +420,16 @@
 		],
 		"body": [
 			"for (var k = 0; k < ${1:N}; k++)",
+			"{",
 			"    for (var i = 0; i < ${1}; i++)",
+			"    {",
 			"        for (var j = 0; j < ${1}; j++)",
+			"        {",
 			"            ${2:G}[i][j] = Math.Min(${2}[i][j], ${2}[i][k] + ${2}[k][j]);",
-			"            ${2:G}[i, j] = Math.Min(${2}[i, j], ${2}[i, k] + ${2}[k, j]);"
+			"            ${2:G}[i, j] = Math.Min(${2}[i, j], ${2}[i, k] + ${2}[k, j]);",
+			"        }",
+			"    }",
+			"}"
 		]
 	},
 	"LevenshteinDistance": {
