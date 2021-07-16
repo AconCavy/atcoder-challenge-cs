@@ -477,6 +477,33 @@
 			"}"
 		]
 	},
+	"LongestIncreasingSubsequence": {
+		"scope": "csharp",
+		"prefix": [
+			"longestincreasingsubsequence",
+			"lis"
+		],
+		"body": [
+			"public static long[] LongestIncreasingSubsequence(long[] source)",
+			"{",
+			"    var dp = new long[source.Length];",
+			"    Array.Fill(dp, long.MaxValue);",
+			"    var idx = new int[source.Length];",
+			"    for (var i = 0; i < source.Length; i++)",
+			"    {",
+			"        var lb = LowerBound(dp, source[i]);",
+			"        dp[lb] = source[i];",
+			"        idx[i] = lb;",
+			"    }",
+			"    var lis =  new long[LowerBound(dp, long.MaxValue)];",
+			"    for (var i = source.Length - 1; i >= 0; i--)",
+			"    {",
+			"        lis[idx[i]] = source[i];",
+			"    }",
+			"    return lis;",
+			"}"
+		]
+	},
 	"LowerBound": {
 		"scope": "csharp",
 		"prefix": [
