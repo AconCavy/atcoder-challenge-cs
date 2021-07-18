@@ -20,29 +20,20 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B, C) = Scanner.Scan<long, long, long>();
-            var d1 = B - A;
-            var d2 = C - B;
-            // B => d1 + 1, d2 - 1
-            // A => d1 - 1
-            // C => d2 + 1
+            // B - A == C - B
+            // B * 2 - A - C == 0
+            var s = B * 2 - A - C;
             var answer = 0L;
-            var k = Math.Max(0, (d2 - d1) / 2);
-            answer += k;
-            B += k;
-            d1 = B - A;
-            d2 = C - B;
-            if (d1 >= d2)
+            if (s < 0)
             {
-                answer += d1 - d2;
-            }
-            else
-            {
-                answer += (d2 - d1) * 2;
+                var k = (-s + 1) / 2;
+                answer += k;
+                s += k * 2;
             }
 
+            answer += s;
             Console.WriteLine(answer);
         }
-
 
         public static class Scanner
         {
