@@ -72,16 +72,18 @@ namespace Tasks
                 {
                     for (var j = 0; j < N; j++)
                     {
-                        if (G[i][j] == '#') continue;
-                        var ok = false;
-                        foreach (var (dh, dw) in D4)
+                        if (G[i][j] == '.')
                         {
-                            var (nh, nw) = (i + dh, j + dw);
-                            if (nh < 0 || N <= nh || nw < 0 || N <= nw) continue;
-                            ok |= G[nh][nw] == '@';
-                        }
+                            var ok = false;
+                            foreach (var (dh, dw) in D4)
+                            {
+                                var (nh, nw) = (i + dh, j + dw);
+                                if (nh < 0 || N <= nh || nw < 0 || N <= nw) continue;
+                                ok |= G[nh][nw] == '@';
+                            }
 
-                        if (ok) next.Add((i, j));
+                            if (ok) next.Add((i, j));
+                        }
                     }
                 }
 
@@ -95,8 +97,7 @@ namespace Tasks
             {
                 for (var j = 0; j < N; j++)
                 {
-                    if (G[i][j] == '#') continue;
-                    Check(i, j, 0);
+                    if (G[i][j] == '.') Check(i, j, 0);
                 }
             }
 
