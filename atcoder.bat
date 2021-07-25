@@ -16,4 +16,4 @@ dotnet new cpsolver -n D -o .\%SLN%\Tasks
 dotnet new cptests -n D -o .\%SLN%\Tests
 
 start https://atcoder.jp/contests/%SLN%
-code -n . .\%SLN%\Tests\ATests.cs .\%SLN%\Tasks\A.cs .\%SLN%\Tests\BTests.cs .\%SLN%\Tasks\B.cs .\%SLN%\Tests\CTests.cs .\%SLN%\Tasks\C.cs .\%SLN%\Tests\DTests.cs .\%SLN%\Tasks\D.cs
+code -n . .\%SLN%\Tasks\Tasks.csproj .\%SLN%\Tests\ATests.cs .\%SLN%\Tasks\A.cs .\%SLN%\Tests\BTests.cs .\%SLN%\Tasks\B.cs .\%SLN%\Tests\CTests.cs .\%SLN%\Tasks\C.cs .\%SLN%\Tests\DTests.cs .\%SLN%\Tasks\D.cs
