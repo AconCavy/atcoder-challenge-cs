@@ -20,19 +20,19 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            var A = Scanner.ScanEnumerable<long>().ToArray();
-            var B = Scanner.ScanEnumerable<long>().ToArray();
-            Array.Sort(A);
-            Array.Sort(B);
+            var AB = new List<long>();
+            AB.AddRange(Scanner.ScanEnumerable<long>());
+            AB.AddRange(Scanner.ScanEnumerable<long>());
+            var order = Enumerable.Range(0, N + M).ToArray();
+            Array.Sort(order, (x, y) => AB[x].CompareTo(AB[y]));
 
             const long inf = (long)1e18;
             var answer = inf;
-            var (a, b) = (0L, 0L);
-            while (a < N && b < M)
+            for (var i = 0; i + 1 < N + M; i++)
             {
-                answer = Math.Min(answer, Math.Abs(A[a] - B[b]));
-                if (A[a] < B[b]) a++;
-                else b++;
+                var (a, b) = (order[i], order[i + 1]);
+                if (a < N == b < N) continue;
+                answer = Math.Min(answer, AB[b] - AB[a]);
             }
 
             Console.WriteLine(answer);
