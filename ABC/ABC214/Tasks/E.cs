@@ -34,41 +34,30 @@ namespace Tasks
 
                 var answer = true;
                 var curr = 0;
-                while (ql.Count > 0 && qr.Count > 0)
+                while (true)
                 {
-                    while (ql.TryPeek(out var top) && top.L <= curr)
+                    if (qr.Count == 0)
+                    {
+                        if (ql.Count == 0) break;
+                        curr = ql.Peek().L;
+                    }
+
+                    while (ql.TryPeek(out var tl) && tl.L <= curr)
                     {
                         qr.Enqueue(ql.Dequeue());
                     }
 
-                    if (qr.Count == 0)
+                    if (qr.TryDequeue(out var tr) && tr.R < curr)
                     {
-                        if (ql.Count == 0)
-                        {
-                            answer = true;
-                            break;
-                        }
-
-                        curr = ql.Peek().L;
-
-                        while (ql.TryPeek(out var top) && top.L == curr)
-                        {
-                            qr.Enqueue(ql.Dequeue());
-                        }
+                        answer = false;
+                        break;
                     }
-                    else
-                    {
-                        if (qr.TryPeek(out var top) && top.R < curr)
-                        {
-                            answer = false;
-                            break;
-                        }
-                    }
+
+                    curr++;
                 }
 
 
                 Console.WriteLine(answer ? "Yes" : "No");
-                ql.Clear();
             }
         }
 
