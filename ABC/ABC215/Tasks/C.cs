@@ -22,13 +22,7 @@ namespace Tasks
             var (S, K) = Scanner.Scan<string, int>();
             var s = S.ToCharArray();
             Array.Sort(s);
-            var hashset = new HashSet<string>();
-            foreach (var p in Enumerable.Range(0, S.Length).Permute())
-            {
-                hashset.Add(new string(p.Select(i => s[i]).ToArray()));
-            }
-
-            var answer = hashset.OrderBy(x => x).ElementAt(K - 1);
+            var answer = s.Permute().Select(x => new string(x.ToArray())).Distinct().ElementAt(K - 1);
             Console.WriteLine(answer);
         }
 

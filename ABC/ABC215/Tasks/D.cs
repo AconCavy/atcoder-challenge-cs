@@ -21,42 +21,86 @@ namespace Tasks
         {
             var (N, M) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
-            Array.Sort(A);
-            var max = Math.Max(M, A[^1]);
-            var sieve = new bool[max + 1];
+            var sieve = new bool[M + 1];
             foreach (var a in A)
             {
-                foreach (var d in GetDivisors(a))
+                foreach (var (p, _) in Prime.GetFactorDictionary(a))
                 {
-                    if (d == 1) continue;
-                    if (sieve[d]) continue;
-                    for (var i = d; i <= max; i += d)
+                    if (p > M || sieve[p]) continue;
+                    for (var i = p; i <= M; i += p)
                     {
                         sieve[i] = true;
                     }
                 }
             }
 
-            var answers = new List<int> { 1 };
-            for (var i = 2; i <= M; i++)
-            {
-                if (!sieve[i]) answers.Add(i);
-            }
-
-            Console.WriteLine(answers.Count);
+            var answers = Enumerable.Range(1, M).Where(x => !sieve[x]).ToArray();
+            Console.WriteLine(answers.Length);
             Console.WriteLine(string.Join("\n", answers));
         }
 
-        public static IEnumerable<long> GetDivisors(long n)
+        public static class Prime
         {
-            for (var i = 1L; i * i <= n; i++)
+            public static IEnumerable<long> GetFactors(long value)
             {
-                if (n % i != 0) continue;
-                yield return i;
-                if (n / i != i) yield return n / i;
+                if (value < 2) yield break;
+                while (value % 2 == 0)
+                {
+                    yield return 2;
+                    value /= 2;
+                }
+                for (var i = 3L; i * i <= value; i++)
+                {
+                    while (value % i == 0)
+                    {
+                        yield return i;
+                        value /= i;
+                    }
+                }
+                if (value > 1) yield return value;
+            }
+            public static IDictionary<long, int> GetFactorDictionary(long value)
+            {
+                var factors = new Dictionary<long, int>();
+                if (value < 2) return factors;
+                void CountUp(long n)
+                {
+                    if (value % n != 0) return;
+                    factors[n] = 0;
+                    while (value % n == 0)
+                    {
+                        value /= n;
+                        factors[n]++;
+                    }
+                }
+                CountUp(2);
+                for (var i = 3L; i * i <= value; i += 2) CountUp(i);
+                if (value > 1) factors[value] = 1;
+                return factors;
+            }
+            public static IEnumerable<int> Sieve(int value)
+            {
+                if (value < 2) yield break;
+                yield return 2;
+                var sieve = new bool[(value + 1) / 2];
+                for (var i = 1; i < sieve.Length; i++)
+                {
+                    if (sieve[i]) continue;
+                    yield return i * 2 + 1;
+                    for (var j = i; j < sieve.Length; j += i * 2 + 1) sieve[j] = true;
+                }
+            }
+            public static bool IsPrime(long value)
+            {
+                if (value == 2) return true;
+                if (value < 2 || value % 2 == 0) return false;
+                for (var i = 3L; i * i <= value; i += 2)
+                {
+                    if (value % i == 0) return false;
+                }
+                return true;
             }
         }
-        public static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
 
         public static class Scanner
         {

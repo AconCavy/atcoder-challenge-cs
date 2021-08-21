@@ -20,11 +20,11 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<long>();
-            for (var i = 0; i < 64; i++)
+            for (var i = 63; i >= 0; i--)
             {
-                if ((N < (1L << i)))
+                if ((N >> i & 1) == 1)
                 {
-                    Console.WriteLine(i - 1);
+                    Console.WriteLine(i);
                     return;
                 }
             }
