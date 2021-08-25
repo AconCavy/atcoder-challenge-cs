@@ -5,7 +5,7 @@ if "%~1"=="" (
 )
 set SLN=%~1
 
-dotnet new cpproj -n %SLN%
+dotnet new cpproj -n %SLN% -f netcoreapp3.1
 dotnet new cpsolver -n A -o .\%SLN%\Tasks
 dotnet new cptests -n A -o .\%SLN%\Tests
 dotnet new cpsolver -n B -o .\%SLN%\Tasks
