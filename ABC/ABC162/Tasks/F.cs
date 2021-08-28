@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace Tasks
 {
-    public class D
+    public class F
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
@@ -19,31 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var S = Scanner.Scan<string>();
-            var (R, G, B) = (0L, 0L, 0L);
-            foreach (var c in S)
-            {
-                switch (c)
-                {
-                    case 'R': R++; break;
-                    case 'G': G++; break;
-                    case 'B': B++; break;
-                    default: break;
-                }
-            }
-
-            var answer = R * G * B;
-            for (var m = 0; m < N; m++)
-            {
-                for (var k = 1; k <= N / 2; k++)
-                {
-                    var (l, r) = (m - k, m + k);
-                    if (l < 0 || N <= r) continue;
-                    if (S[l] != S[m] && S[m] != S[r] && S[l] != S[r]) answer--;
-                }
-            }
-
-            Console.WriteLine(answer);
+            var A = Scanner.ScanEnumerable<long>().ToArray();
         }
 
         public static class Scanner
