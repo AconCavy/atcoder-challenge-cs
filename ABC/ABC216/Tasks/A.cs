@@ -20,12 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<string>();
-            var answer = "";
-            foreach (var c in N)
-            {
-                if (c == '.') break;
-                answer += c;
-            }
+            var answer = N[..^2];
 
             var y = N[^1] - '0';
             if (y < 3) answer += '-';

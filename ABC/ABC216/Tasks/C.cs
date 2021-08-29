@@ -19,26 +19,19 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = Scanner.Scan<ulong>();
-            var tmp = new List<char>();
-            for (var i = 0; i < 64; i++)
-            {
-                if ((N >> i & 1) == 1) tmp.Add('A');
-                tmp.Add('B');
-            }
-
-            tmp.Reverse();
-
+            var N = Scanner.Scan<long>();
             var answer = "";
-            var curr = 0UL;
-            foreach (var x in tmp)
+            var flag = false;
+            for (var i = 60; i >= 0; i--)
             {
-                if (x == 'A') curr++;
-                else curr *= 2;
-
-                if (curr != 0) answer += x;
-                if (curr == N) break;
+                if (flag) answer += 'B';
+                if ((N >> i & 1) == 1)
+                {
+                    flag = true;
+                    answer += 'A';
+                }
             }
+
             Console.WriteLine(answer);
         }
 
