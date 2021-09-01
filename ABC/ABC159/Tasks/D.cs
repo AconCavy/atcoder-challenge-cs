@@ -20,22 +20,27 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var A = Scanner.ScanEnumerable<long>().ToArray();
-            var dict = new Dictionary<long, long>();
+            var A = Scanner.ScanEnumerable<int>().ToArray();
+            const int max = (int)2e5;
+            var count = new long[max + 1];
             foreach (var a in A)
             {
-                if (!dict.ContainsKey(a)) dict[a] = 0;
-                dict[a]++;
+                count[a]++;
             }
 
-            var comb = dict.Values.Sum(x => x * (x - 1) / 2);
+            long nC2(long n) => n * (n - 1) / 2;
+
+            var all = 0L;
+            for (var i = 1; i <= max; i++)
+            {
+                all += nC2(count[i]);
+            }
 
             foreach (var a in A)
             {
-                var count = dict[a];
-                var sub = count * (count - 1) / 2;
-                var add = (count - 1) * (count - 2) / 2;
-                Console.WriteLine(comb - sub + add);
+                var c = count[a];
+                var answer = all - nC2(c) + nC2(c - 1);
+                Console.WriteLine(answer);
             }
         }
 
@@ -44,7 +49,7 @@ namespace Tasks
             private static Queue<string> queue = new Queue<string>();
             public static T Next<T>()
             {
-                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                if (queue.Count == 0) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
                 return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
             }
             public static T Scan<T>() => Next<T>();
@@ -52,6 +57,7 @@ namespace Tasks
             public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());
             public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
         }
     }
