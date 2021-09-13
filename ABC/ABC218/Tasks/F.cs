@@ -20,15 +20,13 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            var G = new HashSet<int>[N].Select(x => new HashSet<int>()).ToArray();
-            var E = new (int U, int V)[M];
+            var G = new List<int>[N].Select(x => new List<int>()).ToArray();
             var dict = new Dictionary<(int, int), int>();
             for (var i = 0; i < M; i++)
             {
                 var (s, t) = Scanner.Scan<int, int>();
                 s--; t--;
                 G[s].Add(t);
-                E[i] = (s, t);
                 dict[(s, t)] = i;
             }
 
@@ -62,11 +60,7 @@ namespace Tasks
 
             if (route.Last() != 0)
             {
-                for (var i = 0; i < M; i++)
-                {
-                    Console.WriteLine(-1);
-                }
-
+                Console.WriteLine(string.Join("\n", Enumerable.Repeat(-1, M)));
                 return;
             }
 
@@ -75,24 +69,23 @@ namespace Tasks
             for (var i = 0; i + 1 < route.Count; i++)
             {
                 var (t, s) = (route[i], route[i + 1]);
-                var e = dict[(s, t)];
 
                 queue.Enqueue(0);
-                var depths = Enumerable.Repeat(-1, N).ToArray();
-                depths[0] = 0;
+                Array.Fill(dp, -1);
+                dp[0] = 0;
                 while (queue.Count > 0)
                 {
                     var u = queue.Dequeue();
                     foreach (var v in G[u])
                     {
                         if (u == s && v == t) continue;
-                        if (depths[v] != -1) continue;
-                        depths[v] = depths[u] + 1;
+                        if (dp[v] != -1) continue;
+                        dp[v] = dp[u] + 1;
                         queue.Enqueue(v);
                     }
                 }
 
-                answer[e] = depths[N - 1];
+                answer[dict[(s, t)]] = dp[N - 1];
             }
 
             Console.WriteLine(string.Join("\n", answer));
