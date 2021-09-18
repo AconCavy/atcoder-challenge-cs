@@ -22,41 +22,76 @@ namespace Tasks
             var S = Scanner.Scan<string>();
             var K = Scanner.Scan<long>();
 
-            var hashset = new HashSet<(long, long)>();
+            var hashset = new HashSet<(long X, long Y)>();
             var (cx, cy) = (0L, 0L);
             hashset.Add((cx, cy));
-            var dict = new Dictionary<char, (int, int)>
+            foreach (var c in S)
             {
-                ['L'] = (-1, 0),
-                ['R'] = (+1, 0),
-                ['U'] = (0, -1),
-                ['D'] = (0, +1)
-            };
-
-            var answer = (long)hashset.Count;
-            var loop = 0L;
-            var pd = 0L;
-            while (loop < K)
-            {
-                foreach (var c in S)
+                switch (c)
                 {
-                    var (dx, dy) = dict[c];
-                    cx += dx;
-                    cy += dy;
-                    hashset.Add((cx, cy));
+                    case 'L': cx--; break;
+                    case 'R': cx++; break;
+                    case 'U': cy--; break;
+                    case 'D': cy++; break;
                 }
 
-                var curr = hashset.Count;
-                var cd = curr - answer;
-                if (cd == pd)
-                {
-                    answer += cd * (K - loop);
-                    break;
-                }
+                hashset.Add((cx, cy));
+            }
 
-                answer = curr;
-                pd = cd;
-                loop++;
+            var V = hashset.ToArray();
+            var N = V.Length;
+
+            if (cx == 0 && cy == 0)
+            {
+                Console.WriteLine(N);
+                return;
+            }
+
+            if (cx == 0)
+            {
+                (cx, cy) = (cy, cx);
+                for (var i = 0; i < N; i++)
+                {
+                    var (x, y) = V[i];
+                    V[i] = (y, x);
+                }
+            }
+
+            if (cx < 0)
+            {
+                cx = -cx;
+                for (var i = 0; i < N; i++)
+                {
+                    var (x, y) = V[i];
+                    V[i] = (-x, y);
+                }
+            }
+
+            var dict = new Dictionary<(long S, long T), List<long>>();
+            foreach (var (x, y) in V)
+            {
+                var q = x / cx;
+                var s = x - q * cx;
+                if (s < 0)
+                {
+                    s += cx;
+                    q--;
+                }
+                var t = y - q * cy;
+                if (!dict.ContainsKey((s, t))) dict[(s, t)] = new List<long>();
+                dict[(s, t)].Add(q);
+            }
+
+            var answer = 0L;
+            foreach (var (_, q) in dict)
+            {
+                q.Sort();
+                answer += K;
+                for (var i = 0; i + 1 < q.Count; i++)
+                {
+                    var d = q[i + 1] - q[i];
+                    answer += Math.Min(d, K);
+                }
             }
 
             Console.WriteLine(answer);
