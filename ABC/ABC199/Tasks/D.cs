@@ -22,65 +22,63 @@ namespace Tasks
         {
             var (N, M) = Scanner.Scan<int, int>();
             var G = new List<int>[N].Select(x => new List<int>()).ToArray();
-            var dsu = new DisjointSetUnion(N);
             for (var i = 0; i < M; i++)
             {
                 var (a, b) = Scanner.Scan<int, int>();
                 a--; b--;
                 G[a].Add(b);
                 G[b].Add(a);
-                dsu.Merge(a, b);
+            }
+
+            var used = new bool[N];
+            var color = new int[N];
+            var list = new List<int>();
+
+            void Dfs1(int u)
+            {
+                used[u] = true;
+                list.Add(u);
+                foreach (var v in G[u])
+                {
+                    if (!used[v]) Dfs1(v);
+                }
+            }
+
+            long Dfs2(int idx)
+            {
+                var u = list[idx];
+                foreach (var v in G[u])
+                {
+                    if (color[u] == color[v]) return 0;
+                }
+
+                if (idx == list.Count - 1) return 1;
+
+                var w = list[idx + 1];
+                var sum = 0L;
+                for (var c = 0; c < 3; c++)
+                {
+                    color[w] = c;
+                    sum += Dfs2(idx + 1);
+                }
+
+                color[w] = -1;
+                return sum;
             }
 
             var answer = 1L;
-            Console.WriteLine(answer);
-        }
+            for (var u = 0; u < N; u++)
+            {
+                if (used[u]) continue;
 
-        public class DisjointSetUnion
-        {
-            private readonly int _length;
-            private readonly int[] _parentOrSize;
-            public DisjointSetUnion(int length = 0)
-            {
-                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-                _length = length;
-                _parentOrSize = new int[_length];
-                Array.Fill(_parentOrSize, -1);
+                list.Clear();
+                Dfs1(u);
+                Array.Fill(color, -1);
+                color[u] = 0;
+                answer *= Dfs2(0) * 3;
             }
-            public int Merge(int u, int v)
-            {
-                if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
-                if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                var (x, y) = (LeaderOf(u), LeaderOf(v));
-                if (x == y) return x;
-                if (-_parentOrSize[x] < -_parentOrSize[y]) (x, y) = (y, x);
-                _parentOrSize[x] += _parentOrSize[y];
-                _parentOrSize[y] = x;
-                return x;
-            }
-            public bool IsSame(int u, int v)
-            {
-                if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
-                if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                return LeaderOf(u) == LeaderOf(v);
-            }
-            public int LeaderOf(int v)
-            {
-                if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                if (_parentOrSize[v] < 0) return v;
-                return _parentOrSize[v] = LeaderOf(_parentOrSize[v]);
-            }
-            public int SizeOf(int v)
-            {
-                if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                return -_parentOrSize[LeaderOf(v)];
-            }
-            public IEnumerable<IEnumerable<int>> GetGroups()
-            {
-                var ret = new List<int>[_length].Select(x => new List<int>()).ToArray();
-                for (var i = 0; i < _length; i++) ret[LeaderOf(i)].Add(i);
-                return ret.Where(x => x.Any());
-            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
@@ -88,7 +86,7 @@ namespace Tasks
             private static Queue<string> queue = new Queue<string>();
             public static T Next<T>()
             {
-                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
+                if (queue.Count == 0) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
                 return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
             }
             public static T Scan<T>() => Next<T>();
