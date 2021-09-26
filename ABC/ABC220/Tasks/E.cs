@@ -22,9 +22,23 @@ namespace Tasks
         public static void Solve()
         {
             var (N, D) = Scanner.Scan<int, int>();
-            var pow2 = new mint[N * 2 + 1];
+            var max = Math.Max(N, D);
+            var pow2 = new mint[max + 1];
             pow2[0] = 1;
-            for (var i = 0; i < N * 2; i++) pow2[i + 1] = pow2[i] * 2;
+            for (var i = 0; i < max; i++) pow2[i + 1] = pow2[i] * 2;
+
+            mint answer = 0;
+            if (N - D >= 0) answer += (pow2[N - D] - 1) * pow2[D];
+
+            for (var l = 1; l < D; l++)
+            {
+                var r = D - l;
+                var d = Math.Max(l, r);
+                if (N - d >= 0) answer += (pow2[N - d] - 1) * pow2[D - 2];
+            }
+
+            answer *= 2;
+            Console.WriteLine(answer);
         }
 
 
