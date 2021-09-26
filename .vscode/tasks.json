@@ -48,6 +48,18 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "clean",
+                "${workspaceFolder}/${config:env.project}"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ]
         }
     ]
 }
