@@ -20,45 +20,22 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var AB = new (int A, int B)[N];
-            var hashset = new HashSet<int>();
+            var list = new List<(int Day, int Diff)>();
             for (var i = 0; i < N; i++)
             {
                 var (a, b) = Scanner.Scan<int, int>();
-                AB[i] = (a, b);
-                hashset.Add(a);
-                hashset.Add(a + b - 1);
-                hashset.Add(a + b);
+                list.Add((a, 1));
+                list.Add((a + b, -1));
             }
 
-            var tmp = hashset.OrderBy(x => x).Select((x, i) => (x, i)).ToList();
-            var map = tmp.ToDictionary(k => k.x, k => k.i);
-            var remap = tmp.ToDictionary(k => k.i, k => k.x);
-            var imos = new int[map.Count + 1];
-            foreach (var (a, b) in AB)
-            {
-                imos[map[a]]++;
-                imos[map[a + b]]--;
-            }
-
-            for (var i = 1; i < imos.Length; i++)
-            {
-                imos[i] += imos[i - 1];
-            }
+            list.Sort((x, y) => x.Day.CompareTo(y.Day));
 
             var answer = new long[N + 1];
-            var prev = 0L;
-            var pd = 0L;
-            for (var i = 0; i < imos.Length; i++)
+            var num = 0;
+            for (var i = 0; i + 1 < list.Count; i++)
             {
-                var curr = imos[i];
-                if (curr != prev)
-                {
-                    var d = remap[i];
-                    answer[prev] += d - pd;
-                    pd = d;
-                    prev = curr;
-                }
+                num += list[i].Diff;
+                answer[num] += list[i + 1].Day - list[i].Day;
             }
 
             Console.WriteLine(string.Join(" ", answer.Skip(1)));

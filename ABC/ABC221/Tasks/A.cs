@@ -20,13 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<long, long>();
-            var d = A - B;
-            var answer = 1L;
-            for (var i = 0; i < d; i++)
-            {
-                answer *= 32;
-            }
-
+            var answer = (long)Math.Pow(32, A - B);
             Console.WriteLine(answer);
         }
 

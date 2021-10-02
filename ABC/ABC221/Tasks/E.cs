@@ -31,17 +31,25 @@ namespace Tasks
                 p2[i + 1] = p2[i] * 2;
             }
 
-            var B = A.ToArray();
-            Array.Sort(B);
-            var map = B.Distinct().Select((x, i) => (x, i)).ToDictionary(k => k.x, k => k.i);
-            var M = map.Count;
-            var ft = new FenwickTree(M + 10);
-            mint answer = 0;
-            foreach (var a in A.Reverse())
+            var pi2 = new mint[N + 1];
+            pi2[N] = p2[N].Inverse();
+            for (var i = N; i > 0; i--)
             {
-                var count = ft.Sum(map[a], M + 1);
-                answer += p2[count] - 1;
-                ft.Add(map[a], 1);
+                pi2[i - 1] = pi2[i] * 2;
+            }
+
+            var B = A.Distinct().ToArray();
+            Array.Sort(B);
+            var map = B.Select((x, i) => (x, i)).ToDictionary(k => k.x, k => k.i);
+            var M = map.Count;
+            var ft = new FenwickTree(M);
+            mint answer = 0;
+
+            for (var i = 0; i < N; i++)
+            {
+                var a = map[A[i]];
+                answer += ft.Sum(a + 1) * p2[i];
+                ft.Add(a, pi2[i + 1]);
             }
 
             Console.WriteLine(answer);
@@ -49,7 +57,7 @@ namespace Tasks
 
         public class FenwickTree
         {
-            private readonly long[] _data;
+            private readonly mint[] _data;
             private readonly int _length;
             private readonly Compare _lowerBound = (item, data) => item <= data;
             private readonly Compare _upperBound = (item, data) => item < data;
@@ -57,9 +65,9 @@ namespace Tasks
             {
                 if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
                 _length = length;
-                _data = new long[length];
+                _data = new mint[length];
             }
-            public void Add(int index, long item)
+            public void Add(int index, mint item)
             {
                 if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
                 index++;

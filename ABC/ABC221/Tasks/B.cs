@@ -19,29 +19,25 @@ namespace Tasks
 
         public static void Solve()
         {
-            var S = Scanner.Scan<string>();
+            var S = Scanner.Scan<string>().ToCharArray();
             var T = Scanner.Scan<string>();
-
-            if (S == T)
+            for (var i = 0; i < S.Length; i++)
             {
-                Console.WriteLine("Yes");
-                return;
-            }
-
-            var s = S.ToCharArray();
-
-            for (var i = 0; i + 1 < s.Length; i++)
-            {
-                (s[i], s[i + 1]) = (s[i + 1], s[i]);
-                if (new string(s) == T)
+                if (S[i] != T[i])
                 {
-                    Console.WriteLine("Yes");
+                    var answer = false;
+                    if (i + 1 < S.Length)
+                    {
+                        (S[i], S[i + 1]) = (S[i + 1], S[i]);
+                        answer = new string(S) == T;
+                    }
+
+                    Console.WriteLine(answer ? "Yes" : "No");
                     return;
                 }
-                (s[i + 1], s[i]) = (s[i], s[i + 1]);
             }
 
-            Console.WriteLine("No");
+            Console.WriteLine("Yes");
         }
 
         public static class Scanner

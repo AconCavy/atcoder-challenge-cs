@@ -20,38 +20,21 @@ namespace Tasks
         public static void Solve()
         {
             var S = Scanner.Scan<string>();
+            var B = S.Select(x => x - '0').ToArray();
+            Array.Sort(B, (x, y) => y.CompareTo(x));
             var n = S.Length;
             var answer = 0L;
             for (var i = 1L; i < 1 << n; i++)
             {
-                var l = new List<long>();
-                var r = new List<long>();
+                var l = 0L;
+                var r = 0L;
                 for (var j = 0; j < n; j++)
                 {
-                    if ((i >> j & 1) == 0) l.Add(S[j] - '0');
-                    else r.Add(S[j] - '0');
+                    if ((i >> j & 1) == 0) l = l * 10 + B[j];
+                    else r = r * 10 + B[j];
                 }
 
-                if (l.Count == 0 || r.Count == 0) continue;
-                l.Sort((x, y) => y.CompareTo(x));
-                r.Sort((x, y) => y.CompareTo(x));
-                if (l[0] == 0 || r[0] == 0) continue;
-
-                var lv = 0L;
-                var rv = 0L;
-                foreach (var v in l)
-                {
-                    lv *= 10;
-                    lv += v;
-                }
-
-                foreach (var v in r)
-                {
-                    rv *= 10;
-                    rv += v;
-                }
-
-                answer = Math.Max(answer, lv * rv);
+                answer = Math.Max(answer, l * r);
             }
 
             Console.WriteLine(answer);
