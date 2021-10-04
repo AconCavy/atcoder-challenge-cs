@@ -1,669 +1,690 @@
 {
-	"Scanner": {
-		"scope": "csharp",
-		"prefix": "scanner",
-		"body": [
-			"public static class Scanner",
-			"{",
-			"    private static Queue<string> queue = new Queue<string>();",
-			"    public static T Next<T>()",
-			"    {",
-			"        if (queue.Count == 0) foreach (var item in Console.ReadLine().Trim().Split(\" \")) queue.Enqueue(item);",
-			"        return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));",
-			"    }",
-			"    public static T Scan<T>() => Next<T>();",
-			"    public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());",
-			"    public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());",
-			"    public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());",
-			"    public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());",
-			"    public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());",
-			"    public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(\" \").Select(x => (T)Convert.ChangeType(x, typeof(T)));",
-			"}"
-		]
-	},
-	"Scan1": {
-		"scope": "csharp",
-		"prefix": "scan1",
-		"body": "var ${1:val} = Scanner.Scan<${2:int}>();"
-	},
-	"Scan2": {
-		"scope": "csharp",
-		"prefix": "scan2",
-		"body": "var (${1:val1}, ${3:val2}) = Scanner.Scan<${2:int}, ${4:int}>();"
-	},
-	"Scan3": {
-		"scope": "csharp",
-		"prefix": "scan3",
-		"body": "var (${1:val1}, ${3:val2}, ${5:val3}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}>();"
-	},
-	"Scan4": {
-		"scope": "csharp",
-		"prefix": "scan4",
-		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}>();"
-	},
-	"Scan5": {
-		"scope": "csharp",
-		"prefix": "scan5",
-		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}>();"
-	},
-	"Scan6": {
-		"scope": "csharp",
-		"prefix": "scan6",
-		"body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}, ${11:val6}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}, ${12:int}>();"
-	},
-	"ScanArray": {
-		"scope": "csharp",
-		"prefix": "scanarray",
-		"body": "var ${1:array} = Scanner.ScanEnumerable<${2:int}>().ToArray();"
-	},
-	"ScanList": {
-		"scope": "csharp",
-		"prefix": "scanlist",
-		"body": "var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
-	},
-	"Printer": {
-		"scope": "csharp",
-		"prefix": "printer",
-		"body": [
-			"public static class Printer",
-			"{",
-			"    public static void Print<T>(T source) => Console.WriteLine(source);",
-			"    public static void Print1D<T>(IEnumerable<T> source, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(separator, source));",
-			"    public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(separator, source.Select(selector)));",
-			"    public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x))));",
-			"    public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = \"\") =>",
-			"        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x.Select(selector)))));",
-			"    public static void Print2D<T>(T[,] source, string separator = \"\")",
-			"    {",
-			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
-			"        for (var i = 0; i < h; i++)",
-			"            for (var j = 0; j < w; j++)",
-			"            {",
-			"                Console.Write(source[i, j]);",
-			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
-			"            }",
-			"    }",
-			"    public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = \"\")",
-			"    {",
-			"        var (h, w) = (source.GetLength(0), source.GetLength(1));",
-			"        for (var i = 0; i < h; i++)",
-			"            for (var j = 0; j < w; j++)",
-			"            {",
-			"                Console.Write(selector(source[i, j]));",
-			"                Console.Write(j == w - 1 ? \"\\n\" : separator);",
-			"            }",
-			"    }",
-			"}"
-		]
-	},
-	"Print": {
-		"scope": "csharp",
-		"prefix": "print",
-		"body": "Printer.Print(${1});"
-	},
-	"Print1D": {
-		"scope": "csharp",
-		"prefix": "print1d",
-		"body": "Printer.Print1D(${1});"
-	},
-	"Print2D": {
-		"scope": "csharp",
-		"prefix": "print2d",
-		"body": "Printer.Print2D(${1});"
-	},
-	"Inf": {
-		"scope": "csharp",
-		"prefix": "inf",
-		"body": "const int inf = (int)1e9;"
-	},
-	"LongInf": {
-		"scope": "csharp",
-		"prefix": "linf",
-		"body": "const long inf = (long)1e18;"
-	},
-	"Delta4d": {
-		"scope": "csharp",
-		"prefix": [
-			"delta4d",
-			"d4"
-		],
-		"body": [
-			"var D4 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };",
-			"foreach (var (${1:dh}, ${2:dw}) in D4)",
-			"{",
-			"    var (${5:nh}, ${6:nw}) = (${3:ch} + ${1}, ${4:cw} + ${2});",
-			"    if (${5} < 0 || ${7:H} <= ${5} || ${6} < 0 || ${8:W} <= ${6}) continue;",
-			"}",
-		]
-	},
-	"Delta8d": {
-		"scope": "csharp",
-		"prefix": [
-			"delta8d",
-			"d8"
-		],
-		"body": "var D8 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1) };"
-	},
-	"GreatestCommonDivisor": {
-		"scope": "csharp",
-		"prefix": [
-			"gcd",
-		],
-		"body": [
-			"public static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);"
-		]
-	},
-	"LeastCommonMultiple": {
-		"scope": "csharp",
-		"prefix": [
-			"lcm",
-		],
-		"body": [
-			"public static long Lcm(long a, long b) => a / Gcd(a, b) * b;"
-		]
-	},
-	"Enumeration": {
-		"scope": "csharp",
-		"prefix": "enumeration",
-		"body": [
-			"public static class Enumeration",
-			"{",
-			"    private static readonly Dictionary<long, long> _memo = new Dictionary<long, long> { { 0, 1 }, { 1, 1 } };",
-			"    private static readonly Dictionary<long, long> _modMemo = new Dictionary<long, long> { { 0, 1 }, { 1, 1 } };",
-			"    private static long _max = 1;",
-			"    private static long _modMax = 1;",
-			"",
-			"    public static long Factorial(long n)",
-			"    {",
-			"        if (_memo.ContainsKey(n)) return _memo[n];",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        var val = _memo[_max];",
-			"        for (var i = _max + 1; i <= n; i++)",
-			"        {",
-			"            val *= i;",
-			"            _memo[i] = val;",
-			"        }",
-			"        _max = n;",
-			"        return _memo[n];",
-			"    }",
-			"",
-			"    public static long Factorial(long n, long mod)",
-			"    {",
-			"        if (_modMemo.ContainsKey(n)) return _modMemo[n];",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        var val = _modMemo[_modMax];",
-			"        for (var i = _modMax + 1; i <= n; i++)",
-			"        {",
-			"            val *= i % mod;",
-			"            val %= mod;",
-			"            _modMemo[i] = val;",
-			"        }",
-			"        _modMax = n;",
-			"        return _modMemo[n];",
-			"    }",
-			"",
-			"    public static long Permutation(long n, long k, bool useMemo = true)",
-			"    {",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        if (n < k) return 0;",
-			"        if (useMemo) return Factorial(n) / Factorial(n - k);",
-			"        var ret = 1L;",
-			"        for (var i = 0; i < k; i++) ret *= n - i;",
-			"        return ret;",
-			"    }",
-			"",
-			"    public static long Permutation(long n, long k, long mod, bool useMemo = true)",
-			"    {",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        if (n < k) return 0;",
-			"        if (useMemo)",
-			"        {",
-			"            var top = Factorial(n, mod);",
-			"            var bottom = Factorial(n - k, mod);",
-			"            return top * Power(bottom, mod - 2, mod) % mod;",
-			"        }",
-			"        var ret = 1L;",
-			"        for (var i = 0; i < k; i++) ret = ret * (n - i) % mod;",
-			"        return ret;",
-			"    }",
-			"",
-			"    public static long Combination(long n, long k, bool useMemo = true)",
-			"    {",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        if (n < k) return 0;",
-			"        k = Math.Min(k, n - k);",
-			"        return useMemo ? Factorial(n) / (Factorial(k) * Factorial(n - k))",
-			"        : Permutation(n, k) / Permutation(k, k);",
-			"    }",
-			"",
-			"    public static long Combination(long n, long k, long mod, bool useMemo = true)",
-			"    {",
-			"        if (n < 0) throw new ArgumentException(nameof(n));",
-			"        if (n < k) return 0;",
-			"        k = Math.Min(k, n - k);",
-			"        var top = useMemo ? Factorial(n, mod) : Permutation(n, k, mod);",
-			"        var bottom = useMemo ? Factorial(k, mod) * Factorial(n - k, mod) % mod : Permutation(k, k, mod);",
-			"        return top * Power(bottom, mod - 2, mod) % mod;",
-			"    }",
-			"",
-			"    public static long Power(long x, long y, long mod)",
-			"    {",
-			"        var result = 1L;",
-			"        while (y > 0)",
-			"        {",
-			"            var xmod = x % mod;",
-			"            if ((y & 1) == 1) result = result * xmod % mod;",
-			"            x = xmod * xmod % mod;",
-			"            y >>= 1;",
-			"        }",
-			"        return result;",
-			"    }",
-			"}"
-		]
-	},
-	"Pascal": {
-		"scope": "csharp",
-		"prefix": "pascal",
-		"body": [
-			"var ${2:nCk} = new long[${1:N}, ${1}];",
-			"for (var i = 0; i < ${1}; i++)",
-			"{",
-			"    for (var j = 0; j <= i; j++)",
-			"    {",
-			"        if (j == 0 || j == i) ${2}[i, j] = 1;",
-			"        else ${2}[i, j] = ${2}[i - 1, j - 1] + ${2}[i - 1, j];",
-			"    }",
-			"}"
-		]
-	},
-	"PascalProbability": {
-		"scope": "csharp",
-		"prefix": [
-			"pascalprobability",
-			"ppascal"
-		],
-		"body": [
-			"var ${2:nCk} = new double[${1:N}, ${1}];",
-			"${2}[0, 0] = 1;",
-			"for (var i = 1; i < ${1}; i++)",
-			"{",
-			"    for (var j = 0; j <= i; j++)",
-			"    {",
-			"        if (j == 0) ${2}[i, j] = ${2}[i - 1, j] / 2;",
-			"        else ${2}[i, j] = (${2}[i - 1, j - 1] + ${2}[i - 1, j]) / 2;",
-			"    }",
-			"}"
-		]
-	},
-	"FactorialModulo": {
-		"scope": "csharp",
-		"prefix": "factorialmodulo",
-		"body": [
-			"var fact = new mint[${1:N} + 1];",
-			"var ifact = new mint[${1} + 1];",
-			"fact[0] = ifact[0] = 1;",
-			"for (var i = 1; i <= ${1}; i++)",
-			"{",
-			"    fact[i] = fact[i - 1] * i;",
-			"    ifact[i] = 1 / fact[i];",
-			"}",
-			"",
-			"mint Combination(int n, int k)",
-			"{",
-			"    if(n < k || n < 0 || k < 0) return 0;",
-			"    return fact[n] * ifact[k] * ifact[n - k];",
-			"}"
-		]
-	},
-	"CountOf": {
-		"scope": "csharp",
-		"prefix": "countof",
-		"body": [
-			"private static int CountOf(string target, string value)",
-			"{",
-			"    var count = 0;",
-			"    var index = 0;",
-			"    while (true)",
-			"    {",
-			"        index = target.IndexOf(value, index);",
-			"        if (index < 0) break;",
-			"        index++;",
-			"        count++;",
-			"    }",
-			"    return count;",
-			"}"
-		]
-	},
-	"Graph": {
-		"scope": "csharp",
-		"prefix": "graph",
-		"body": [
-			"var G = new List<${1:int}>[${2:N}].Select(x => new List<${1}>()).ToArray();",
-			"for (var i = 0; i < ${3:M}; i++)",
-			"{",
-			"    var (${4:a}, ${5:b}) = Scanner.Scan<${1}, ${1}>();",
-			"    ${4}--; ${5}--;",
-			"    G[${4}].Add(${5});",
-			"    G[${5}].Add(${4});",
-			"}"
-		]
-	},
-	"WeightedGraph": {
-		"scope": "csharp",
-		"prefix": [
-			"weightedgraph",
-			"wgraph",
-			"wg"
-		],
-		"body": [
-			"var G = new List<(int, ${1:int})>[${2:N}].Select(x => new List<(int, ${1})>()).ToArray();",
-			"for (var i = 0; i < ${3:M}; i++)",
-			"{",
-			"    var (${4:a}, ${5:b}, ${6:c}) = Scanner.Scan<int, int, ${1}>();",
-			"    ${4}--; ${5}--;",
-			"    G[${4}].Add((${5}, ${6}));",
-			"    G[${5}].Add((${4}, ${6}));",
-			"}"
-		]
-	},
-	"Bfs": {
-		"scope": "csharp",
-		"prefix": "bfs",
-		"body": [
-			"var queue = new Queue<int>();",
-			"queue.Enqueue(0);",
-			"var depths = Enumerable.Repeat(-1, ${1:N}).ToArray();",
-			"depths[0] = 0;",
-			"while (queue.Count > 0)",
-			"{",
-			"    var u = queue.Dequeue();",
-			"    foreach (var v in G[u])",
-			"    {",
-			"        if (depths[v] != -1) continue;",
-			"        depths[v] = depths[u] + 1;",
-			"        queue.Enqueue(v);",
-			"    }",
-			"}"
-		]
-	},
-	"Dijkstra": {
-		"scope": "csharp",
-		"prefix": "dijkstra",
-		"body": [
-			"var costs = new long[${1:N}];",
-			"Array.Fill(costs, long.MaxValue);",
-			"costs[${2:0}] = 0;",
-			"var queue = new PriorityQueue<(int U, long Cost)>((x, y) => x.Cost.CompareTo(y.Cost));",
-			"queue.Enqueue((${2}, 0));",
-			"while (queue.Count > 0)",
-			"{",
-			"    var (u, cu) = queue.Dequeue();",
-			"    if (costs[u] < cu) continue;",
-			"    foreach (var (v, cv) in ${3:G}[u])",
-			"    {",
-			"        var c = ${4:costs[u] + cv};",
-			"        if (costs[v] <= c) continue;",
-			"        costs[v] = c;",
-			"        queue.Enqueue((v, c));",
-			"    }",
-			"}"
-		]
-	},
-	"Warshall–Floyd": {
-		"scope": "csharp",
-		"prefix": [
-			"warshallfloyd",
-			"wf"
-		],
-		"body": [
-			"for (var k = 0; k < ${1:N}; k++)",
-			"{",
-			"    for (var i = 0; i < ${1}; i++)",
-			"    {",
-			"        for (var j = 0; j < ${1}; j++)",
-			"        {",
-			"            ${2:G}[i][j] = Math.Min(${2}[i][j], ${2}[i][k] + ${2}[k][j]);",
-			"            ${2:G}[i, j] = Math.Min(${2}[i, j], ${2}[i, k] + ${2}[k, j]);",
-			"        }",
-			"    }",
-			"}"
-		]
-	},
-	"LevenshteinDistance": {
-		"scope": "csharp",
-		"prefix": "levenshtein",
-		"body": [
-			"public static long LevenshteinDistance<T>(IReadOnlyList<T> a, IReadOnlyList<T> b,",
-			"long editCost = 1, long insertCost = 1, long deleteCost = 1) where T : IEquatable<T>",
-			"{",
-			"    var (n, m) = (a.Count + 1, b.Count + 1);",
-			"    var dp = new long[n * m];",
-			"    Array.Fill(dp, long.MaxValue);",
-			"    for (var i = 0; i < n; i++) dp[i * m] = i;",
-			"    for (var i = 0; i < m; i++) dp[i] = i;",
-			"    for (var i = 1; i < n; i++)",
-			"    {",
-			"        for (var j = 1; j < m; j++)",
-			"        {",
-			"            var ij = i * m + j;",
-			"            dp[ij] = Math.Min(dp[ij], dp[ij - m] + deleteCost);",
-			"            dp[ij] = Math.Min(dp[ij], dp[ij - 1] + insertCost);",
-			"            dp[ij] = Math.Min(dp[ij], dp[ij - m - 1] + (a[i - 1].Equals(b[j - 1]) ? 0 : editCost));",
-			"        }",
-			"    }",
-			"",
-			"    return dp[^1];",
-			"}"
-		]
-	},
-	"LongestCommonSubsequence": {
-		"scope": "csharp",
-		"prefix": [
-			"longestcommonsubsequence",
-			"lcs"
-		],
-		"body": [
-			"var lcs = new int[${1:N} + 1, ${2:M} + 1];",
-			"for (var i = 0; i < ${1}; i++)",
-			"{",
-			"    for (var j = 0; j < ${2}; j++)",
-			"    {",
-			"        if (${3:S}[i] == ${4:T}[j]) lcs[i + 1, j + 1] = lcs[i, j] + 1;",
-			"        else lcs[i + 1, j + 1] = Math.Max(lcs[i + 1, j], lcs[i, j + 1]);",
-			"    }",
-			"}"
-		]
-	},
-	"LongestIncreasingSubsequence": {
-		"scope": "csharp",
-		"prefix": [
-			"longestincreasingsubsequence",
-			"lis"
-		],
-		"body": [
-			"public static long[] LongestIncreasingSubsequence(long[] source)",
-			"{",
-			"    var dp = new long[source.Length];",
-			"    Array.Fill(dp, long.MaxValue);",
-			"    var idx = new int[source.Length];",
-			"    for (var i = 0; i < source.Length; i++)",
-			"    {",
-			"        var lb = LowerBound(dp, source[i]);",
-			"        dp[lb] = source[i];",
-			"        idx[i] = lb;",
-			"    }",
-			"    var lis =  new long[LowerBound(dp, long.MaxValue)];",
-			"    for (var i = source.Length - 1; i >= 0; i--)",
-			"    {",
-			"        lis[idx[i]] = source[i];",
-			"    }",
-			"    return lis;",
-			"}"
-		]
-	},
-	"LowerBound": {
-		"scope": "csharp",
-		"prefix": [
-			"lb",
-			"lowerbound"
-		],
-		"body": [
-			"public static int LowerBound(long[] source, long key)",
-			"{",
-			"    var (l, r) = (-1, source.Length);",
-			"    while (r - l > 1)",
-			"    {",
-			"        var m = l + (r - l) / 2;",
-			"        if (source[m] >= key) r = m;",
-			"        else l = m;",
-			"    }",
-			"    return r;",
-			"}"
-		]
-	},
-	"UpperBound": {
-		"scope": "csharp",
-		"prefix": [
-			"ub",
-			"upperbound"
-		],
-		"body": [
-			"public static int UpperBound(long[] source, long key)",
-			"{",
-			"    var (l, r) = (-1, source.Length);",
-			"    while (r - l > 1)",
-			"    {",
-			"        var m = l + (r - l) / 2;",
-			"        if (source[m] > key) r = m;",
-			"        else l = m;",
-			"    }",
-			"    return r;",
-			"}"
-		]
-	},
-	"BinarySearch": {
-		"scope": "csharp",
-		"prefix": [
-			"bs",
-			"binarysearch"
-		],
-		"body": [
-			"public static long BinarySearch(long ng, long ok, Func<long, bool> func)",
-			"{",
-			"    while (Math.Abs(ok - ng) > 1)",
-			"    {",
-			"        var m = (ok + ng) / 2;",
-			"        if (func(m)) ok = m;",
-			"        else ng = m;",
-			"    }",
-			"    return ok;",
-			"}",
-			"public static double BinarySearch(double ng, double ok, Func<double, bool> func, double eps = 1e-9)",
-			"{",
-			"    while (Math.Abs(ok - ng) > eps)",
-			"    {",
-			"        var m = (ok + ng) / 2;",
-			"        if (func(m)) ok = m;",
-			"        else ng = m;",
-			"    }",
-			"    return ok;",
-			"}"
-		]
-	},
-	"TernarySearch": {
-		"scope": "csharp",
-		"prefix": [
-			"ts",
-			"ternarysearch"
-		],
-		"body": [
-			"public static double TernarySearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
-			"{",
-			"    while (r - l > eps)",
-			"    {",
-			"        var d = (r - l) / 3;",
-			"        var (ml, mr) = (l + d, r - d);",
-			"        if (func(ml) < func(mr)) r = mr;",
-			"        else l = ml;",
-			"    }",
-			"    return (l + r) / 2;",
-			"}"
-		]
-	},
-	"GoldenSearch": {
-		"scope": "csharp",
-		"prefix": [
-			"gs",
-			"goldensearch"
-		],
-		"body": [
-			"public static double GoldenSearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
-			"{",
-			"    var phi = (1.0 + Math.Sqrt(5)) / 2;",
-			"    while (r - l > eps)",
-			"    {",
-			"        var (ml, mr) = ((l * phi + r) / (phi + 1), (l + r * phi) / (phi + 1));",
-			"        if (func(ml) < func(mr)) r = mr;",
-			"        else l = ml;",
-			"    }",
-			"    return (l + r) / 2;",
-			"}"
-		]
-	},
-	"Loop": {
-		"scope": "csharp",
-		"prefix": "loop",
-		"body": [
-			"var dict = new Dictionary<int, int>();",
-			"var steps = new List<int>();",
-			"var ${1:current} = ${2:0};",
-			"for (var i = 0; i < ${3:N}; i++)",
-			"{",
-			"    if (dict.ContainsKey(current))",
-			"    {",
-			"        var noloop = dict[current];",
-			"        var loop = i - dict[current];",
-			"        var mod = (${4:K} - noloop) % loop;",
-			"        if (mod < 0) mod += loop;",
-			"        current = steps[noloop + mod];",
-			"        break;",
-			"    }",
-			"",
-			"    dict[current] = i;",
-			"    steps.Add(current);",
-			"    current = ${5:G}[current];",
-			"}"
-		]
-	},
-	"Transpose": {
-		"scope": "csharp",
-		"prefix": "transpose",
-		"body": [
-			"public static T[,] Transpose<T>(T[,] matrix)",
-			"{",
-			"    var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));",
-			"    var result = new T[m, n];",
-			"    for (var i = 0; i < m; i++)",
-			"        for (var j = 0; j < n; j++)",
-			"            result[i, j] = matrix[j, m - 1 - i];",
-			"    return result;",
-			"}"
-		]
-	},
-	"TestMethod": {
-		"scope": "csharp",
-		"prefix": "testmethod",
-		"body": [
-			"[TestMethod, Timeout(TimeLimit)]",
-			"public void Test${1:number}()",
-			"{",
-			"    const string input = @\"\";",
-			"    const string output = @\"\";",
-			"    Tester.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelativeError});",
-			"}"
-		]
-	},
+    "Scanner": {
+        "scope": "csharp",
+        "prefix": "scanner",
+        "body": [
+            "public static class Scanner",
+            "{",
+            "    private static Queue<string> queue = new Queue<string>();",
+            "    public static T Next<T>()",
+            "    {",
+            "        if (queue.Count == 0) foreach (var item in Console.ReadLine().Trim().Split(\" \")) queue.Enqueue(item);",
+            "        return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));",
+            "    }",
+            "    public static T Scan<T>() => Next<T>();",
+            "    public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());",
+            "    public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());",
+            "    public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());",
+            "    public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());",
+            "    public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>(), Next<T6>());",
+            "    public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(\" \").Select(x => (T)Convert.ChangeType(x, typeof(T)));",
+            "}"
+        ]
+    },
+    "Scan1": {
+        "scope": "csharp",
+        "prefix": "scan1",
+        "body": "var ${1:val} = Scanner.Scan<${2:int}>();"
+    },
+    "Scan2": {
+        "scope": "csharp",
+        "prefix": "scan2",
+        "body": "var (${1:val1}, ${3:val2}) = Scanner.Scan<${2:int}, ${4:int}>();"
+    },
+    "Scan3": {
+        "scope": "csharp",
+        "prefix": "scan3",
+        "body": "var (${1:val1}, ${3:val2}, ${5:val3}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}>();"
+    },
+    "Scan4": {
+        "scope": "csharp",
+        "prefix": "scan4",
+        "body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}>();"
+    },
+    "Scan5": {
+        "scope": "csharp",
+        "prefix": "scan5",
+        "body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}>();"
+    },
+    "Scan6": {
+        "scope": "csharp",
+        "prefix": "scan6",
+        "body": "var (${1:val1}, ${3:val2}, ${5:val3}, ${7:val4}, ${9:val5}, ${11:val6}) = Scanner.Scan<${2:int}, ${4:int}, ${6:int}, ${8:int}, ${10:int}, ${12:int}>();"
+    },
+    "ScanArray": {
+        "scope": "csharp",
+        "prefix": "scanarray",
+        "body": "var ${1:array} = Scanner.ScanEnumerable<${2:int}>().ToArray();"
+    },
+    "ScanList": {
+        "scope": "csharp",
+        "prefix": "scanlist",
+        "body": "var ${1:list} = Scanner.ScanEnumerable<${2:int}>().ToList();"
+    },
+    "Printer": {
+        "scope": "csharp",
+        "prefix": "printer",
+        "body": [
+            "public static class Printer",
+            "{",
+            "    public static void Print<T>(T source) => Console.WriteLine(source);",
+            "    public static void Print1D<T>(IEnumerable<T> source, string separator = \"\") =>",
+            "        Console.WriteLine(string.Join(separator, source));",
+            "    public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = \"\") =>",
+            "        Console.WriteLine(string.Join(separator, source.Select(selector)));",
+            "    public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = \"\") =>",
+            "        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x))));",
+            "    public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = \"\") =>",
+            "        Console.WriteLine(string.Join(\"\\n\", source.Select(x => string.Join(separator, x.Select(selector)))));",
+            "    public static void Print2D<T>(T[,] source, string separator = \"\")",
+            "    {",
+            "        var (h, w) = (source.GetLength(0), source.GetLength(1));",
+            "        for (var i = 0; i < h; i++)",
+            "            for (var j = 0; j < w; j++)",
+            "            {",
+            "                Console.Write(source[i, j]);",
+            "                Console.Write(j == w - 1 ? \"\\n\" : separator);",
+            "            }",
+            "    }",
+            "    public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = \"\")",
+            "    {",
+            "        var (h, w) = (source.GetLength(0), source.GetLength(1));",
+            "        for (var i = 0; i < h; i++)",
+            "            for (var j = 0; j < w; j++)",
+            "            {",
+            "                Console.Write(selector(source[i, j]));",
+            "                Console.Write(j == w - 1 ? \"\\n\" : separator);",
+            "            }",
+            "    }",
+            "}"
+        ]
+    },
+    "Print": {
+        "scope": "csharp",
+        "prefix": "print",
+        "body": "Printer.Print(${1});"
+    },
+    "Print1D": {
+        "scope": "csharp",
+        "prefix": "print1d",
+        "body": "Printer.Print1D(${1});"
+    },
+    "Print2D": {
+        "scope": "csharp",
+        "prefix": "print2d",
+        "body": "Printer.Print2D(${1});"
+    },
+    "Inf": {
+        "scope": "csharp",
+        "prefix": "inf",
+        "body": "const int inf = (int)1e9;"
+    },
+    "LongInf": {
+        "scope": "csharp",
+        "prefix": "linf",
+        "body": "const long inf = (long)1e18;"
+    },
+    "Delta4d": {
+        "scope": "csharp",
+        "prefix": [
+            "delta4d",
+            "d4"
+        ],
+        "body": [
+            "var D4 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };",
+            "foreach (var (${1:dh}, ${2:dw}) in D4)",
+            "{",
+            "    var (${5:nh}, ${6:nw}) = (${3:ch} + ${1}, ${4:cw} + ${2});",
+            "    if (${5} < 0 || ${7:H} <= ${5} || ${6} < 0 || ${8:W} <= ${6}) continue;",
+            "}",
+        ]
+    },
+    "Delta8d": {
+        "scope": "csharp",
+        "prefix": [
+            "delta8d",
+            "d8"
+        ],
+        "body": "var D8 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1) };"
+    },
+    "GreatestCommonDivisor": {
+        "scope": "csharp",
+        "prefix": [
+            "gcd",
+        ],
+        "body": [
+            "public static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);"
+        ]
+    },
+    "LeastCommonMultiple": {
+        "scope": "csharp",
+        "prefix": [
+            "lcm",
+        ],
+        "body": [
+            "public static long Lcm(long a, long b) => a / Gcd(a, b) * b;"
+        ]
+    },
+    "Enumeration": {
+        "scope": "csharp",
+        "prefix": "enumeration",
+        "body": [
+            "public static class Enumeration",
+            "{",
+            "    private static readonly Dictionary<long, long> _memo = new Dictionary<long, long> { { 0, 1 }, { 1, 1 } };",
+            "    private static readonly Dictionary<long, long> _modMemo = new Dictionary<long, long> { { 0, 1 }, { 1, 1 } };",
+            "    private static long _max = 1;",
+            "    private static long _modMax = 1;",
+            "",
+            "    public static long Factorial(long n)",
+            "    {",
+            "        if (_memo.ContainsKey(n)) return _memo[n];",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        var val = _memo[_max];",
+            "        for (var i = _max + 1; i <= n; i++)",
+            "        {",
+            "            val *= i;",
+            "            _memo[i] = val;",
+            "        }",
+            "        _max = n;",
+            "        return _memo[n];",
+            "    }",
+            "",
+            "    public static long Factorial(long n, long mod)",
+            "    {",
+            "        if (_modMemo.ContainsKey(n)) return _modMemo[n];",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        var val = _modMemo[_modMax];",
+            "        for (var i = _modMax + 1; i <= n; i++)",
+            "        {",
+            "            val *= i % mod;",
+            "            val %= mod;",
+            "            _modMemo[i] = val;",
+            "        }",
+            "        _modMax = n;",
+            "        return _modMemo[n];",
+            "    }",
+            "",
+            "    public static long Permutation(long n, long k, bool useMemo = true)",
+            "    {",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        if (n < k) return 0;",
+            "        if (useMemo) return Factorial(n) / Factorial(n - k);",
+            "        var ret = 1L;",
+            "        for (var i = 0; i < k; i++) ret *= n - i;",
+            "        return ret;",
+            "    }",
+            "",
+            "    public static long Permutation(long n, long k, long mod, bool useMemo = true)",
+            "    {",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        if (n < k) return 0;",
+            "        if (useMemo)",
+            "        {",
+            "            var top = Factorial(n, mod);",
+            "            var bottom = Factorial(n - k, mod);",
+            "            return top * Power(bottom, mod - 2, mod) % mod;",
+            "        }",
+            "        var ret = 1L;",
+            "        for (var i = 0; i < k; i++) ret = ret * (n - i) % mod;",
+            "        return ret;",
+            "    }",
+            "",
+            "    public static long Combination(long n, long k, bool useMemo = true)",
+            "    {",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        if (n < k) return 0;",
+            "        k = Math.Min(k, n - k);",
+            "        return useMemo ? Factorial(n) / (Factorial(k) * Factorial(n - k))",
+            "        : Permutation(n, k) / Permutation(k, k);",
+            "    }",
+            "",
+            "    public static long Combination(long n, long k, long mod, bool useMemo = true)",
+            "    {",
+            "        if (n < 0) throw new ArgumentException(nameof(n));",
+            "        if (n < k) return 0;",
+            "        k = Math.Min(k, n - k);",
+            "        var top = useMemo ? Factorial(n, mod) : Permutation(n, k, mod);",
+            "        var bottom = useMemo ? Factorial(k, mod) * Factorial(n - k, mod) % mod : Permutation(k, k, mod);",
+            "        return top * Power(bottom, mod - 2, mod) % mod;",
+            "    }",
+            "",
+            "    public static long Power(long x, long y, long mod)",
+            "    {",
+            "        var result = 1L;",
+            "        while (y > 0)",
+            "        {",
+            "            var xmod = x % mod;",
+            "            if ((y & 1) == 1) result = result * xmod % mod;",
+            "            x = xmod * xmod % mod;",
+            "            y >>= 1;",
+            "        }",
+            "        return result;",
+            "    }",
+            "}"
+        ]
+    },
+    "Pascal": {
+        "scope": "csharp",
+        "prefix": "pascal",
+        "body": [
+            "var ${2:nCk} = new long[${1:N}, ${1}];",
+            "for (var i = 0; i < ${1}; i++)",
+            "{",
+            "    for (var j = 0; j <= i; j++)",
+            "    {",
+            "        if (j == 0 || j == i) ${2}[i, j] = 1;",
+            "        else ${2}[i, j] = ${2}[i - 1, j - 1] + ${2}[i - 1, j];",
+            "    }",
+            "}"
+        ]
+    },
+    "PascalProbability": {
+        "scope": "csharp",
+        "prefix": [
+            "pascalprobability",
+            "ppascal"
+        ],
+        "body": [
+            "var ${2:nCk} = new double[${1:N}, ${1}];",
+            "${2}[0, 0] = 1;",
+            "for (var i = 1; i < ${1}; i++)",
+            "{",
+            "    for (var j = 0; j <= i; j++)",
+            "    {",
+            "        if (j == 0) ${2}[i, j] = ${2}[i - 1, j] / 2;",
+            "        else ${2}[i, j] = (${2}[i - 1, j - 1] + ${2}[i - 1, j]) / 2;",
+            "    }",
+            "}"
+        ]
+    },
+    "FactorialModulo": {
+        "scope": "csharp",
+        "prefix": "factorialmodulo",
+        "body": [
+            "var fact = new mint[${1:N} + 1];",
+            "var ifact = new mint[${1} + 1];",
+            "fact[0] = ifact[0] = 1;",
+            "for (var i = 1; i <= ${1}; i++)",
+            "{",
+            "    fact[i] = fact[i - 1] * i;",
+            "    ifact[i] = 1 / fact[i];",
+            "}",
+            "",
+            "mint Combination(int n, int k)",
+            "{",
+            "    if(n < k || n < 0 || k < 0) return 0;",
+            "    return fact[n] * ifact[k] * ifact[n - k];",
+            "}"
+        ]
+    },
+    "CountOf": {
+        "scope": "csharp",
+        "prefix": "countof",
+        "body": [
+            "private static int CountOf(string target, string value)",
+            "{",
+            "    var count = 0;",
+            "    var index = 0;",
+            "    while (true)",
+            "    {",
+            "        index = target.IndexOf(value, index);",
+            "        if (index < 0) break;",
+            "        index++;",
+            "        count++;",
+            "    }",
+            "    return count;",
+            "}"
+        ]
+    },
+    "Graph": {
+        "scope": "csharp",
+        "prefix": "graph",
+        "body": [
+            "var G = new List<${1:int}>[${2:N}].Select(x => new List<${1}>()).ToArray();",
+            "for (var i = 0; i < ${3:M}; i++)",
+            "{",
+            "    var (${4:a}, ${5:b}) = Scanner.Scan<${1}, ${1}>();",
+            "    ${4}--; ${5}--;",
+            "    G[${4}].Add(${5});",
+            "    G[${5}].Add(${4});",
+            "}"
+        ]
+    },
+    "WeightedGraph": {
+        "scope": "csharp",
+        "prefix": [
+            "weightedgraph",
+            "wgraph",
+            "wg"
+        ],
+        "body": [
+            "var G = new List<(int, ${1:int})>[${2:N}].Select(x => new List<(int, ${1})>()).ToArray();",
+            "for (var i = 0; i < ${3:M}; i++)",
+            "{",
+            "    var (${4:a}, ${5:b}, ${6:c}) = Scanner.Scan<int, int, ${1}>();",
+            "    ${4}--; ${5}--;",
+            "    G[${4}].Add((${5}, ${6}));",
+            "    G[${5}].Add((${4}, ${6}));",
+            "}"
+        ]
+    },
+    "Bfs": {
+        "scope": "csharp",
+        "prefix": "bfs",
+        "body": [
+            "var queue = new Queue<int>();",
+            "queue.Enqueue(0);",
+            "var depths = Enumerable.Repeat(-1, ${1:N}).ToArray();",
+            "depths[0] = 0;",
+            "while (queue.Count > 0)",
+            "{",
+            "    var u = queue.Dequeue();",
+            "    foreach (var v in G[u])",
+            "    {",
+            "        if (depths[v] != -1) continue;",
+            "        depths[v] = depths[u] + 1;",
+            "        queue.Enqueue(v);",
+            "    }",
+            "}"
+        ]
+    },
+    "Dijkstra": {
+        "scope": "csharp",
+        "prefix": "dijkstra",
+        "body": [
+            "var costs = new long[${1:N}];",
+            "Array.Fill(costs, long.MaxValue);",
+            "costs[${2:0}] = 0;",
+            "var queue = new PriorityQueue<(int U, long Cost)>((x, y) => x.Cost.CompareTo(y.Cost));",
+            "queue.Enqueue((${2}, 0));",
+            "while (queue.Count > 0)",
+            "{",
+            "    var (u, cu) = queue.Dequeue();",
+            "    if (costs[u] < cu) continue;",
+            "    foreach (var (v, cv) in ${3:G}[u])",
+            "    {",
+            "        var c = ${4:costs[u] + cv};",
+            "        if (costs[v] <= c) continue;",
+            "        costs[v] = c;",
+            "        queue.Enqueue((v, c));",
+            "    }",
+            "}"
+        ]
+    },
+    "Warshall–Floyd": {
+        "scope": "csharp",
+        "prefix": [
+            "warshallfloyd",
+            "wf"
+        ],
+        "body": [
+            "for (var k = 0; k < ${1:N}; k++)",
+            "{",
+            "    for (var i = 0; i < ${1}; i++)",
+            "    {",
+            "        for (var j = 0; j < ${1}; j++)",
+            "        {",
+            "            ${2:G}[i][j] = Math.Min(${2}[i][j], ${2}[i][k] + ${2}[k][j]);",
+            "            ${2:G}[i, j] = Math.Min(${2}[i, j], ${2}[i, k] + ${2}[k, j]);",
+            "        }",
+            "    }",
+            "}"
+        ]
+    },
+    "LevenshteinDistance": {
+        "scope": "csharp",
+        "prefix": "levenshtein",
+        "body": [
+            "public static long LevenshteinDistance<T>(IReadOnlyList<T> a, IReadOnlyList<T> b,",
+            "long editCost = 1, long insertCost = 1, long deleteCost = 1) where T : IEquatable<T>",
+            "{",
+            "    var (n, m) = (a.Count + 1, b.Count + 1);",
+            "    var dp = new long[n * m];",
+            "    Array.Fill(dp, long.MaxValue);",
+            "    for (var i = 0; i < n; i++) dp[i * m] = i;",
+            "    for (var i = 0; i < m; i++) dp[i] = i;",
+            "    for (var i = 1; i < n; i++)",
+            "    {",
+            "        for (var j = 1; j < m; j++)",
+            "        {",
+            "            var ij = i * m + j;",
+            "            dp[ij] = Math.Min(dp[ij], dp[ij - m] + deleteCost);",
+            "            dp[ij] = Math.Min(dp[ij], dp[ij - 1] + insertCost);",
+            "            dp[ij] = Math.Min(dp[ij], dp[ij - m - 1] + (a[i - 1].Equals(b[j - 1]) ? 0 : editCost));",
+            "        }",
+            "    }",
+            "",
+            "    return dp[^1];",
+            "}"
+        ]
+    },
+    "LongestCommonSubsequence": {
+        "scope": "csharp",
+        "prefix": [
+            "longestcommonsubsequence",
+            "lcs"
+        ],
+        "body": [
+            "var lcs = new int[${1:N} + 1, ${2:M} + 1];",
+            "for (var i = 0; i < ${1}; i++)",
+            "{",
+            "    for (var j = 0; j < ${2}; j++)",
+            "    {",
+            "        if (${3:S}[i] == ${4:T}[j]) lcs[i + 1, j + 1] = lcs[i, j] + 1;",
+            "        else lcs[i + 1, j + 1] = Math.Max(lcs[i + 1, j], lcs[i, j + 1]);",
+            "    }",
+            "}"
+        ]
+    },
+    "LongestIncreasingSubsequence": {
+        "scope": "csharp",
+        "prefix": [
+            "longestincreasingsubsequence",
+            "lis"
+        ],
+        "body": [
+            "public static long[] LongestIncreasingSubsequence(long[] source)",
+            "{",
+            "    var dp = new long[source.Length];",
+            "    Array.Fill(dp, long.MaxValue);",
+            "    var idx = new int[source.Length];",
+            "    for (var i = 0; i < source.Length; i++)",
+            "    {",
+            "        var lb = LowerBound(dp, source[i]);",
+            "        dp[lb] = source[i];",
+            "        idx[i] = lb;",
+            "    }",
+            "    var lis =  new long[LowerBound(dp, long.MaxValue)];",
+            "    for (var i = source.Length - 1; i >= 0; i--)",
+            "    {",
+            "        lis[idx[i]] = source[i];",
+            "    }",
+            "    return lis;",
+            "}"
+        ]
+    },
+    "LowerBound": {
+        "scope": "csharp",
+        "prefix": [
+            "lb",
+            "lowerbound"
+        ],
+        "body": [
+            "public static int LowerBound(long[] source, long key)",
+            "{",
+            "    var (l, r) = (-1, source.Length);",
+            "    while (r - l > 1)",
+            "    {",
+            "        var m = l + (r - l) / 2;",
+            "        if (source[m] >= key) r = m;",
+            "        else l = m;",
+            "    }",
+            "    return r;",
+            "}"
+        ]
+    },
+    "UpperBound": {
+        "scope": "csharp",
+        "prefix": [
+            "ub",
+            "upperbound"
+        ],
+        "body": [
+            "public static int UpperBound(long[] source, long key)",
+            "{",
+            "    var (l, r) = (-1, source.Length);",
+            "    while (r - l > 1)",
+            "    {",
+            "        var m = l + (r - l) / 2;",
+            "        if (source[m] > key) r = m;",
+            "        else l = m;",
+            "    }",
+            "    return r;",
+            "}"
+        ]
+    },
+    "BinarySearch": {
+        "scope": "csharp",
+        "prefix": [
+            "bs",
+            "binarysearch"
+        ],
+        "body": [
+            "public static long BinarySearch(long ng, long ok, Func<long, bool> func)",
+            "{",
+            "    while (Math.Abs(ok - ng) > 1)",
+            "    {",
+            "        var m = (ok + ng) / 2;",
+            "        if (func(m)) ok = m;",
+            "        else ng = m;",
+            "    }",
+            "    return ok;",
+            "}",
+            "public static double BinarySearch(double ng, double ok, Func<double, bool> func, double eps = 1e-9)",
+            "{",
+            "    while (Math.Abs(ok - ng) > eps)",
+            "    {",
+            "        var m = (ok + ng) / 2;",
+            "        if (func(m)) ok = m;",
+            "        else ng = m;",
+            "    }",
+            "    return ok;",
+            "}"
+        ]
+    },
+    "TernarySearch": {
+        "scope": "csharp",
+        "prefix": [
+            "ts",
+            "ternarysearch"
+        ],
+        "body": [
+            "public static double TernarySearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
+            "{",
+            "    while (r - l > eps)",
+            "    {",
+            "        var d = (r - l) / 3;",
+            "        var (ml, mr) = (l + d, r - d);",
+            "        if (func(ml) < func(mr)) r = mr;",
+            "        else l = ml;",
+            "    }",
+            "    return (l + r) / 2;",
+            "}"
+        ]
+    },
+    "GoldenSearch": {
+        "scope": "csharp",
+        "prefix": [
+            "gs",
+            "goldensearch"
+        ],
+        "body": [
+            "public static double GoldenSearch(double l, double r, Func<double, double> func, double eps = 1e-9)",
+            "{",
+            "    var phi = (1.0 + Math.Sqrt(5)) / 2;",
+            "    while (r - l > eps)",
+            "    {",
+            "        var (ml, mr) = ((l * phi + r) / (phi + 1), (l + r * phi) / (phi + 1));",
+            "        if (func(ml) < func(mr)) r = mr;",
+            "        else l = ml;",
+            "    }",
+            "    return (l + r) / 2;",
+            "}"
+        ]
+    },
+    "Compress": {
+        "scope": "csharp",
+        "prefix": [
+            "compress",
+        ],
+        "body": [
+            "public static (Dictionary<T, int> map, Dictionary<int, T> remap) Compress<T>(IEnumerable<T> source)",
+            "{",
+            "    var distinct = source.Distinct().ToArray();",
+            "    Array.Sort(distinct);",
+            "    var map = new Dictionary<T, int>();",
+            "    var remap = new Dictionary<int, T>();",
+            "    foreach (var (x, i) in distinct.Select((x, i) => (x, i)))",
+            "    {",
+            "        map[x] = i;",
+            "        remap[i] = x;",
+            "    }",
+            "    return (map, remap);",
+            "}"
+        ]
+    },
+    "Loop": {
+        "scope": "csharp",
+        "prefix": "loop",
+        "body": [
+            "var dict = new Dictionary<int, int>();",
+            "var steps = new List<int>();",
+            "var ${1:current} = ${2:0};",
+            "for (var i = 0; i < ${3:N}; i++)",
+            "{",
+            "    if (dict.ContainsKey(current))",
+            "    {",
+            "        var noloop = dict[current];",
+            "        var loop = i - dict[current];",
+            "        var mod = (${4:K} - noloop) % loop;",
+            "        if (mod < 0) mod += loop;",
+            "        current = steps[noloop + mod];",
+            "        break;",
+            "    }",
+            "",
+            "    dict[current] = i;",
+            "    steps.Add(current);",
+            "    current = ${5:G}[current];",
+            "}"
+        ]
+    },
+    "Transpose": {
+        "scope": "csharp",
+        "prefix": "transpose",
+        "body": [
+            "public static T[,] Transpose<T>(T[,] matrix)",
+            "{",
+            "    var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));",
+            "    var result = new T[m, n];",
+            "    for (var i = 0; i < m; i++)",
+            "        for (var j = 0; j < n; j++)",
+            "            result[i, j] = matrix[j, m - 1 - i];",
+            "    return result;",
+            "}"
+        ]
+    },
+    "TestMethod": {
+        "scope": "csharp",
+        "prefix": "testmethod",
+        "body": [
+            "[TestMethod, Timeout(TimeLimit)]",
+            "public void Test${1:number}()",
+            "{",
+            "    const string input = @\"\";",
+            "    const string output = @\"\";",
+            "    Tester.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelativeError});",
+            "}"
+        ]
+    },
 }
