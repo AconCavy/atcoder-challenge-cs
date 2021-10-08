@@ -619,7 +619,7 @@
             "compress",
         ],
         "body": [
-            "public static (Dictionary<T, int> map, Dictionary<int, T> remap) Compress<T>(IEnumerable<T> source)",
+            "public static (Dictionary<T, int> Map, Dictionary<int, T> ReMap) Compress<T>(IEnumerable<T> source)",
             "{",
             "    var distinct = source.Distinct().ToArray();",
             "    Array.Sort(distinct);",
