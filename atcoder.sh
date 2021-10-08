@@ -22,4 +22,4 @@ case "$(uname -s)" in
     Linux) xdg-open https://atcoder.jp/contests/$SLN ;;
 esac
 
-code -n . ./$SLN/Tasks/Tasks.csproj ./$SLN/Tests/ATests.cs ./$SLN/Tasks/A.cs ./$SLN/Tests/BTests.cs ./$SLN/Tasks/B.cs ./$SLN/Tests/CTests.cs ./$SLN/Tasks/C.cs ./$SLN/Tests/DTests.cs ./$SLN/Tasks/D.cs
+code -n . ./$SLN/Tests/ATests.cs ./$SLN/Tasks/A.cs ./$SLN/Tests/BTests.cs ./$SLN/Tasks/B.cs ./$SLN/Tests/CTests.cs ./$SLN/Tasks/C.cs ./$SLN/Tests/DTests.cs ./$SLN/Tasks/D.cs
