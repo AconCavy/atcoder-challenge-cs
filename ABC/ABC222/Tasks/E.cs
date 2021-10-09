@@ -22,8 +22,68 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M, K) = Scanner.Scan<int, int, int>();
-            var A = Scanner.ScanEnumerable<int>().ToArray();
+            var A = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToArray();
+            var G = new List<int>[N].Select(x => new List<int>()).ToArray();
+            var dict = new Dictionary<(int U, int V), int>();
+            for (var i = 0; i < N - 1; i++)
+            {
+                var (u, v) = Scanner.Scan<int, int>();
+                u--; v--;
+                G[u].Add(v);
+                G[v].Add(u);
 
+                if (u > v) (u, v) = (v, u);
+                dict[(u, v)] = i;
+            }
+
+            var count = new int[N - 1];
+            bool Dfs(int u, int p, int g)
+            {
+                if (u == g) return true;
+                foreach (var v in G[u])
+                {
+                    if (v == p) continue;
+                    if (Dfs(v, u, g))
+                    {
+                        var idx = u < v ? dict[(u, v)] : dict[(v, u)];
+                        count[idx]++;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            for (var i = 0; i + 1 < M; i++)
+            {
+                Dfs(A[i], -1, A[i + 1]);
+            }
+
+            // R - B == K
+            // K + sum == R - B + R + B
+            // R = (K + sum) / 2
+
+            var sum = count.Sum();
+            var R2 = K + sum;
+            if (R2 % 2 == 1 || R2 < 0)
+            {
+                Console.WriteLine(0);
+                return;
+            }
+
+            var max = 100000;
+            var dp = new mint[max + 1];
+            dp[0] = 1;
+            foreach (var c in count)
+            {
+                for (var i = max; i >= c; i--)
+                {
+                    dp[i] += dp[i - c];
+                }
+            }
+
+            var answer = dp[R2 / 2];
+            Console.WriteLine(answer);
         }
 
         public readonly struct ModuloInteger : IEquatable<ModuloInteger>
