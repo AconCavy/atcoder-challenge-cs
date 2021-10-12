@@ -29,7 +29,7 @@
                 "${workspaceFolder}/${config:env.project}/Tasks",
                 "--framework",
                 "${config:env.framework}",
-                "--property:StartupObject=Tasks.${config:env.task}"
+                // "--property:StartupObject=Tasks.${config:env.task}"
             ],
             "problemMatcher": [
                 "$msCompile"
