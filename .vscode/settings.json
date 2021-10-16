@@ -1,5 +1,5 @@
 {
-    "env.project": "PAST/PAST202012-OPEN",
+    "env.project": "ARC/ARC128",
     "env.task": "A",
     "env.framework": "netcoreapp3.1"
 }
