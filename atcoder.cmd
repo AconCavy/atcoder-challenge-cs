@@ -1,19 +1,49 @@
 @echo off
-if "%~1"=="" (
-    echo option requires a sln name as an argument
+
+call :"%~1" %~2 %~3
+exit /b
+
+:""
+:"help"
+    echo new: Create a new solution by the specified name.
+    echo add: Add a new task and test to the specified solution.
     exit /b
-)
-set SLN=%~1
 
-dotnet new cpproj -n %SLN% -f netcoreapp3.1
-dotnet new cpsolver -n A -o .\%SLN%\Tasks
-dotnet new cptests -n A -o .\%SLN%\Tests
-dotnet new cpsolver -n B -o .\%SLN%\Tasks
-dotnet new cptests -n B -o .\%SLN%\Tests
-dotnet new cpsolver -n C -o .\%SLN%\Tasks
-dotnet new cptests -n C -o .\%SLN%\Tests
-dotnet new cpsolver -n D -o .\%SLN%\Tasks
-dotnet new cptests -n D -o .\%SLN%\Tests
+:"add"
+    setlocal
+    set SLN=%~1
+    set TASK=%~2
 
-start https://atcoder.jp/contests/%SLN%
-code -n . .\%SLN%\Tests\ATests.cs .\%SLN%\Tasks\A.cs .\%SLN%\Tests\BTests.cs .\%SLN%\Tasks\B.cs .\%SLN%\Tests\CTests.cs .\%SLN%\Tasks\C.cs .\%SLN%\Tests\DTests.cs .\%SLN%\Tasks\D.cs
+    if "%SLN%"=="" (
+        echo The option requires a solution name as an argument.
+        exit /b
+    )
+
+    if "%TASK%"=="" (
+        echo The option requires a task name as an argument.
+        exit /b
+    )
+
+    call dotnet new cpsolver -n %TASK% -o .\%SLN%\Tasks
+    call dotnet new cptests -n %TASK% -o .\%SLN%\Tests
+    call code -n . .\%SLN%\Tests\%TASK%Tests.cs .\%SLN%\Tasks\%TASK%.cs
+    endlocal
+    exit /b
+
+:"new"
+    setlocal
+    set SLN=%~1
+    if "%SLN%"=="" (
+        echo option requires a solution name as an argument.
+        exit /b
+    )
+
+    call dotnet new cpproj -n %SLN% -f netcoreapp3.1
+    call :"add" %SLN% A
+    call :"add" %SLN% B
+    call :"add" %SLN% C
+    call :"add" %SLN% D
+
+    start https://atcoder.jp/contests/%SLN%
+    endlocal
+    exit /b
