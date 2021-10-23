@@ -1,46 +1,39 @@
 # Overview
 
-The repository for C# solutions submitted to AtCoder.
+The repository is C# solutions submitted for AtCoder.
 
 ## Environment
 
-.NET Core 3.1.x
+.NET Core 3.1
 
-## Install templates
+## Install Templates
 
-Installs [AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp).
+Install [AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp).
 
-## Create project
+## Create Project
 
-Creates base project with a project name using the `atcoder.cmd` on Windows, the `atcoder.sh` on macOS or Linux.
-After that, the specified contest web site will be opened.
-
-### Windows
+Create a project using the script with `new` command.
 
 ```sh
-./atcoder.cmd ABC177
+# Windows
+./atcoder.cmd new ABC177
+
+# macOS or Linux
+./atcoder.sh new ABC177
 ```
 
-### macOS or Linux
+In the example, the dotnet solution named `ABC177` that contains `Task` and `Test` projects will be created.
+
+## Create Solver Items
+
+Create solver items using the script with `add` command.
 
 ```sh
-./atcoder.sh ABC177
+# Windows
+./atcoder.cmd add ABC177 E
+
+# macOS or Linux
+./atcoder.sh add ABC177 E
 ```
 
-## Append task
-
-Creates solver items with a task name under the `Tasks` and the `Tests` using the `add.cmd` on Windows, the `add-task.sh` on macOS or Linux.
-
-For example, `(root)/ABC177/Tasks/E.cs` and `(root)/ABC177/Tests/ETests.cs` will be created if the current directory is `(root)/ABC177`.
-
-### Windows
-
-```sh
-../add.cmd E
-```
-
-### macOS or Linux
-
-```sh
-../add.sh E
-```
+In the example, `Task/E.cs` and `Test/ETests.cs` will be created in `ABC177` solution.
