@@ -15,10 +15,6 @@
             "problemMatcher": [
                 "$msCompile"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
         },
         {
             "label": "run",
@@ -34,9 +30,6 @@
             ],
             "problemMatcher": [
                 "$msCompile"
-            ],
-            "dependsOn": [
-                "clean"
             ]
         },
         {
@@ -47,14 +40,10 @@
                 "test",
                 "${workspaceFolder}/${config:env.project}",
                 "--framework",
-                "${config:env.framework}"
+                "${config:env.framework}",
             ],
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "dependsOn": [
-                "build"
+            "problemMatcher": [
+                "$msCompile"
             ]
         },
         {
