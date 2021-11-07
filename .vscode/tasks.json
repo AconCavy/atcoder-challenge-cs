@@ -41,6 +41,7 @@
                 "${workspaceFolder}/${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
+                "--no-build"
             ],
             "problemMatcher": [
                 "$msCompile"
