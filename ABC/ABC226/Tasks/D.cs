@@ -43,30 +43,18 @@ namespace Tasks
             Console.WriteLine(answer);
         }
 
-        public static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
-
         public readonly struct Fraction : IComparable<Fraction>, IEquatable<Fraction>
         {
             public readonly long Y;
             public readonly long X;
-
             public Fraction(long y, long x)
             {
+                static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
                 var g = Gcd(y, x);
-                Y = y / g;
-                X = x / g;
+                (Y, X) = (y / g, x / g);
             }
-
-            public int CompareTo([AllowNull] Fraction other)
-            {
-                return (Y * other.X).CompareTo(X * other.Y);
-            }
-
-            public bool Equals([AllowNull] Fraction other)
-            {
-                return X == other.X && Y == other.Y;
-            }
-
+            public int CompareTo(Fraction other) => (Y * other.X).CompareTo(X * other.Y);
+            public bool Equals(Fraction other) => X == other.X && Y == other.Y;
         }
 
         public static class Scanner
