@@ -21,21 +21,21 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var P = new (Point L, Point R)[N];
+            var P = new (Fraction L, Fraction R)[N];
 
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = Scanner.Scan<long, long>();
-                P[i] = (new Point(x, y - 1), new Point(x - 1, y));
+                P[i] = (new Fraction(y - 1, x), new Fraction(y, x - 1));
             }
 
-            Array.Sort(P, (x, y) => (x.R.Y * y.R.X).CompareTo(y.R.Y * x.R.X));
+            Array.Sort(P, (x, y) => x.R.CompareTo(y.R));
 
-            var rr = new Point(0, 0);
+            var rr = new Fraction(0, 1);
             var answer = 0;
             foreach (var (l, r) in P)
             {
-                if (l.Y * rr.X < rr.Y * l.X) continue;
+                if (rr.CompareTo(l) > 0) continue;
                 rr = r;
                 answer++;
             }
@@ -43,16 +43,27 @@ namespace Tasks
             Console.WriteLine(answer);
         }
 
-        public readonly struct Point : IEquatable<Point>
+        public readonly struct Fraction : IComparable<Fraction>, IEquatable<Fraction>
         {
-            public readonly long X;
-            public readonly long Y;
-            public Point(long x, long y) => (X, Y) = (x, y);
-
-            public bool Equals([AllowNull] Point other)
+            public long Y { get; }
+            public long X { get; }
+            public Fraction(long y, long x)
             {
-                return X == other.X && Y == other.Y;
+                static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
+                var g = Gcd(y, x);
+                (Y, X) = (y / g, x / g);
             }
+            public static bool operator <(Fraction left, Fraction right) => left.CompareTo(right) < 0;
+            public static bool operator <=(Fraction left, Fraction right) => left.CompareTo(right) <= 0;
+            public static bool operator >(Fraction left, Fraction right) => left.CompareTo(right) > 0;
+            public static bool operator >=(Fraction left, Fraction right) => left.CompareTo(right) >= 0;
+            public static bool operator ==(Fraction left, Fraction right) => left.Equals(right);
+            public static bool operator !=(Fraction left, Fraction right) => !left.Equals(right);
+            public int CompareTo(Fraction other) => (Y * other.X).CompareTo(X * other.Y);
+            public bool Equals(Fraction other) => Y == other.Y && X == other.X;
+            public override bool Equals(object obj) => obj is Fraction other && Equals(other);
+            public override int GetHashCode() => HashCode.Combine(Y, X);
+            public override string ToString() => $"{Y}/{X}";
         }
 
         public static class Scanner
