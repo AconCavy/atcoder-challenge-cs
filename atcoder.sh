@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function help {
     echo "new: Create a new solution by the specified name."
@@ -44,7 +44,7 @@ function new {
 
     case "$(uname -s)" in
         Darwin) open https://atcoder.jp/contests/$SLN ;;
-        Linux) xdg-open https://atcoder.jp/contests/$SLN ;;
+        Linux) $BROWSER https://atcoder.jp/contests/$SLN ;;
     esac
 }
 

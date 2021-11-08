@@ -10,6 +10,8 @@ The repository is C# solutions submitted for AtCoder.
 
 Install [AconCavy/CompetitiveProgrammingTemplateCSharp](https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp).
 
+You can use `install.ps1` or `install.sh`.
+
 ## Create Project
 
 Create a project using the script with `new` command.
