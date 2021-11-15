@@ -22,23 +22,21 @@ namespace Tasks
             var N = Scanner.Scan<int>();
             var S = Scanner.ScanEnumerable<int>().ToArray();
 
-            // 4ab + 3a + 3b == s
+            long F(long a, long b) => 4 * a * b + 3 * a + 3 * b;
+
             var answer = N;
             foreach (var s in S)
             {
                 var ok = false;
-                for (var a = 1; 4 * a + 3 * a <= s; a++)
+                for (var a = 1; F(a, 1) <= s; a++)
                 {
-                    for (var b = 1; 4 * a * b + 3 * a + 3 * b <= s; b++)
+                    for (var b = 1; F(a, b) <= s; b++)
                     {
-                        ok |= 4 * a * b + 3 * a + 3 * b == s;
+                        ok |= F(a, b) == s;
                     }
                 }
 
-                if (ok)
-                {
-                    answer--;
-                }
+                if (ok) answer--;
             }
 
             Console.WriteLine(answer);

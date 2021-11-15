@@ -23,10 +23,10 @@ namespace Tasks
             var answer = 0L;
             for (var a = 1L; a * a * a <= N; a++)
             {
-                for (var b = a; b * b <= N / a; b++)
+                for (var b = a; a * b * b <= N; b++)
                 {
                     var c = N / (a * b);
-                    answer += Math.Max(0, c - b + 1);
+                    answer += c - b + 1;
                 }
             }
 
