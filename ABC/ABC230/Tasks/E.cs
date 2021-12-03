@@ -21,18 +21,13 @@ namespace Tasks
         {
             var N = Scanner.Scan<long>();
             var answer = 0L;
-            var k = 0L;
             for (var i = 1L; i * i <= N; i++)
             {
-                answer += ((N / i) - (N / (i + 1))) * i;
-                k = i;
-            }
+                if (i != N / i) answer += N / i;
+                var d = (N / i) - (N / (i + 1));
+                answer += i * d;
 
-            for (var i = 1; i <= N / (k + 1); i++)
-            {
-                answer += N / i;
             }
-
             Console.WriteLine(answer);
         }
 

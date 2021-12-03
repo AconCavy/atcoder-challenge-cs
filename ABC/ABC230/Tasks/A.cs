@@ -21,7 +21,7 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             if (N >= 42) N++;
-            var answer = $"AGC{N.ToString("000")}";
+            var answer = $"AGC{N:000}";
             Console.WriteLine(answer);
         }
 
