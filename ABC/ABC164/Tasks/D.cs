@@ -18,41 +18,58 @@ namespace Tasks
 
         public static void Solve()
         {
+            const int mod = 2019;
             var S = Scanner.Scan<string>();
-            const int p = 2019;
-            var counts = new long[p];
-            var sum = 0L;
-            var digit = 1;
+            var N = S.Length;
+            var A = S.Select(x => x - '0').ToArray();
+            var count = new long[mod];
+            count[0] = 1;
+
+            var curr = 0L;
+            var dig = 1;
             var answer = 0L;
-            counts[sum]++;
-            for (var i = 0; i < S.Length; i++)
+            foreach (var a in A.Reverse())
             {
-                sum += (S[S.Length - 1 - i] - '0') * digit;
-                sum %= p;
-                counts[sum]++;
-                digit = digit * 10 % p;
+                curr = (curr + a * dig) % mod;
+                answer += count[curr];
+                count[curr]++;
+                dig = dig * 10 % mod;
             }
-            for (var i = 0; i < counts.Length; i++)
-            {
-                answer += (counts[i] * (counts[i] - 1)) / 2;
-            }
+
             Console.WriteLine(answer);
         }
 
         public static class Scanner
         {
-            private static Queue<string> queue = new Queue<string>();
-            public static T Next<T>()
+            public static T Scan<T>() where T : IConvertible => Convert<T>(ScanLine()[0]);
+            public static (T1, T2) Scan<T1, T2>() where T1 : IConvertible where T2 : IConvertible
             {
-                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
-                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
+                var line = ScanLine();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]));
             }
-            public static T Scan<T>() => Next<T>();
-            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
-            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
-            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
-            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
-            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
+            public static (T1, T2, T3) Scan<T1, T2, T3>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible
+            {
+                var line = ScanLine();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]));
+            }
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible
+            {
+                var line = ScanLine();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]));
+            }
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible
+            {
+                var line = ScanLine();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]));
+            }
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible where T6 : IConvertible
+            {
+                var line = ScanLine();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]), Convert<T6>(line[5]));
+            }
+            public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => ScanLine().Select(Convert<T>);
+            private static T Convert<T>(string value) where T : IConvertible => (T)System.Convert.ChangeType(value, typeof(T));
+            private static string[] ScanLine() => Console.ReadLine()?.Trim().Split(' ') ?? Array.Empty<string>();
         }
     }
 }
