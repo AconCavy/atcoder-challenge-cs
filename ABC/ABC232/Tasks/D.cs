@@ -27,11 +27,14 @@ namespace Tasks
             }
 
             var G = new int[H, W];
-            G[0, 0] = C[0][0] == '.' ? 1 : 0;
+            G[0, 0] = 1;
+            var answer = 0;
             for (var i = 0; i < H; i++)
             {
                 for (var j = 0; j < W; j++)
                 {
+                    if (G[i, j] == 0) continue;
+                    answer = Math.Max(answer, G[i, j]);
                     if (i + 1 < H && C[i + 1][j] == '.')
                     {
                         G[i + 1, j] = Math.Max(G[i + 1, j], G[i, j] + 1);
@@ -43,60 +46,8 @@ namespace Tasks
                     }
                 }
             }
-            var answer = G[0, 0];
-            var used = new bool[H, W];
-            var D4 = new[] { (1, 0), (0, 1) };
-            var queue = new Queue<(int, int)>();
-            queue.Enqueue((0, 0));
-            while (queue.Count > 0)
-            {
-                var (ch, cw) = queue.Dequeue();
-                foreach (var (dh, dw) in D4)
-                {
-                    var (nh, nw) = (ch + dh, cw + dw);
-                    if (nh < 0 || H <= nh || nw < 0 || W <= nw) continue;
-                    if (C[nh][nw] == '#') continue;
-                    if (used[nh, nw]) continue;
-                    used[nh, nw] = true;
-                    answer = Math.Max(answer, G[nh, nw]);
-                    queue.Enqueue((nh, nw));
-                }
-            }
 
             Console.WriteLine(answer);
-        }
-
-        public static class Printer
-        {
-            public static void Print<T>(T source) => Console.WriteLine(source);
-            public static void Print1D<T>(IEnumerable<T> source, string separator = "") =>
-                Console.WriteLine(string.Join(separator, source));
-            public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = "") =>
-                Console.WriteLine(string.Join(separator, source.Select(selector)));
-            public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = "") =>
-                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x))));
-            public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = "") =>
-                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x.Select(selector)))));
-            public static void Print2D<T>(T[,] source, string separator = "")
-            {
-                var (h, w) = (source.GetLength(0), source.GetLength(1));
-                for (var i = 0; i < h; i++)
-                    for (var j = 0; j < w; j++)
-                    {
-                        Console.Write(source[i, j]);
-                        Console.Write(j == w - 1 ? "\n" : separator);
-                    }
-            }
-            public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = "")
-            {
-                var (h, w) = (source.GetLength(0), source.GetLength(1));
-                for (var i = 0; i < h; i++)
-                    for (var j = 0; j < w; j++)
-                    {
-                        Console.Write(selector(source[i, j]));
-                        Console.Write(j == w - 1 ? "\n" : separator);
-                    }
-            }
         }
 
         public static class Scanner

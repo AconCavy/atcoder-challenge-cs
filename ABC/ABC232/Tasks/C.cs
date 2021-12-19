@@ -20,14 +20,13 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            var E1 = new (int A, int B)[M];
+            var E1 = new bool[N, N];
             var E2 = new (int A, int B)[M];
             for (var i = 0; i < M; i++)
             {
                 var (a, b) = Scanner.Scan<int, int>();
                 a--; b--;
-                E1[i] = (a, b);
-                if (a > b) (a, b) = (b, a);
+                E1[a, b] = E1[b, a] = true;
             }
 
             for (var i = 0; i < M; i++)
@@ -37,33 +36,12 @@ namespace Tasks
                 E2[i] = (a, b);
             }
 
-            Array.Sort(E1, (x, y) =>
-            {
-                var result = x.A.CompareTo(y.A);
-                return result == 0 ? x.B.CompareTo(y.B) : result;
-            });
-
             foreach (var order in Enumerable.Range(0, N).Permute())
             {
-                var E3 = E2.Select(x => (A: order[x.A], B: order[x.B])).ToArray();
-                for (var i = 0; i < M; i++)
-                {
-                    var (c, d) = E3[i];
-                    if (c > d) (c, d) = (d, c);
-                    E3[i] = (c, d);
-                }
-                Array.Sort(E3, (x, y) =>
-                {
-                    var result = x.A.CompareTo(y.A);
-                    return result == 0 ? x.B.CompareTo(y.B) : result;
-                });
-
                 var ok = true;
-                for (var i = 0; i < M; i++)
+                foreach (var (c, d) in E2)
                 {
-                    var (a, b) = E1[i];
-                    var (c, d) = E3[i];
-                    ok &= a == c && b == d;
+                    ok &= E1[order[c], order[d]];
                 }
 
                 if (ok)
