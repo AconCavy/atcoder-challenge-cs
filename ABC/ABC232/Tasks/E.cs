@@ -24,7 +24,7 @@ namespace Tasks
             var (H, W, K) = Scanner.Scan<int, int, int>();
             var (x1, y1, x2, y2) = Scanner.Scan<int, int, int, int>();
             var dp = new mint[2, 2, 2];
-            dp[0, 0, 0] = 1;
+            dp[0, x1 == x2 ? 0 : 1, y1 == y2 ? 0 : 1] = 1;
             var t = 1;
             for (var i = 0; i < K; i++)
             {
@@ -35,29 +35,9 @@ namespace Tasks
                 dp[t ^ 1, 1, 1] = dp[t, 0, 1] * (H - 1) + dp[t, 1, 0] * (W - 1) + dp[t, 1, 1] * (H + W - 4);
             }
 
-            t ^= 1;
-            if (x1 == x2 && y1 == y2)
-            {
-                var answer = dp[t, 0, 0];
-                Console.WriteLine(answer);
-            }
-            else if (x1 == x2)
-            {
-                var answer = dp[t, 0, 1] / (W - 1);
-                Console.WriteLine(answer);
-            }
-            else if (y1 == y2)
-            {
-                var answer = dp[t, 1, 0] / (H - 1);
-                Console.WriteLine(answer);
-            }
-            else
-            {
-                var answer = dp[t, 1, 1] / (H - 1) / (W - 1);
-                Console.WriteLine(answer);
-            }
+            var answer = dp[t ^ 1, 0, 0];
+            Console.WriteLine(answer);
         }
-
 
         public readonly struct ModuloInteger : IEquatable<ModuloInteger>
         {
