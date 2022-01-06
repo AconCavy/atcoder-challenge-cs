@@ -520,6 +520,20 @@
             "}"
         ]
     },
+    "Shift": {
+        "scope": "csharp",
+        "prefix": "shift",
+        "body": [
+            "public static T[] Shift<T>(T[] source, int shift)",
+            "{",
+            "    shift %= source.Length;",
+            "    if (shift == 0) return source;",
+            "    return shift > 0",
+            "        ? source[^shift..].Concat(source[..^shift]).ToArray()",
+            "        : source[-shift..].Concat(source[..-shift]).ToArray();",
+            "}"
+        ]
+    },
     "LowerBound": {
         "scope": "csharp",
         "prefix": [
