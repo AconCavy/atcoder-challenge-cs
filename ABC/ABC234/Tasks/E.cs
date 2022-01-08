@@ -20,33 +20,23 @@ namespace Tasks
         public static void Solve()
         {
             var X = Scanner.Scan<long>();
-            var hashset = new HashSet<long>(Enumerable.Range(0, 10).Select(x => (long)x));
+            var hashset = new HashSet<long>();
             for (var d = -9; d <= 9; d++)
             {
-                for (var i = 0; i <= 9; i++)
+                for (var i = 0L; i <= 9; i++)
                 {
-                    for (var j = 0L; j <= 9; j++)
+                    var x = i;
+                    for (var t = 1; t < 18; t++)
                     {
-                        if ((i, j) == (0, 0)) continue;
-                        var x = j;
-                        for (var t = 1; t < 18; t++)
-                        {
-                            var mod = x % 10;
-                            if (mod + d < 0 || 10 <= mod + d) break;
-                            x *= 10;
-                            x += mod + d;
-                            hashset.Add(x);
-                        }
+                        var mod = x % 10;
+                        if (mod + d < 0 || 10 <= mod + d) break;
+                        x *= 10;
+                        x += mod + d;
+                        hashset.Add(x);
                     }
                 }
             }
-            const long inf = (long)1e18;
-            var answer = inf;
-            foreach (var x in hashset.Where(x => x >= X))
-            {
-                answer = Math.Min(answer, x);
-            }
-
+            var answer = hashset.Where(x => x >= X).Min();
             Console.WriteLine(answer);
         }
 
