@@ -428,7 +428,7 @@
             "}"
         ]
     },
-    "Warshall–Floyd": {
+    "WarshallFloyd": {
         "scope": "csharp",
         "prefix": [
             "warshallfloyd",
@@ -524,13 +524,14 @@
         "scope": "csharp",
         "prefix": "shift",
         "body": [
-            "public static T[] Shift<T>(T[] source, int shift)",
+            "public static T[] Shift<T>(ReadOnlySpan<T> source, int shift)",
             "{",
-            "    shift %= source.Length;",
-            "    if (shift == 0) return source;",
-            "    return shift > 0",
-            "        ? source[^shift..].Concat(source[..^shift]).ToArray()",
-            "        : source[-shift..].Concat(source[..-shift]).ToArray();",
+            "    shift = (shift + source.Length) % source.Length;",
+            "    if (shift == 0) return source.ToArray();",
+            "    var result = new T[source.Length];",
+            "    source[^shift..].CopyTo(result.AsSpan(..shift));",
+            "    source[..^shift].CopyTo(result.AsSpan(shift..));",
+            "    return result;",
             "}"
         ]
     },
@@ -541,13 +542,13 @@
             "lowerbound"
         ],
         "body": [
-            "public static int LowerBound(long[] source, long key)",
+            "public static int LowerBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>",
             "{",
             "    var (l, r) = (-1, source.Length);",
             "    while (r - l > 1)",
             "    {",
             "        var m = l + (r - l) / 2;",
-            "        if (source[m] >= key) r = m;",
+            "        if (source[m].CompareTo(key) >= 0) r = m;",
             "        else l = m;",
             "    }",
             "    return r;",
@@ -561,13 +562,13 @@
             "upperbound"
         ],
         "body": [
-            "public static int UpperBound(long[] source, long key)",
+            "public static int UpperBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>",
             "{",
             "    var (l, r) = (-1, source.Length);",
             "    while (r - l > 1)",
             "    {",
             "        var m = l + (r - l) / 2;",
-            "        if (source[m] > key) r = m;",
+            "        if (source[m].CompareTo(key) > 0) r = m;",
             "        else l = m;",
             "    }",
             "    return r;",
