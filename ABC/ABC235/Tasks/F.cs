@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 
 namespace Tasks
 {
-    using mint = F.ModuloInteger;
-
     public class F
     {
         public static void Main(string[] args)
@@ -21,80 +20,88 @@ namespace Tasks
 
         public static void Solve()
         {
-            var V = Scanner.Scan<string>().Select(x => x - '0').ToArray();
+            const long Mod = 998244353;
+            var V = Console.ReadLine().Trim();
             var N = V.Length;
             var M = Scanner.Scan<int>();
-            var C = Scanner.ScanEnumerable<int>().ToArray();
-        }
+            var C = Console.ReadLine().Trim().Split(' ');
 
-        public readonly struct ModuloInteger : IEquatable<ModuloInteger>
-        {
-            public long Value { get; }
-            // public static long Modulo { get; set; } = 998244353;
-            // The modulo will be used as an editable property.
-            // The constant modulo will be recommended to use for performances in use cases.
-            public const long Modulo = 998244353;
-            public ModuloInteger(int value) => Value = value % Modulo >= 0 ? value % Modulo : value % Modulo + Modulo;
-            public ModuloInteger(long value) => Value = value % Modulo >= 0 ? value % Modulo : value % Modulo + Modulo;
-            public static implicit operator int(ModuloInteger mint) => (int)mint.Value;
-            public static implicit operator long(ModuloInteger mint) => mint.Value;
-            public static implicit operator ModuloInteger(int value) => new ModuloInteger(value);
-            public static implicit operator ModuloInteger(long value) => new ModuloInteger(value);
-            public static ModuloInteger operator +(in ModuloInteger a, in ModuloInteger b) => a.Value + b.Value;
-            public static ModuloInteger operator -(in ModuloInteger a, in ModuloInteger b) => a.Value - b.Value;
-            public static ModuloInteger operator *(in ModuloInteger a, in ModuloInteger b) => a.Value * b.Value;
-            public static ModuloInteger operator /(in ModuloInteger a, in ModuloInteger b) => a * b.Inverse();
-            public static ModuloInteger operator +(in ModuloInteger a, int b) => a.Value + b;
-            public static ModuloInteger operator +(int a, in ModuloInteger b) => a + b.Value;
-            public static ModuloInteger operator -(in ModuloInteger a, int b) => a.Value - b;
-            public static ModuloInteger operator -(int a, in ModuloInteger b) => a - b.Value;
-            public static ModuloInteger operator *(in ModuloInteger a, int b) => a.Value * b;
-            public static ModuloInteger operator *(int a, in ModuloInteger b) => a * b.Value;
-            public static ModuloInteger operator /(in ModuloInteger a, int b) => a * Inverse(b);
-            public static ModuloInteger operator /(int a, in ModuloInteger b) => a * b.Inverse();
-            public static ModuloInteger operator +(in ModuloInteger a, long b) => a.Value + b;
-            public static ModuloInteger operator +(long a, in ModuloInteger b) => a + b.Value;
-            public static ModuloInteger operator -(in ModuloInteger a, long b) => a.Value - b;
-            public static ModuloInteger operator -(long a, in ModuloInteger b) => a - b.Value;
-            public static ModuloInteger operator *(in ModuloInteger a, long b) => a.Value * b;
-            public static ModuloInteger operator *(long a, in ModuloInteger b) => a * b.Value;
-            public static ModuloInteger operator /(in ModuloInteger a, long b) => a * Inverse(b);
-            public static ModuloInteger operator /(long a, in ModuloInteger b) => a * b.Inverse();
-            public static bool operator ==(in ModuloInteger a, in ModuloInteger b) => a.Value == b.Value;
-            public static bool operator !=(in ModuloInteger a, in ModuloInteger b) => a.Value != b.Value;
-            public bool Equals(ModuloInteger other) => Value == other.Value;
-            public override bool Equals(object obj) => obj is ModuloInteger other && Equals(other);
-            public override int GetHashCode() => Value.GetHashCode();
-            public override string ToString() => Value.ToString();
-            public ModuloInteger Inverse() => Inverse(Value);
-            public static ModuloInteger Inverse(long value)
+            var ok = 0;
+            foreach (var c in C)
             {
-                if (value == 0) return 0;
-                var (s, t, m0, m1) = (Modulo, value, 0L, 1L);
-                while (t > 0)
-                {
-                    var u = s / t;
-                    s -= t * u;
-                    m0 -= m1 * u;
-                    (s, t) = (t, s);
-                    (m0, m1) = (m1, m0);
-                }
-                if (m0 < 0) m0 += Modulo / s;
-                return m0;
+                ok |= 1 << int.Parse(c);
             }
-            public ModuloInteger Power(long n) => Power(Value, n);
-            public static ModuloInteger Power(long value, long n)
+
+            var max = 1 << 10;
+            var count = new long[2][] { new long[max], new long[max] };
+            var sum = new long[2][] { new long[max], new long[max] };
+            long curr = 0;
+            var digit = 0;
+
+            var t = 1;
+            for (var i = 0; i < N; i++)
             {
-                if (n < 0) throw new ArgumentException();
-                var ret = 1L;
-                while (n > 0)
+                t ^= 1;
+                var tt = t ^ 1;
+                var c = V[i] - '0';
+                Array.Fill(count[tt], 0);
+                Array.Fill(sum[tt], 0);
+                for (var j = 0; j < max; j++)
                 {
-                    if ((n & 1) > 0) ret = ret * value % Modulo;
-                    value = value * value % Modulo;
-                    n >>= 1;
+                    for (var d = 0; d < 10; d++)
+                    {
+                        var next = j | (1 << d);
+                        count[tt][next] += count[t][j];
+                        count[tt][next] %= Mod;
+                        sum[tt][next] += sum[t][j] * 10 + count[t][j] * d;
+                        sum[tt][next] %= Mod;
+                    }
                 }
-                return ret;
+
+                if (i > 0)
+                {
+                    for (var d = 1; d < 10; d++)
+                    {
+                        var next = 1 << d;
+                        count[tt][next]++;
+                        count[tt][next] %= Mod;
+                        sum[tt][next] += d;
+                        sum[tt][next] %= Mod;
+                    }
+                }
+
+                for (var d = 0; d < c; d++)
+                {
+                    if (i == 0 && d == 0) continue;
+                    var next = digit | (1 << d);
+                    count[tt][next]++;
+                    count[tt][next] %= Mod;
+                    sum[tt][next] += curr * 10 + d;
+                    sum[tt][next] %= Mod;
+                }
+
+                digit |= 1 << c;
+                curr = (curr * 10 + c) % Mod;
             }
+
+            t ^= 1;
+            var answer = 0L;
+            for (var j = 0; j < max; j++)
+            {
+                if ((j & ok) == ok)
+                {
+                    answer += sum[t][j];
+                    answer %= Mod;
+                }
+            }
+
+            if ((digit & ok) == ok)
+            {
+                answer += curr;
+                answer %= Mod;
+            }
+
+            Console.WriteLine(answer);
         }
 
         public static class Scanner
