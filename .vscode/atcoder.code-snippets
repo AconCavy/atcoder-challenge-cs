@@ -181,6 +181,27 @@
             "public static long Lcm(long a, long b) => a / Gcd(a, b) * b;"
         ]
     },
+    "ExtendedGcd": {
+        "scope": "csharp",
+        "prefix": [
+            "exgcd",
+        ],
+        "body": [
+            "public static long ExtGcd(long a, long b, out long x, out long y)",
+            "{",
+            "    if (b == 0)",
+            "    {",
+            "        x = 1;",
+            "        y = 0;",
+            "        return a;",
+            "    }",
+            "",
+            "    var d = ExtGcd(b, a % b, out y, out x);",
+            "    y -= a / b * x;",
+            "    return d;",
+            "}"
+        ]
+    },
     "Enumeration": {
         "scope": "csharp",
         "prefix": "enumeration",
@@ -533,6 +554,24 @@
             "    source[..^shift].CopyTo(result.AsSpan(shift..));",
             "    return result;",
             "}"
+        ]
+    },
+    "GetDivisors": {
+        "scope": "csharp",
+        "prefix": [
+            "gd",
+            "getdivisors"
+        ],
+        "body": [
+            "public static IEnumerable<long> GetDivisors(long n)",
+            "{",
+            "    for (var i = 1L; i * i <= n; i++)",
+            "    {",
+            "        if (n % i != 0) continue;",
+            "        yield return i;",
+            "        if (n / i != i) yield return n / i;",
+            "    }",
+            "}",
         ]
     },
     "LowerBound": {
