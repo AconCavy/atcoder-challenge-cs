@@ -12,11 +12,11 @@ namespace Tests
         public void Test1()
         {
             const string input = @"6
-        2 1 2 1 1 10
-        ";
+2 1 2 1 1 10
+";
             const string output = @"4
-        2
-        ";
+2
+";
             Tester.InOutTest(Tasks.E.Solve, input, output, RelativeError);
         }
 
@@ -24,11 +24,11 @@ namespace Tests
         public void Test2()
         {
             const string input = @"7
-        3 1 4 1 5 9 2
-        ";
+3 1 4 1 5 9 2
+";
             const string output = @"5.250000000
-        4
-        ";
+4
+";
             Tester.InOutTest(Tasks.E.Solve, input, output, RelativeError);
         }
     }

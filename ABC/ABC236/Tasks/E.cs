@@ -19,8 +19,46 @@ namespace Tasks
 
         public static void Solve()
         {
-            var N = Scanner.Scan<int>();
+            var N = Scanner.Scan<long>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
+
+            long DP(IEnumerable<long> source)
+            {
+                var (x, y) = (0L, 0L);
+                foreach (var v in source)
+                {
+                    var z = Math.Max(x, y) + v;
+                    (x, y) = (y, z);
+                }
+
+                return Math.Max(x, y);
+            }
+
+            double Average()
+            {
+                bool F(long k) => DP(A.Select(x => x * 1000 - k)) >= 0;
+                return BinarySearch((long)1e12 + 1, 0, F) / 1000d;
+            }
+
+            long Median()
+            {
+                bool F(long k) => DP(A.Select(x => x >= k ? 1L : -1L)) > 0;
+                return BinarySearch((long)1e9 + 1, 0, F);
+            }
+
+            Console.WriteLine(Average());
+            Console.WriteLine(Median());
+        }
+
+        public static long BinarySearch(long ng, long ok, Func<long, bool> func)
+        {
+            while (Math.Abs(ok - ng) > 1)
+            {
+                var m = (ok + ng) / 2;
+                if (func(m)) ok = m;
+                else ng = m;
+            }
+            return ok;
         }
 
         public static class Scanner
