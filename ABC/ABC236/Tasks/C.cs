@@ -22,20 +22,18 @@ namespace Tasks
             var (N, M) = Scanner.Scan<int, int>();
             var S = Scanner.ScanEnumerable<string>().ToArray();
             var T = Scanner.ScanEnumerable<string>().ToArray();
-            var dict = new Dictionary<string, bool>();
+            var queue = new Queue<string>(T);
             foreach (var s in S)
             {
-                dict[s] = false;
-            }
-
-            foreach (var t in T)
-            {
-                dict[t] = true;
-            }
-
-            foreach (var s in S)
-            {
-                Console.WriteLine(dict[s] ? "Yes" : "No");
+                if (queue.TryPeek(out var t) && s == t)
+                {
+                    queue.Dequeue();
+                    Console.WriteLine("Yes");
+                }
+                else
+                {
+                    Console.WriteLine("No");
+                }
             }
         }
 
