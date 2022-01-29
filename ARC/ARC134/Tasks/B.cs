@@ -21,22 +21,24 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>().ToCharArray();
-            var idx = new HashSet<int>[26].Select(_ => new HashSet<int>()).ToArray();
+            var idx = new List<int>[26].Select(_ => new List<int>()).ToArray();
             foreach (var (c, i) in S.Select((x, i) => (x - 'a', i)))
             {
                 idx[c].Add(i);
+            }
+
+            foreach (var list in idx)
+            {
+                list.Reverse();
             }
 
             var l = 0;
             var r = N;
             for (var c = 0; c < 26 && l < r; c++)
             {
-                foreach (var i in idx[c].OrderByDescending(x => x))
+                foreach (var i in idx[c])
                 {
-                    if (i > r)
-                    {
-                        continue;
-                    }
+                    if (i > r) continue;
                     while (l < i)
                     {
                         if (S[l] > S[i])
