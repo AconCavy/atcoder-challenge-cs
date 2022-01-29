@@ -23,32 +23,35 @@ namespace Tasks
         {
             var (N, K) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
-            if (A[0] < A.Skip(1).Sum() * 2)
-            {
-                Console.WriteLine(0);
-                return;
-            }
 
-            var fact = new mint[N + 1];
-            var ifact = new mint[N + 1];
+            var fact = new mint[K + 10];
+            var ifact = new mint[K + 10];
             fact[0] = ifact[0] = 1;
-            for (var i = 1; i <= N; i++)
+            for (var i = 1; i < K + 10; i++)
             {
                 fact[i] = fact[i - 1] * i;
                 ifact[i] = 1 / fact[i];
             }
 
-            mint Combination(int n, int k)
+            mint Combination(long n, int k)
             {
-                if (n < k || n < 0 || k < 0) return 0;
-                return fact[n] * ifact[k] * ifact[n - k];
+                if (n < 0 || k < 0) return 0;
+                mint result = ifact[k];
+                for (var i = 0; i < k; i++)
+                {
+                    result *= n - i;
+                }
+
+                return result;
             }
 
-            mint HCombination(int n, int k)
+            mint answer = Combination(A[0] - A.Skip(1).Sum() - 1, K - 1);
+            foreach (var a in A.Skip(1))
             {
-                return Combination(n + k + 1, k);
+                answer *= Combination(a + K - 1, K - 1);
             }
 
+            Console.WriteLine(answer);
         }
 
         public readonly struct ModuloInteger : IEquatable<ModuloInteger>

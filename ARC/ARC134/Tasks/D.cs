@@ -28,20 +28,33 @@ namespace Tasks
                 dict[a].Add(i);
             }
 
+            var minL = dict.Keys.Min();
+            var minR = dict[minL].Min(x => A[x + N]);
+            if (minL >= minR)
+            {
+                Console.WriteLine($"{minL} {minR}");
+                return;
+            }
+
             var list = new List<(int L, int R)>();
             var idx = -1;
+            void Add(int i)
+            {
+                list.Add((A[i], A[i + N]));
+                idx = i;
+            }
+
             foreach (var (k, v) in dict.OrderBy(x => x.Key))
             {
                 foreach (var i in v)
                 {
                     if (idx > i) break;
-                    if (list.Count != 0 && A[i] < list[0].R)
+                    if (list.Count == 0
+                    || A[i] == list[0].L
+                    || A[i] < list[0].R)
                     {
-                        list.Clear();
+                        Add(i);
                     }
-
-                    list.Add((A[i], A[i + N]));
-                    idx = i;
                 }
             }
 
