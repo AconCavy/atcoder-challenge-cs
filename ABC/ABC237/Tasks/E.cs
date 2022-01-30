@@ -26,43 +26,35 @@ namespace Tasks
             {
                 var (u, v) = Scanner.Scan<int, int>();
                 u--; v--;
-                var dh = Math.Abs(H[u] - H[v]);
-                if (H[u] > H[v])
-                {
-                    G[u].Add((v, dh));
-                    G[v].Add((u, -2 * dh));
-                }
-                else if (H[u] < H[v])
-                {
-                    G[u].Add((v, -2 * dh));
-                    G[v].Add((u, dh));
-                }
-                else
-                {
-                    G[u].Add((v, 0));
-                    G[v].Add((u, 0));
-                }
+                G[u].Add((v, Math.Max(0, H[v] - H[u])));
+                G[v].Add((u, Math.Max(0, H[u] - H[v])));
             }
 
             var costs = new long[N];
-            Array.Fill(costs, -long.MaxValue);
+            Array.Fill(costs, long.MaxValue);
             costs[0] = 0;
-            var queue = new PriorityQueue<(int U, long Cost)>((x, y) => y.Cost.CompareTo(x.Cost));
+            var queue = new PriorityQueue<(int U, long Cost)>((x, y) => x.Cost.CompareTo(y.Cost));
             queue.Enqueue((0, 0));
+
             while (queue.Count > 0)
             {
                 var (u, cu) = queue.Dequeue();
-                if (costs[u] > cu) continue;
+                if (costs[u] < cu) continue;
                 foreach (var (v, cv) in G[u])
                 {
                     var c = costs[u] + cv;
-                    if (costs[v] >= c) continue;
+                    if (costs[v] <= c) continue;
                     costs[v] = c;
                     queue.Enqueue((v, c));
                 }
             }
 
-            var answer = costs.Max();
+            var answer = 0L;
+            for (var i = 0; i < N; i++)
+            {
+                answer = Math.Max(answer, H[0] - H[i] - costs[i]);
+            }
+
             Console.WriteLine(answer);
         }
 
