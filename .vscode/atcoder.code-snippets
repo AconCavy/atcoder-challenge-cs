@@ -773,6 +773,26 @@
             "}"
         ]
     },
+    "TestClass": {
+        "scope": "csharp",
+        "prefix": "testclass",
+        "body": [
+            "[TestClass]",
+            "public class ${1:task}Tests",
+            "{",
+            "    const int TimeLimit = 2000;",
+            "    const double RelativeError = 1e-9;",
+            "",
+            "    [TestMethod, Timeout(TimeLimit)]",
+            "    public void Test1()",
+            "    {",
+            "        const string input = @\"\";",
+            "        const string output = @\"\";",
+            "        Utility.InOutTest(${1:task}.Solve, input, output);",
+            "    }",
+            "}"
+        ]
+    },
     "TestMethod": {
         "scope": "csharp",
         "prefix": "testmethod",
@@ -782,7 +802,7 @@
             "{",
             "    const string input = @\"\";",
             "    const string output = @\"\";",
-            "    Tester.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelativeError});",
+            "    Utility.InOutTest(Tasks.${2:task}.Solve, input, output${3:, RelativeError});",
             "}"
         ]
     },

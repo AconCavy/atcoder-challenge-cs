@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TEMPLATEVERSION="1.0.0"
+TEMPLATEVERSION="1.2.1"
 
 mkdir tmp
 wget https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v$TEMPLATEVERSION/AconCavy.CompetitiveProgramming.Templates.$TEMPLATEVERSION.nupkg -O tmp/AconCavy.CompetitiveProgramming.Templates.$TEMPLATEVERSION.nupkg
