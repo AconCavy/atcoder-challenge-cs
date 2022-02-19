@@ -36,12 +36,8 @@ namespace Tasks
                 G[a].Add(b);
                 G[b].Add(a);
                 dsu.Merge(a, b);
-            }
-
-
-            for (var i = 0; i < N; i++)
-            {
-                D[i] -= G[i].Count;
+                D[a]--;
+                D[b]--;
             }
 
             var answers = new List<(int, int)>();
@@ -62,7 +58,6 @@ namespace Tasks
             {
                 var (uq, us) = queue.Dequeue();
                 var (vq, vs) = queue.Dequeue();
-                if (dsu.IsSame(uq.Peek(), vq.Peek())) continue;
                 var u = uq.Dequeue();
                 var v = vq.Dequeue();
                 D[u]--;
