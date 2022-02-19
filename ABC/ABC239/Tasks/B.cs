@@ -20,11 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var X = Scanner.Scan<long>();
-            var answer = X >= 0 ? X / 10 : -(-X / 10);
-            if (X < 0 && -X % 10 > 0)
-            {
-                answer--;
-            }
+            var answer = X >= 0 ? X / 10 : -(-X + 9) / 10;
             Console.WriteLine(answer);
         }
 

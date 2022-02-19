@@ -44,27 +44,47 @@ namespace Tasks
                 D[i] -= G[i].Count;
             }
 
-            var group = dsu.GetGroups().ToArray();
-            var queues = group.Select(x => new Queue<int>(x.Where(y => D[y] > 0))).ToArray();
             var answers = new List<(int, int)>();
-
-            for (var i = 0; i < group.Length; i++)
+            var queue = new PriorityQueue<(Queue<int> U, long M)>((x, y) => y.M.CompareTo(x.M));
+            foreach (var group in dsu.GetGroups())
             {
-                for (var j = i + 1; j < group.Length; j++)
+                var q = new Queue<int>(group.Where(x => D[x] > 0));
+                var s = group.Sum(x => D[x]);
+                if (q.Count == 0)
                 {
-                    if (queues[i].Count == 0) break;
-                    if (queues[j].Count < 2) continue;
-                    if (dsu.IsSame(queues[i].Peek(), queues[j].Peek())) continue;
+                    Console.WriteLine(-1);
+                    return;
+                }
+                queue.Enqueue((q, s));
+            }
 
-                    var u = queues[i].Dequeue();
-                    var v = queues[j].Dequeue();
-                    dsu.Merge(u, v);
-                    D[u]--;
-                    D[v]--;
-                    answers.Add((u + 1, v + 1));
-                    if (D[u] > 0) queues[i].Enqueue(u);
-                    if (D[v] > 0) queues[j].Enqueue(v);
-                    Console.WriteLine($"-{u} {v}");
+            while (queue.Count >= 2)
+            {
+                var (uq, us) = queue.Dequeue();
+                var (vq, vs) = queue.Dequeue();
+                if (dsu.IsSame(uq.Peek(), vq.Peek())) continue;
+                var u = uq.Dequeue();
+                var v = vq.Dequeue();
+                D[u]--;
+                D[v]--;
+                us--;
+                vs--;
+                dsu.Merge(u, v);
+                answers.Add((u + 1, v + 1));
+                if (D[u] > 0) uq.Enqueue(u);
+                if (D[v] > 0) vq.Enqueue(v);
+
+                if (us >= vs)
+                {
+                    while (vq.Count > 0) uq.Enqueue(vq.Dequeue());
+                    us += vs;
+                    queue.Enqueue((uq, us));
+                }
+                else
+                {
+                    while (uq.Count > 0) vq.Enqueue(uq.Dequeue());
+                    vs += us;
+                    queue.Enqueue((vq, vs));
                 }
             }
 
@@ -80,7 +100,7 @@ namespace Tasks
                 }
             }
 
-            if (D.Any(x => x > 0))
+            if (D.Any(x => x != 0))
             {
                 Console.WriteLine(-1);
                 return;
@@ -90,6 +110,87 @@ namespace Tasks
             {
                 Console.WriteLine($"{u} {v}");
             }
+        }
+
+        public class PriorityQueue<T> : IReadOnlyCollection<T>
+        {
+            private readonly Comparison<T> _comparison;
+            private readonly List<T> _heap;
+            public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer = null) : this(comparer)
+            {
+                foreach (var item in items) Enqueue(item);
+            }
+            public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison) : this(comparison)
+            {
+                foreach (var item in items) Enqueue(item);
+            }
+            public PriorityQueue(IComparer<T> comparer = null) : this((comparer ?? Comparer<T>.Default).Compare) { }
+            public PriorityQueue(Comparison<T> comparison)
+            {
+                _heap = new List<T>();
+                _comparison = comparison;
+            }
+            public int Count => _heap.Count;
+            public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public void Enqueue(T item)
+            {
+                var child = Count;
+                _heap.Add(item);
+                while (child > 0)
+                {
+                    var parent = (child - 1) / 2;
+                    if (_comparison(_heap[parent], _heap[child]) <= 0) break;
+                    (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
+                    child = parent;
+                }
+            }
+            public T Dequeue()
+            {
+                if (Count == 0) throw new InvalidOperationException();
+                var result = _heap[0];
+                _heap[0] = _heap[Count - 1];
+                _heap.RemoveAt(Count - 1);
+                var parent = 0;
+                while (parent * 2 + 1 < Count)
+                {
+                    var left = parent * 2 + 1;
+                    var right = parent * 2 + 2;
+                    if (right < Count && _comparison(_heap[left], _heap[right]) > 0)
+                        left = right;
+                    if (_comparison(_heap[parent], _heap[left]) <= 0) break;
+                    (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
+                    parent = left;
+                }
+                return result;
+            }
+            public T Peek()
+            {
+                if (Count == 0) throw new InvalidOperationException();
+                return _heap[0];
+            }
+            public bool TryDequeue(out T result)
+            {
+                if (Count > 0)
+                {
+                    result = Dequeue();
+                    return true;
+                }
+                result = default;
+                return false;
+            }
+            public bool TryPeek(out T result)
+            {
+                if (Count > 0)
+                {
+                    result = Peek();
+                    return true;
+                }
+                result = default;
+                return false;
+            }
+            public void Clear() => _heap.Clear();
+            public bool Contains(T item) => _heap.Contains(item);
         }
 
         public class DisjointSetUnion

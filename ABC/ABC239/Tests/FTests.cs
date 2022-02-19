@@ -16,9 +16,9 @@ namespace Tests
 2 3
 1 4
 ";
-            const string output = @"6 2
-5 6
-4 5
+            const string output = @"5 6
+5 4
+2 6
 ";
             Utility.InOutTest(Tasks.F.Solve, input, output);
         }
