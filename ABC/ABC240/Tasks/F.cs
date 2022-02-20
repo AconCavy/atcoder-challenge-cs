@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Tasks
 {
@@ -21,12 +20,40 @@ namespace Tasks
         public static void Solve()
         {
             var T = Scanner.Scan<int>();
+            long F(long x) => x * (x + 1) / 2;
 
             while (T-- > 0)
             {
                 var (N, M) = Scanner.Scan<int, int>();
-            }
+                var a = 0L;
+                var b = 0L;
+                var XY = new (long X, long Y)[N];
+                for (var i = 0; i < N; i++)
+                {
+                    var (x, y) = Scanner.Scan<long, long>();
+                    XY[i] = (x, y);
+                }
 
+                var answer = XY[0].X;
+
+                foreach (var (x, y) in XY)
+                {
+                    long G(long k) => a + b * k + x * F(k);
+
+                    if (b > 0 && x < 0)
+                    {
+                        var k = Math.Min(b / -x, y);
+                        answer = Math.Max(answer, G(Math.Min(y, k)));
+                        answer = Math.Max(answer, G(Math.Min(y, k + 1)));
+                    }
+
+                    a = G(y);
+                    b += x * y;
+                    answer = Math.Max(answer, a);
+                }
+
+                Console.WriteLine(answer);
+            }
         }
 
         public static class Scanner

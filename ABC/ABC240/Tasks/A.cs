@@ -20,8 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<int, int>();
-            A--; B--;
-            var answer = (A + 1) % 10 == B || (B + 1) % 10 == A;
+            var answer = (A + 1) % 10 == B % 10 || (B + 1) % 10 == A % 10;
             Console.WriteLine(answer ? "Yes" : "No");
         }
 
