@@ -1,7 +1,8 @@
 #!/bin/bash
 
-TEMPLATEVERSION="1.2.1"
+TEMPLATE_VERSION="1.2.1"
+OUTPUT_DIR="tmp"
 
-mkdir tmp
-wget https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v$TEMPLATEVERSION/AconCavy.CompetitiveProgramming.Templates.$TEMPLATEVERSION.nupkg -O tmp/AconCavy.CompetitiveProgramming.Templates.$TEMPLATEVERSION.nupkg
-dotnet new -i tmp/AconCavy.CompetitiveProgramming.Templates.$TEMPLATEVERSION.nupkg
+mkdir $OUTPUT_DIR
+curl -L https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v$TEMPLATE_VERSION/AconCavy.CompetitiveProgramming.Templates.$TEMPLATE_VERSION.nupkg -o ./$OUTPUT_DIR/AconCavy.CompetitiveProgramming.Templates.$TEMPLATE_VERSION.nupkg
+dotnet new -i ./$OUTPUT_DIR/AconCavy.CompetitiveProgramming.Templates.$TEMPLATE_VERSION.nupkg

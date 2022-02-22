@@ -1,5 +1,6 @@
 @echo off
 
-set TEMPLATEVERSION=1.2.1
+set TEMPLATE_VERSION=1.2.1
+set OUTPUT_DIR=tmp
 
-powershell -Command "New-Item tmp -ItemType directory; Invoke-WebRequest -Uri https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v%TEMPLATEVERSION%/AconCavy.CompetitiveProgramming.Templates.%TEMPLATEVERSION%.nupkg -OutFile ./tmp/AconCavy.CompetitiveProgramming.Templates.%TEMPLATEVERSION%.nupkg; dotnet new -i ./tmp/AconCavy.CompetitiveProgramming.Templates.%TEMPLATEVERSION%.nupkg"
+powershell -Command "New-Item %OUTPUT_DIR% -ItemType directory; Invoke-WebRequest -Uri https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v%TEMPLATE_VERSION%/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg -OutFile ./tmp/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg; dotnet new -i ./%OUTPUT_DIR%/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg"
