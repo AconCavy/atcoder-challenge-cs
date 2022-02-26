@@ -31,10 +31,10 @@ namespace Tasks
                 for (var j = 0; j < N; j++)
                 {
                     var ok = false;
-                    if (i + 6 <= N)
+                    if (i + 5 < N)
                     {
                         var count = 0;
-                        for (var k = 0; k < 6; k++)
+                        for (var k = 0; k <= 5; k++)
                         {
                             if (G[i + k][j] == '#') count++;
                         }
@@ -42,10 +42,10 @@ namespace Tasks
                         ok |= count >= 4;
                     }
 
-                    if (j + 6 <= N)
+                    if (j + 5 < N)
                     {
                         var count = 0;
-                        for (var k = 0; k < 6; k++)
+                        for (var k = 0; k <= 5; k++)
                         {
                             if (G[i][j + k] == '#') count++;
                         }
@@ -53,10 +53,10 @@ namespace Tasks
                         ok |= count >= 4;
                     }
 
-                    if (i + 6 <= N && j + 6 <= N)
+                    if (i + 5 < N && j + 5 < N)
                     {
                         var count = 0;
-                        for (var k = 0; k < 6; k++)
+                        for (var k = 0; k <= 5; k++)
                         {
                             if (G[i + k][j + k] == '#') count++;
                         }
@@ -64,10 +64,10 @@ namespace Tasks
                         ok |= count >= 4;
                     }
 
-                    if (i + 6 <= N && j - 5 >= 0)
+                    if (i + 5 < N && j - 5 >= 0)
                     {
                         var count = 0;
-                        for (var k = 0; k < 6; k++)
+                        for (var k = 0; k <= 5; k++)
                         {
                             if (G[i + k][j - k] == '#') count++;
                         }
