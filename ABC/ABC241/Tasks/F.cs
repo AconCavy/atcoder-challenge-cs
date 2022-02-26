@@ -20,29 +20,20 @@ namespace Tasks
         public static void Solve()
         {
             var (H, W, N) = Scanner.Scan<int, int, int>();
-            var s = Scanner.Scan<int, int>();
-            var t = Scanner.Scan<int, int>();
+            var (sx, sy) = Scanner.Scan<int, int>();
+            var (gx, gy) = Scanner.Scan<int, int>();
             var dictP = new Dictionary<(int X, int Y), int>();
-            var dxa = new Dictionary<int, List<int>>();
-            var dya = new Dictionary<int, List<int>>();
-            var dxd = new Dictionary<int, List<int>>();
-            var dyd = new Dictionary<int, List<int>>();
-
-            dictP[s] = 0;
-            dictP[t] = -1;
+            var dictX = new Dictionary<int, List<int>>();
+            var dictY = new Dictionary<int, List<int>>();
             var D4 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
 
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = Scanner.Scan<int, int>();
-                if (!dxd.ContainsKey(x)) dxa[x] = new List<int>();
-                dxa[x].Add(y);
-                if (!dyd.ContainsKey(y)) dya[y] = new List<int>();
-                dya[y].Add(x);
-                if (!dxd.ContainsKey(x)) dxd[x] = new List<int>();
-                dxd[x].Add(y);
-                if (!dyd.ContainsKey(y)) dyd[y] = new List<int>();
-                dyd[y].Add(x);
+                if (!dictX.ContainsKey(x)) dictX[x] = new List<int>();
+                dictX[x].Add(y);
+                if (!dictY.ContainsKey(y)) dictY[y] = new List<int>();
+                dictY[y].Add(x);
 
                 foreach (var (dx, dy) in D4)
                 {
@@ -52,30 +43,20 @@ namespace Tasks
                 }
             }
 
-            foreach (var list in dxa.Values)
+            foreach (var list in dictX.Values)
             {
                 list.Sort();
             }
 
-            foreach (var list in dya.Values)
+            foreach (var list in dictY.Values)
             {
                 list.Sort();
-            }
-
-            foreach (var list in dxd.Values)
-            {
-                list.Sort();
-                list.Reverse();
-            }
-
-            foreach (var list in dyd.Values)
-            {
-                list.Sort();
-                list.Reverse();
             }
 
             var queue = new Queue<(int X, int Y)>();
-            queue.Enqueue(s);
+            queue.Enqueue((sx, sy));
+            dictP[(sx, sy)] = 0;
+            dictP[(gx, gy)] = -1;
 
             void Enqueue((int, int) u, (int, int) v)
             {
@@ -90,64 +71,58 @@ namespace Tasks
             {
                 var u = queue.Dequeue();
 
-                if (dxd.ContainsKey(u.X))
+                if (dictX.ContainsKey(u.X))
                 {
                     // U
-                    var lb = UpperBound(dxd[u.X], u.Y, (x, y) => y.CompareTo(x));
-                    if (lb < dxd[u.X].Count)
+                    var lb = UpperBound(dictX[u.X], u.Y);
+                    if (lb - 1 >= 0)
                     {
-                        var v = (u.X, Y: dxd[u.X][lb] + 1);
+                        var v = (u.X, Y: dictX[u.X][lb - 1] + 1);
                         Enqueue(u, v);
                     }
-                }
 
-                if (dxa.ContainsKey(u.X))
-                {
                     // D
-                    var lb = UpperBound(dxa[u.X], u.Y, (x, y) => x.CompareTo(y));
-                    if (lb < dxa[u.X].Count)
+                    lb = UpperBound(dictX[u.X], u.Y);
+                    if (lb < dictX[u.X].Count)
                     {
-                        var v = (u.X, Y: dxa[u.X][lb] - 1);
+                        var v = (u.X, Y: dictX[u.X][lb] - 1);
                         Enqueue(u, v);
 
                     }
                 }
 
-                if (dyd.ContainsKey(u.Y))
+                if (dictY.ContainsKey(u.Y))
                 {
                     // L
-                    var lb = UpperBound(dyd[u.Y], u.X, (x, y) => y.CompareTo(x));
-                    if (lb < dyd[u.Y].Count)
+                    var lb = UpperBound(dictY[u.Y], u.X);
+                    if (lb - 1 >= 0)
                     {
-                        var v = (X: dyd[u.Y][lb] + 1, u.Y);
+                        var v = (X: dictY[u.Y][lb - 1] + 1, u.Y);
                         Enqueue(u, v);
 
                     }
-                }
 
-                if (dya.ContainsKey(u.Y))
-                {
                     // D
-                    var lb = UpperBound(dya[u.Y], u.X, (x, y) => x.CompareTo(y));
-                    if (lb < dya[u.Y].Count)
+                    lb = UpperBound(dictY[u.Y], u.X);
+                    if (lb < dictY[u.Y].Count)
                     {
-                        var v = (X: dya[u.Y][lb] - 1, u.Y);
+                        var v = (X: dictY[u.Y][lb] - 1, u.Y);
                         Enqueue(u, v);
                     }
                 }
             }
 
-            var answer = dictP[t];
+            var answer = dictP[(gx, gy)];
             Console.WriteLine(answer);
         }
 
-        public static int UpperBound<T>(List<T> source, T key, Comparison<T> comparison)
+        public static int UpperBound<T>(List<T> source, T key) where T : IComparable<T>
         {
             var (l, r) = (-1, source.Count);
             while (r - l > 1)
             {
                 var m = l + (r - l) / 2;
-                if (comparison(source[m], key) > 0) r = m;
+                if (source[m].CompareTo(key) > 0) r = m;
                 else l = m;
             }
             return r;
