@@ -20,123 +20,215 @@ namespace Tasks
         public static void Solve()
         {
             var Q = Scanner.Scan<int>();
-            var query = new (int, long, int)[Q];
-            var set = new HashSet<long>();
-            for (var i = 0; i < Q; i++)
-            {
-                var line = Scanner.ScanEnumerable<long>().ToArray();
-                var (t, x) = ((int)line[0], line[1]);
-                var k = t == 1 ? -1 : (int)line[2];
-                query[i] = (t, x, k);
-                set.Add(x);
-            }
+            var asc = new RandomizedBinarySearchTree<long>();
+            var desc = new RandomizedBinarySearchTree<long>((x, y) => y.CompareTo(x));
 
-            var (map, remap) = Compress(set);
-            var N = map.Count;
-            var ft = new FenwickTree(N);
-            foreach (var (t, x, k) in query)
+            while (Q-- > 0)
             {
-                if (t == 1)
+                var query = Scanner.ScanEnumerable<long>().ToArray();
+                var (q, x) = (query[0], query[1]);
+                if (q == 1)
                 {
-                    ft.Add(map[x], 1);
-                }
-                else if (t == 2)
-                {
-                    bool F(int idx) => ft.Sum(idx, map[x] + 1) >= k;
-                    var idx = BinarySearch(map[x] + 1, 0, F);
-                    var answer = F(idx) ? remap[idx] : -1;
-                    Console.WriteLine(answer);
+                    asc.Insert(x);
+                    desc.Insert(x);
                 }
                 else
                 {
-                    bool F(int idx) => ft.Sum(map[x], idx + 1) >= k;
-                    var idx = BinarySearch(map[x] - 1, N - 1, F);
-                    var answer = F(idx) ? remap[idx] : -1;
+                    var k = (int)query[2] - 1;
+                    var set = q == 2 ? desc : asc;
+                    if (set.Count() == 0)
+                    {
+                        Console.WriteLine(-1);
+                        continue;
+                    }
+                    var lb = set.LowerBound(x);
+                    var answer = lb + k < set.Count() ? set.ElementAt(lb + k) : -1;
                     Console.WriteLine(answer);
                 }
             }
         }
 
-        public static int BinarySearch(int ng, int ok, Func<int, bool> func)
+        public class RandomizedBinarySearchTree<T> : IEnumerable<T>
         {
-            while (Math.Abs(ok - ng) > 1)
+            private readonly Comparison<T> _comparison;
+            private readonly Compare _lowerBound;
+            private readonly Compare _upperBound;
+            private readonly Random _random;
+            private Node _root;
+            public RandomizedBinarySearchTree(int seed = 0) : this(comparer: null, seed) { }
+            public RandomizedBinarySearchTree(Comparer<T> comparer, int seed = 0) : this(
+                (comparer ?? Comparer<T>.Default).Compare, seed)
             {
-                var m = (ok + ng) / 2;
-                if (func(m)) ok = m;
-                else ng = m;
             }
-            return ok;
+            public RandomizedBinarySearchTree(Comparison<T> comparison, int seed = 0)
+            {
+                _comparison = comparison;
+                _lowerBound = (x, y) => _comparison(x, y) >= 0;
+                _upperBound = (x, y) => _comparison(x, y) > 0;
+                _random = new Random(seed);
+            }
+            public delegate bool Compare(T x, T y);
+            public void Insert(T value)
+            {
+                if (_root is null) _root = new Node(value);
+                else InsertAt(LowerBound(value), value);
+            }
+            public void InsertAt(int index, T value)
+            {
+                var (l, r) = Split(_root, index);
+                _root = Merge(Merge(l, new Node(value)), r);
+            }
+            public void Erase(T value)
+            {
+                EraseAt(LowerBound(value));
+            }
+            public void EraseAt(int index)
+            {
+                var (l, r1) = Split(_root, index);
+                var (_, r2) = Split(r1, 1);
+                _root = Merge(l, r2);
+            }
+            public T ElementAt(int index)
+            {
+                if (index < 0 || Count(_root) <= index) throw new ArgumentNullException(nameof(index));
+                var node = _root;
+                var idx = Count(node) - Count(node.R) - 1;
+                while (node is { })
+                {
+                    if (idx == index) return node.Value;
+                    if (idx > index)
+                    {
+                        node = node.L;
+                        idx -= Count(node?.R) + 1;
+                    }
+                    else
+                    {
+                        node = node.R;
+                        idx += Count(node?.L) + 1;
+                    }
+                }
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            public int Count() => Count(_root);
+
+            public bool Contains(T value)
+            {
+                return Find(value) is { };
+            }
+            public IEnumerator<T> GetEnumerator() => Enumerate(_root).GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public int UpperBound(T value) => CommonBound(value, _upperBound);
+            public int LowerBound(T value) => CommonBound(value, _lowerBound);
+            public int CommonBound(T value, Compare compare)
+            {
+                var node = _root;
+                if (node is null) return -1;
+                var bound = Count(node);
+                var idx = bound - Count(node.R) - 1;
+                while (node is { })
+                {
+                    if (compare(node.Value, value))
+                    {
+                        node = node.L;
+                        bound = Math.Min(bound, idx);
+                        idx -= Count(node?.R) + 1;
+                    }
+                    else
+                    {
+                        node = node.R;
+                        idx += Count(node?.L) + 1;
+                    }
+                }
+                return bound;
+            }
+            private double GetProbability() => _random.NextDouble();
+            private Node Merge(Node l, Node r)
+            {
+                if (l is null || r is null) return l ?? r;
+                var (n, m) = (Count(l), Count(r));
+                if ((double)n / (n + m) > GetProbability())
+                {
+                    l.R = Merge(l.R, r);
+                    return l;
+                }
+                else
+                {
+                    r.L = Merge(l, r.L);
+                    return r;
+                }
+            }
+            private (Node, Node) Split(Node node, int k)
+            {
+                if (node is null) return (null, null);
+                if (k <= Count(node.L))
+                {
+                    var (l, r) = Split(node.L, k);
+                    node.L = r;
+                    return (l, node);
+                }
+                else
+                {
+                    var (l, r) = Split(node.R, k - Count(node.L) - 1);
+                    node.R = l;
+                    return (node, r);
+                }
+            }
+            private Node Find(T value)
+            {
+                var node = _root;
+                while (node is { })
+                {
+                    var cmp = _comparison(node.Value, value);
+                    if (cmp > 0) node = node.L;
+                    else if (cmp < 0) node = node.R;
+                    else break;
+                }
+                return node;
+            }
+            private int Count(Node node) => node?.Count ?? 0;
+            private static IEnumerable<T> Enumerate(Node node = null)
+            {
+                if (node is null) yield break;
+                foreach (var value in Enumerate(node.L)) yield return value;
+                yield return node.Value;
+                foreach (var value in Enumerate(node.R)) yield return value;
+            }
+            private class Node
+            {
+                public T Value { get; }
+                public Node L
+                {
+                    get => _l;
+                    set
+                    {
+                        _l = value;
+                        UpdateCount();
+                    }
+                }
+                public Node R
+                {
+                    get => _r;
+                    set
+                    {
+                        _r = value;
+                        UpdateCount();
+                    }
+                }
+                public int Count { get; private set; }
+                private Node _l;
+                private Node _r;
+                public Node(T value)
+                {
+                    Value = value;
+                    Count = 1;
+                }
+                private void UpdateCount()
+                {
+                    Count = (L?.Count ?? 0) + (R?.Count ?? 0) + 1;
+                }
+            }
         }
 
-        public static (Dictionary<T, int> Map, Dictionary<int, T> ReMap) Compress<T>(IEnumerable<T> source)
-        {
-            var distinct = source.Distinct().ToArray();
-            Array.Sort(distinct);
-            var map = new Dictionary<T, int>();
-            var remap = new Dictionary<int, T>();
-            foreach (var (x, i) in distinct.Select((x, i) => (x, i)))
-            {
-                map[x] = i;
-                remap[i] = x;
-            }
-            return (map, remap);
-        }
-
-        public class FenwickTree
-        {
-            private readonly long[] _data;
-            private readonly int _length;
-            public FenwickTree(int length)
-            {
-                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-                _length = length;
-                _data = new long[length];
-            }
-            public void Add(int index, long item)
-            {
-                if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
-                index++;
-                while (index <= _length)
-                {
-                    _data[index - 1] += item;
-                    index += index & -index;
-                }
-            }
-            public long Sum(int length)
-            {
-                if (length < 0 || _length < length) throw new ArgumentOutOfRangeException(nameof(length));
-                var s = 0L;
-                while (length > 0)
-                {
-                    s += _data[length - 1];
-                    length -= length & -length;
-                }
-                return s;
-            }
-            public long Sum(int left, int right)
-            {
-                if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
-                return Sum(right) - Sum(left);
-            }
-            public int LowerBound(long item) => CommonBound(item, LessThanOrEqual);
-            public int UpperBound(long item) => CommonBound(item, LessThan);
-            private int CommonBound(long item, Func<long, long, bool> compare)
-            {
-                if (compare(item, _data[0])) return 0;
-                var x = 0;
-                var r = 1;
-                while (r < _length) r <<= 1;
-                for (var k = r; k > 0; k >>= 1)
-                {
-                    if (x + k - 1 >= _length || compare(item, _data[x + k - 1])) continue;
-                    item -= _data[x + k - 1];
-                    x += k;
-                }
-                return x;
-            }
-            private static bool LessThanOrEqual(long x, long y) => x <= y;
-            private static bool LessThan(long x, long y) => x < y;
-        }
         public static class Scanner
         {
             public static string ScanLine() => Console.ReadLine()?.Trim() ?? string.Empty;

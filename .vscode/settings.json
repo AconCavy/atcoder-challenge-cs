@@ -1,5 +1,5 @@
 {
-    "env.project": "ABC241",
+    "env.project": "ABC/ABC241",
     "env.task": "D",
     "env.framework": "netcoreapp3.1"
 }
