@@ -20,149 +20,137 @@ namespace Tasks
         public static void Solve()
         {
             var (H, W, N) = Scanner.Scan<int, int, int>();
-            var (sx, sy) = Scanner.Scan<int, int>();
-            var (gx, gy) = Scanner.Scan<int, int>();
-            var setX = new HashSet<int>();
-            var setY = new HashSet<int>();
-            setX.Add(sx);
-            setY.Add(sy);
-            setX.Add(gx);
-            setY.Add(gy);
-            var P = new (int X, int Y)[N];
+            var s = Scanner.Scan<int, int>();
+            var t = Scanner.Scan<int, int>();
+            var dictP = new Dictionary<(int X, int Y), int>();
+            var dxa = new Dictionary<int, List<int>>();
+            var dya = new Dictionary<int, List<int>>();
+            var dxd = new Dictionary<int, List<int>>();
+            var dyd = new Dictionary<int, List<int>>();
+
+            dictP[s] = 0;
+            dictP[t] = -1;
+            var D4 = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) };
+
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = Scanner.Scan<int, int>();
-                setX.Add(x);
-                setY.Add(y);
-                P[i] = (x, y);
-            }
+                if (!dxd.ContainsKey(x)) dxa[x] = new List<int>();
+                dxa[x].Add(y);
+                if (!dyd.ContainsKey(y)) dya[y] = new List<int>();
+                dya[y].Add(x);
+                if (!dxd.ContainsKey(x)) dxd[x] = new List<int>();
+                dxd[x].Add(y);
+                if (!dyd.ContainsKey(y)) dyd[y] = new List<int>();
+                dyd[y].Add(x);
 
-            var (mx, rmx) = Compress(setX);
-            var (my, rmy) = Compress(setY);
-
-            H = mx.Count;
-            W = my.Count;
-            var G = new bool[H, W];
-            foreach (var (x, y) in P)
-            {
-                G[mx[x], my[y]] = true;
-            }
-
-            var depths = new int[H, W];
-            for (var i = 0; i < H; i++)
-            {
-                for (var j = 0; j < W; j++)
+                foreach (var (dx, dy) in D4)
                 {
-                    depths[i, j] = -1;
+                    var (nx, ny) = (x + dx, y + dy);
+                    if (nx <= 0 || H < nx || ny <= 0 || W < ny) continue;
+                    dictP[(nx, ny)] = -1;
                 }
             }
 
-            depths[mx[sx], my[sy]] = 0;
+            foreach (var list in dxa.Values)
+            {
+                list.Sort();
+            }
 
-            var queue = new Queue<(int, int)>();
-            queue.Enqueue((mx[sx], my[sy]));
+            foreach (var list in dya.Values)
+            {
+                list.Sort();
+            }
 
+            foreach (var list in dxd.Values)
+            {
+                list.Sort();
+                list.Reverse();
+            }
+
+            foreach (var list in dyd.Values)
+            {
+                list.Sort();
+                list.Reverse();
+            }
+
+            var queue = new Queue<(int X, int Y)>();
+            queue.Enqueue(s);
+
+            void Enqueue((int, int) u, (int, int) v)
+            {
+                if (dictP.ContainsKey(v) && dictP[v] == -1)
+                {
+                    dictP[v] = dictP[u] + 1;
+                    queue.Enqueue(v);
+                }
+            }
 
             while (queue.Count > 0)
             {
-                var (uh, uw) = queue.Dequeue();
-                for (var i = uh; i + 1 < H; i++)
+                var u = queue.Dequeue();
+
+                if (dxd.ContainsKey(u.X))
                 {
-                    if (G[i + 1, uw])
+                    // U
+                    var lb = UpperBound(dxd[u.X], u.Y, (x, y) => y.CompareTo(x));
+                    if (lb < dxd[u.X].Count)
                     {
-                        if (depths[i, uw] != -1) continue;
-                        depths[i, uw] = depths[uh, uw] + 1;
-                        queue.Enqueue((i, uw));
-                        break;
+                        var v = (u.X, Y: dxd[u.X][lb] + 1);
+                        Enqueue(u, v);
                     }
                 }
 
-                for (var i = uh; i - 1 >= 0; i--)
+                if (dxa.ContainsKey(u.X))
                 {
-                    if (G[i - 1, uw])
+                    // D
+                    var lb = UpperBound(dxa[u.X], u.Y, (x, y) => x.CompareTo(y));
+                    if (lb < dxa[u.X].Count)
                     {
-                        if (depths[i, uw] != -1) continue;
-                        depths[i, uw] = depths[uh, uw] + 1;
-                        queue.Enqueue((i, uw));
-                        break;
+                        var v = (u.X, Y: dxa[u.X][lb] - 1);
+                        Enqueue(u, v);
+
                     }
                 }
 
-                for (var j = uw; j + 1 < W; j++)
+                if (dyd.ContainsKey(u.Y))
                 {
-                    if (G[uh, j + 1])
+                    // L
+                    var lb = UpperBound(dyd[u.Y], u.X, (x, y) => y.CompareTo(x));
+                    if (lb < dyd[u.Y].Count)
                     {
-                        if (depths[uh, j] != -1) continue;
-                        depths[uh, j] = depths[uh, uw] + 1;
-                        queue.Enqueue((uh, j));
-                        break;
+                        var v = (X: dyd[u.Y][lb] + 1, u.Y);
+                        Enqueue(u, v);
+
                     }
                 }
 
-                for (var j = uw; j - 1 >= 0; j--)
+                if (dya.ContainsKey(u.Y))
                 {
-                    if (G[uh, j - 1])
+                    // D
+                    var lb = UpperBound(dya[u.Y], u.X, (x, y) => x.CompareTo(y));
+                    if (lb < dya[u.Y].Count)
                     {
-                        if (depths[uh, j] != -1) continue;
-                        depths[uh, j] = depths[uh, uw] + 1;
-                        queue.Enqueue((uh, j));
-                        break;
+                        var v = (X: dya[u.Y][lb] - 1, u.Y);
+                        Enqueue(u, v);
                     }
                 }
             }
 
-            // Printer.Print2D(depths, " ");
-            // Printer.Print2D(G, " ");
-
-            var answer = depths[mx[gx], my[gy]];
+            var answer = dictP[t];
             Console.WriteLine(answer);
         }
 
-        public static class Printer
+        public static int UpperBound<T>(List<T> source, T key, Comparison<T> comparison)
         {
-            public static void Print<T>(T source) => Console.WriteLine(source);
-            public static void Print1D<T>(IEnumerable<T> source, string separator = "") =>
-                Console.WriteLine(string.Join(separator, source));
-            public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = "") =>
-                Console.WriteLine(string.Join(separator, source.Select(selector)));
-            public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = "") =>
-                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x))));
-            public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = "") =>
-                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x.Select(selector)))));
-            public static void Print2D<T>(T[,] source, string separator = "")
+            var (l, r) = (-1, source.Count);
+            while (r - l > 1)
             {
-                var (h, w) = (source.GetLength(0), source.GetLength(1));
-                for (var i = 0; i < h; i++)
-                    for (var j = 0; j < w; j++)
-                    {
-                        Console.Write(source[i, j]);
-                        Console.Write(j == w - 1 ? "\n" : separator);
-                    }
+                var m = l + (r - l) / 2;
+                if (comparison(source[m], key) > 0) r = m;
+                else l = m;
             }
-            public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = "")
-            {
-                var (h, w) = (source.GetLength(0), source.GetLength(1));
-                for (var i = 0; i < h; i++)
-                    for (var j = 0; j < w; j++)
-                    {
-                        Console.Write(selector(source[i, j]));
-                        Console.Write(j == w - 1 ? "\n" : separator);
-                    }
-            }
-        }
-
-        public static (Dictionary<T, int> Map, Dictionary<int, T> ReMap) Compress<T>(IEnumerable<T> source)
-        {
-            var distinct = source.Distinct().ToArray();
-            Array.Sort(distinct);
-            var map = new Dictionary<T, int>();
-            var remap = new Dictionary<int, T>();
-            foreach (var (x, i) in distinct.Select((x, i) => (x, i)))
-            {
-                map[x] = i;
-                remap[i] = x;
-            }
-            return (map, remap);
+            return r;
         }
 
         public static class Scanner
