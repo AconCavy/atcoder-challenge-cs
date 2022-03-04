@@ -411,17 +411,17 @@
         "scope": "csharp",
         "prefix": "bfs",
         "body": [
+            "var costs = new int[${1:N}];",
+            "Array.Fill(costs, -1);",
             "var queue = new Queue<int>();",
             "queue.Enqueue(0);",
-            "var depths = Enumerable.Repeat(-1, ${1:N}).ToArray();",
-            "depths[0] = 0;",
             "while (queue.Count > 0)",
             "{",
             "    var u = queue.Dequeue();",
             "    foreach (var v in G[u])",
             "    {",
-            "        if (depths[v] != -1) continue;",
-            "        depths[v] = depths[u] + 1;",
+            "        if (costs[v] != -1) continue;",
+            "        costs[v] = costs[u] + 1;",
             "        queue.Enqueue(v);",
             "    }",
             "}"
@@ -730,11 +730,11 @@
             "}"
         ]
     },
-    "Transpose": {
+    "Rotate": {
         "scope": "csharp",
-        "prefix": "transpose",
+        "prefix": "rotate",
         "body": [
-            "public static T[,] Transpose<T>(T[,] matrix)",
+            "public static T[,] Rotate<T>(T[,] matrix)",
             "{",
             "    var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));",
             "    var result = new T[m, n];",
