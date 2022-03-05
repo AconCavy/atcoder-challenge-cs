@@ -22,19 +22,19 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var dp = new mint[N + 1, 10];
+            var dp = new mint[N + 1, 11];
             for (var i = 1; i < 10; i++)
             {
                 dp[1, i] = 1;
             }
 
-            for (var i = 0; i < N; i++)
+            for (var i = 1; i < N; i++)
             {
                 for (var j = 1; j < 10; j++)
                 {
                     dp[i + 1, j - 1] += dp[i, j];
                     dp[i + 1, j] += dp[i, j];
-                    if (j + 1 < 10) dp[i + 1, j + 1] += dp[i, j];
+                    dp[i + 1, j + 1] += dp[i, j];
                 }
             }
 
