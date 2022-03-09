@@ -1,6 +1,11 @@
 @echo off
 
 set TEMPLATE_VERSION=1.2.1
+set PACKAGE=AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg
+set URI=https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v%TEMPLATE_VERSION%/%PACKAGE%
 set OUTPUT_DIR=tmp
+set PACKAGE_PATH=./%OUTPUT_DIR%/%PACKAGE%
 
-powershell -Command "New-Item %OUTPUT_DIR% -ItemType directory; Invoke-WebRequest -Uri https://github.com/AconCavy/CompetitiveProgrammingTemplateCSharp/releases/download/v%TEMPLATE_VERSION%/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg -OutFile ./tmp/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg; dotnet new -i ./%OUTPUT_DIR%/AconCavy.CompetitiveProgramming.Templates.%TEMPLATE_VERSION%.nupkg"
+mkdir %OUTPUT_DIR%
+powershell -Command "Invoke-WebRequest -Uri %URI% -OutFile %PACKAGE_PATH%"
+dotnet new -i %PACKAGE_PATH%
