@@ -24,9 +24,8 @@ exit /b
         exit /b
     )
 
-    call dotnet new cpsolver -n %TASK% -o .\%SLN%\Tasks
-    call dotnet new cptests -n %TASK% -o .\%SLN%\Tests
-    call code -n . .\%SLN%\Tests\%TASK%Tests.cs .\%SLN%\Tasks\%TASK%.cs
+    call dotnet new cpsolver -n %TASK% -o .\%SLN%
+    call code -n . .\%SLN%\%TASK%.cs
     endlocal
     exit /b
 
@@ -39,6 +38,7 @@ exit /b
     )
 
     call dotnet new cpproj -n %SLN% -f netcoreapp3.1
+    call code -n . .\%SLN%\Tests.cs
     call :"add" %SLN% A
     call :"add" %SLN% B
     call :"add" %SLN% C

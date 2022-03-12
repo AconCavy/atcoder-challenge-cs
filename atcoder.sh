@@ -24,9 +24,8 @@ function add {
     SLN=$1
     TASK=$2
 
-    dotnet new cpsolver -n $TASK -o ./${SLN}/Tasks
-    dotnet new cptests -n $TASK -o ./${SLN}/Tests
-    code -n . ./${SLN}/Tests/${TASK}Tests.cs ./${SLN}/Tasks/${TASK}.cs
+    dotnet new cpsolver -n $TASK -o ./$SLN
+    code -n . ./${SLN}/${TASK}.cs
 }
 
 function new {
@@ -37,6 +36,8 @@ function new {
 
     SLN=$1
 
+    dotnet new cpproj -n $SLN -f netcoreapp3.1
+    code -n . ./${SLN}/Tests.cs
     add $SLN A
     add $SLN B
     add $SLN C
