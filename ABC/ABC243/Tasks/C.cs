@@ -27,55 +27,36 @@ namespace Tasks
             }
 
             var S = Scanner.Scan<string>();
-            var L = new Dictionary<int, List<int>>();
-            var R = new Dictionary<int, List<int>>();
+            var L = new Dictionary<int, int>();
+            var R = new Dictionary<int, int>();
+            const int inf = (int)1e9;
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = P[i];
                 if (S[i] == 'L')
                 {
-                    if (!L.ContainsKey(y)) L[y] = new List<int>();
-                    L[y].Add(x);
+                    if (!L.ContainsKey(y)) L[y] = 0;
+                    L[y] = Math.Max(L[y], x);
                 }
                 else
                 {
-                    if (!R.ContainsKey(y)) R[y] = new List<int>();
-                    R[y].Add(x);
+                    if (!R.ContainsKey(y)) R[y] = inf;
+                    R[y] = Math.Min(R[y], x);
                 }
             }
 
-            foreach (var (_, v) in L) v.Sort();
-            foreach (var (_, v) in R) v.Sort();
-
-            foreach (var (k, list) in R)
+            foreach (var (y, x) in R)
             {
-                if (!L.ContainsKey(k)) continue;
-                foreach (var x1 in R[k])
+                if (L.ContainsKey(y) && x <= L[y])
                 {
-                    var lb = LowerBound(L[k], x1);
-                    if (lb < L[k].Count && x1 <= L[k][lb])
-                    {
-                        Console.WriteLine("Yes");
-                        return;
-                    }
-
+                    Console.WriteLine("Yes");
+                    return;
                 }
             }
 
             Console.WriteLine("No");
         }
 
-        public static int LowerBound<T>(List<T> source, T key) where T : IComparable<T>
-        {
-            var (l, r) = (-1, source.Count);
-            while (r - l > 1)
-            {
-                var m = l + (r - l) / 2;
-                if (source[m].CompareTo(key) >= 0) r = m;
-                else l = m;
-            }
-            return r;
-        }
 
         public static class Scanner
         {
