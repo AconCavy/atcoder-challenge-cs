@@ -10,7 +10,7 @@
                 "${workspaceFolder}/${config:env.project}/Tasks",
                 "--framework",
                 "${config:env.framework}",
-                "/property:StartupObject=Tasks.${config:env.task}"
+                "--nologo"
             ],
             "problemMatcher": [
                 "$msCompile"
@@ -26,7 +26,6 @@
                 "${workspaceFolder}/${config:env.project}/Tasks",
                 "--framework",
                 "${config:env.framework}",
-                "--property:StartupObject=Tasks.${config:env.task}",
             ],
             "problemMatcher": [
                 "$msCompile"
@@ -41,13 +40,11 @@
                 "${workspaceFolder}/${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
+                "--nologo",
             ],
             "problemMatcher": [
                 "$msCompile"
             ],
-            "dependsOn": [
-                "build"
-            ]
         },
         {
             "label": "clean",
