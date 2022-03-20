@@ -7,7 +7,7 @@
             "type": "shell",
             "args": [
                 "build",
-                "${workspaceFolder}/${config:env.project}/Tasks",
+                "${workspaceFolder}/${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
                 "--nologo"
@@ -23,7 +23,7 @@
             "args": [
                 "run",
                 "--project",
-                "${workspaceFolder}/${config:env.project}/Tasks",
+                "${workspaceFolder}/${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
             ],
