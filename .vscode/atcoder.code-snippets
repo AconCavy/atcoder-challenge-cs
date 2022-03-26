@@ -789,7 +789,7 @@
             "    @\"\")]",
             "public void ${1:task}Test(string input, string output)",
             "{",
-            "    Utility.InOutTest(Tasks.${1}.Solve, input, output${2:, -1e9});",
+            "    Utility.InOutTest(Tasks.${1}.Solve, input, output${2:, 1e-9});",
             "}"
         ]
     },
