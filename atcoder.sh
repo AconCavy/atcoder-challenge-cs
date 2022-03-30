@@ -1,57 +1,72 @@
 #!/bin/bash
 
 function help {
-    echo "new: Create a new solution by the specified name."
-    echo "add: Add a new task and test to the specified solution."
+  echo "Usage: atcoder.cmd [project-name]                Create a new project."
+  echo "Usage: atcoder.cmd [project-name] [task-name]    Create a new task to the project."
 }
 
-function add {
-    if [ -z $1 ]; then
-        echo The option requires a solution name as an argument.
-        exit 1
-    fi
+function task {
+  PROJECT_PATH=$1
+  TASK=$2
+  OUTPUT_FILE=$PROJECT_PATH/$TASK.cs
 
-    if [ -z $2 ]; then
-        echo The option requires a task name as an argument.
-        exit 1
-    fi
+  if [ -e $OUTPUT_FILE ]; then
+    echo "$OUTPUT_FILE is already exist. Skip creating the file."
+    return
+  fi
 
-    if [ $# != 2 ]; then
-        echo The options are only a solution name and a task name as an argument.
-        exit 1
-    fi
-
-    SLN=$1
-    TASK=$2
-
-    dotnet new cpsolver -n $TASK -o ./$SLN
-    code -n . ./${SLN}/${TASK}.cs
+  echo "Create $OUTPUT_FILE."
+  dotnet new cpsolver -n $TASK -o $PROJECT_PATH
+  code -n . $OUTPUT_FILE
 }
 
-function new {
-    if [ -z $1 ]; then
-        echo The option requires a solution name as an argument.
-        exit 1
-    fi
+function project {
+  PROJECT_PATH=$1
+  PROJECT=$2
 
-    SLN=$1
+  if [ -e $PROJECT_PATH ]; then
+    echo "$PROJECT_PATH is already exist. Skip creating the project."
+    return
+  fi
 
-    dotnet new cpproj -n $SLN -f netcoreapp3.1
-    code -n . ./${SLN}/Tests.cs
-    add $SLN A
-    add $SLN B
-    add $SLN C
-    add $SLN D
+  echo "Create $PROJECT to $PROJECT_PATH".
+  dotnet new cpproj -n $PROJECT -f netcoreapp3.1 -o $PROJECT_PATH
 
-    case "$(uname -s)" in
-        Darwin) open https://atcoder.jp/contests/$SLN ;;
-        Linux) $BROWSER https://atcoder.jp/contests/$SLN ;;
-    esac
+  for p in A B C D E F; do
+    task $PROJECT_PATH $p
+  done
+
+  code -n . $PROJECT_PATH/$PROJECT.csproj $PROJECT_PATH/Tests.cs
+
+  case "$(uname -s)" in
+    Darwin) open https://atcoder.jp/contests/$PROJECT ;;
+    Linux) $BROWSER https://atcoder.jp/contests/$PROJECT ;;
+  esac
 }
 
-case $1 in
-    help) help;;
-    add) add $2 $3;;
-    new) new $2;;
-    *) help;;
-esac
+PROJECT=$1
+TASK=$2
+
+if [ -z $PROJECT ] || [ $PROJECT = "help" ]; then
+  help
+  exit 0
+fi
+
+OUTPUT=$(cd $(dirname $0); pwd)
+CONTENT_TYPE=${PROJECT:0:3}
+
+if [[ $CONTENT_TYPE =~ A[BGR]C ]]; then
+  OUTPUT=$OUTPUT/$CONTENT_TYPE
+fi
+
+if [ ! -d $OUTPUT ]; then
+  mkdir $OUTPUT
+fi
+
+PROJECT_PATH=$OUTPUT/$PROJECT
+
+if [ -z $TASK ]; then
+  project $PROJECT_PATH $PROJECT
+else
+  task $PROJECT_PATH $TASK
+fi
