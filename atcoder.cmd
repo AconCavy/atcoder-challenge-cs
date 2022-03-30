@@ -8,11 +8,9 @@ if "%PROJECT%"=="" set IS_HELP=true
 if "%PROJECT%"=="help" set IS_HELP=true
 
 if %IS_HELP%==true (
-  echo Usage: atcoder.cmd [project-name]                Create a new project.
-  echo Usage: atcoder.cmd [project-name] [task-name]    Create a new task to the project.
+  call :help
   exit /b
 )
-
 
 set OUTPUT=%CD%
 set CONTEST_TYPE=%PROJECT:~0,3%
@@ -37,6 +35,29 @@ if "%TASK%"=="" (
 
 exit /b
 
+:help
+  echo Usage: atcoder.cmd [project-name]                Create a new project.
+  echo Usage: atcoder.cmd [project-name] [task-name]    Create a new task to the project.
+  exit /b
+
+:task
+  setlocal
+  set PROJECT_PATH=%~1
+  set TASK=%~2
+  set OUTPUT_FILE=%PROJECT_PATH%\%TASK%.cs
+
+  if exist %OUTPUT_FILE% (
+    echo %OUTPUT_FILE% is already exist. Skip creating the file.
+    exit /b
+  )
+
+  echo Create %OUTPUT_FILE%.
+  call dotnet new cpsolver -n %TASK% -o %PROJECT_PATH%
+  call code -n . %OUTPUT_FILE%
+
+  endlocal
+  exit /b
+
 :project
   setlocal
   set PROJECT_PATH=%~1
@@ -58,23 +79,5 @@ exit /b
 
   call code -n . %PROJECT_PATH%\%PROJECT%.csproj %PROJECT_PATH%\Tests.cs
   start https://atcoder.jp/contests/%PROJECT%
-  endlocal
-  exit /b
-
-:task
-  setlocal
-  set PROJECT_PATH=%~1
-  set TASK=%~2
-  set OUTPUT_FILE=%PROJECT_PATH%\%TASK%.cs
-
-  if exist %OUTPUT_FILE% (
-    echo %OUTPUT_FILE% is already exist. Skip creating the file.
-    exit /b
-  )
-
-  echo Create %OUTPUT_FILE%.
-  call dotnet new cpsolver -n %TASK% -o %PROJECT_PATH%
-  call code -n . %OUTPUT_FILE%
-
   endlocal
   exit /b
