@@ -14,28 +14,28 @@ You can use `install.cmd` or `install.sh`.
 
 ## Create Project
 
-Create a project using the script with `new` command.
+Create a new project using `atcoder.cmd` or `atcoder.sh` script.
 
 ```sh
 # Windows
-./atcoder.cmd new ABC177
+./atcoder.cmd ABC000
 
 # macOS or Linux
-./atcoder.sh new ABC177
+./atcoder.sh new ABC000
 ```
 
-In the example, the dotnet project named `ABC177` will be created.
+In the example, the dotnet project named `ABC000` will be created into `ABC`.
 
-## Create Solver Items
+## Create Solver file
 
-Create solver items using the script with `add` command.
+Create a new solver file using `atcoder.cmd` or `atcoder.sh` script.
 
 ```sh
 # Windows
-./atcoder.cmd add ABC177 E
+./atcoder.cmd ABC000 E
 
 # macOS or Linux
-./atcoder.sh add ABC177 E
+./atcoder.sh add ABC000 E
 ```
 
-In the example, `E.cs` will be created in `ABC177` project.
+In the example, `E.cs` will be created in `ABC000` project.
