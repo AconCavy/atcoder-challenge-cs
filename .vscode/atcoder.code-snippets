@@ -534,6 +534,7 @@
             "        idx[i] = lb;",
             "    }",
             "    var lis = new long[LowerBound(dp, long.MaxValue)];",
+            "    var k = lis.Length - 1;",
             "    for (var i = source.Length - 1; i >= 0; i--)",
             "    {",
             "        if (idx[i] == k) lis[k--] = source[i];",
