@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function help {
-  echo "Usage: atcoder.cmd [project-name]                Create a new project."
-  echo "Usage: atcoder.cmd [project-name] [task-name]    Create a new task to the project."
+  echo "Usage: atcoder.sh [project-name]                Create a new project."
+  echo "Usage: atcoder.sh [project-name] [task-name]    Create a new task to the project."
 }
 
 function task {
