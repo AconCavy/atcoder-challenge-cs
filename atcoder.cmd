@@ -1,49 +1,80 @@
 @echo off
 
-call :"%~1" %~2 %~3
+set PROJECT=%~1
+set TASK=%~2
+
+set IS_HELP=false
+if "%PROJECT%"=="" set IS_HELP=true
+if "%PROJECT%"=="help" set IS_HELP=true
+
+if %IS_HELP%==true (
+  echo Usage: atcoder.cmd [project-name]                Create a new project.
+  echo Usage: atcoder.cmd [project-name] [task-name]    Create a new task to the project.
+  exit /b
+)
+
+
+set OUTPUT=%CD%
+set CONTEST_TYPE=%PROJECT:~0,3%
+echo %CONTEST_TYPE% | findstr /r "A[BGR]C" > nul
+
+if %ERRORLEVEL%==0 (
+  set OUTPUT=%CD%\%CONTEST_TYPE%
+)
+
+if not exist %OUTPUT% (
+  echo Create %OUTPUT%.
+  mkdir %OUTPUT%
+)
+
+set PROJECT_PATH=%OUTPUT%\%PROJECT%
+
+if "%TASK%"=="" (
+  call :project %PROJECT_PATH% %PROJECT%
+) else (
+  call :task %PROJECT_PATH% %TASK%
+)
+
 exit /b
 
-:""
-:"help"
-    echo new: Create a new solution by the specified name.
-    echo add: Add a new task and test to the specified solution.
+:project
+  setlocal
+  set PROJECT_PATH=%~1aaa
+  set PROJECT=%~2bbb
+
+  if exist %PROJECT_PATH% (
+    echo %PROJECT_PATH% is already exist. Skip creating the project.
     exit /b
+  )
 
-:"add"
-    setlocal
-    set SLN=%~1
-    set TASK=%~2
+  echo Create %PROJECT% to %PROJECT_PATH%.
+  call dotnet new cpproj -n %PROJECT% -f netcoreapp3.1 -o %PROJECT_PATH%
 
-    if "%SLN%"=="" (
-        echo The option requires a solution name as an argument.
-        exit /b
-    )
+  setlocal enabledelayedexpansion
+  for %%p in (A) do (
+    call :task !PROJECT_PATH! %%p
+  )
+  endlocal
 
-    if "%TASK%"=="" (
-        echo The option requires a task name as an argument.
-        exit /b
-    )
+  call code -n . %PROJECT_PATH%\%PROJECT%.csproj %PROJECT_PATH%\Tests.cs
+  start https://atcoder.jp/contests/%PROJECT%
+  endlocal
+  exit /b
 
-    call dotnet new cpsolver -n %TASK% -o .\%SLN%
-    call code -n . .\%SLN%\%TASK%.cs
-    endlocal
+:task
+  setlocal
+  set PROJECT_PATH=%~1
+  set TASK=%~2
+  set OUTPUT_FILE=%PROJECT_PATH%\%TASK%.cs
+
+  if exist %OUTPUT_FILE% (
+    echo %OUTPUT_FILE% is already exist. Skip creating the file.
     exit /b
+  )
 
-:"new"
-    setlocal
-    set SLN=%~1
-    if "%SLN%"=="" (
-        echo option requires a solution name as an argument.
-        exit /b
-    )
+  echo Create %OUTPUT_FILE%.
+  call dotnet new cpsolver -n %TASK% -o %PROJECT_PATH%
+  call code -n . %OUTPUT_FILE%
 
-    call dotnet new cpproj -n %SLN% -f netcoreapp3.1
-    call code -n . .\%SLN%\Tests.cs
-    call :"add" %SLN% A
-    call :"add" %SLN% B
-    call :"add" %SLN% C
-    call :"add" %SLN% D
-
-    start https://atcoder.jp/contests/%SLN%
-    endlocal
-    exit /b
+  endlocal
+  exit /b
