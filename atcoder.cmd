@@ -39,8 +39,8 @@ exit /b
 
 :project
   setlocal
-  set PROJECT_PATH=%~1aaa
-  set PROJECT=%~2bbb
+  set PROJECT_PATH=%~1
+  set PROJECT=%~2
 
   if exist %PROJECT_PATH% (
     echo %PROJECT_PATH% is already exist. Skip creating the project.
