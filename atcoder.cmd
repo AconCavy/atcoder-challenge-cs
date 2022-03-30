@@ -72,7 +72,7 @@ exit /b
   call dotnet new cpproj -n %PROJECT% -f netcoreapp3.1 -o %PROJECT_PATH%
 
   setlocal enabledelayedexpansion
-  for %%p in (A) do (
+  for %%p in (A B C D E F) do (
     call :task !PROJECT_PATH! %%p
   )
   endlocal
