@@ -20,9 +20,9 @@ namespace Tasks
         public static void Solve()
         {
             var (A, B) = Scanner.Scan<int, int>();
-            var v = new Vector2(A, B);
-            var answer = Vector2.Normalize(v);
-            Console.WriteLine($"{answer.X} {answer.Y}");
+            var d = Math.Sqrt(A * A + B * B);
+            var (x, y) = (A / d, B / d);
+            Console.WriteLine($"{x} {y}");
         }
 
         public static class Scanner

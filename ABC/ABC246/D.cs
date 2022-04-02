@@ -21,25 +21,14 @@ namespace Tasks
         {
             var N = Scanner.Scan<long>();
 
-            // X == (a+b)^3 - 2ab(a+b) >= N
-
-            // long F(long a, long b)
-            // {
-            //     var c = a + b;
-            //     return c * c * c - 2 * a * b * c;
-            // }
-
-            long F(long a, long b)
-            {
-                return (a * a * a) + (a * a * b) + (a * b * b) + (b * b * b);
-            }
+            long F(long a, long b) => (a * a * a) + (a * a * b) + (a * b * b) + (b * b * b);
 
             const long inf = (long)1e6;
             var answer = inf * inf * inf;
             var b = inf;
-            for (var a = 0; a <= inf; a++)
+            for (var a = 0; a <= b; a++)
             {
-                while (F(a, b) >= N && b >= 0)
+                while (F(a, b) >= N && b >= a)
                 {
                     answer = Math.Min(answer, F(a, b));
                     b--;

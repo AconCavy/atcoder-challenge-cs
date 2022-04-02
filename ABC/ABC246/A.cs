@@ -19,21 +19,16 @@ namespace Tasks
 
         public static void Solve()
         {
-            var X = new HashSet<int>();
-            var Y = new HashSet<int>();
+            var x = 0;
+            var y = 0;
             for (var i = 0; i < 3; i++)
             {
-                var (x, y) = Scanner.Scan<int, int>();
-                if (X.Contains(x)) X.Remove(x);
-                else X.Add(x);
-
-                if (Y.Contains(y)) Y.Remove(y);
-                else Y.Add(y);
+                var (X, Y) = Scanner.Scan<int, int>();
+                x ^= X;
+                y ^= Y;
             }
 
-            var xx = X.First();
-            var yy = Y.First();
-            Console.WriteLine($"{xx} {yy}");
+            Console.WriteLine($"{x} {y}");
         }
 
         public static class Scanner
