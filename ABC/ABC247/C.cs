@@ -21,25 +21,12 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
 
-            string answer = "";
-
-            void Dfs(int curr)
+            var answer = "1";
+            for (var i = 2; i <= N; i++)
             {
-                if (curr > N) return;
-
-                if (curr == 1)
-                {
-                    answer = "1";
-                }
-                else
-                {
-                    answer = $"{answer} {curr} {answer}";
-                }
-
-                Dfs(curr + 1);
+                answer = $"{answer} {i} {answer}";
             }
 
-            Dfs(1);
             Console.WriteLine(answer);
         }
 
