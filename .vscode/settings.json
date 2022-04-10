@@ -1,4 +1,5 @@
 {
-    "env.project": "ARC/ARC138",
+    "env.directory": "ARC/",
+    "env.project": "ARC138",
     "env.framework": "netcoreapp3.1"
 }

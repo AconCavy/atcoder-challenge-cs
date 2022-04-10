@@ -7,7 +7,7 @@
             "type": "shell",
             "args": [
                 "build",
-                "${workspaceFolder}/${config:env.project}",
+                "${workspaceFolder}/${config:env.directory}${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
                 "--nologo"
@@ -23,7 +23,7 @@
             "args": [
                 "run",
                 "--project",
-                "${workspaceFolder}/${config:env.project}",
+                "${workspaceFolder}/${config:env.directory}${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
             ],
@@ -37,7 +37,7 @@
             "type": "shell",
             "args": [
                 "test",
-                "${workspaceFolder}/${config:env.project}",
+                "${workspaceFolder}/${config:env.directory}${config:env.project}",
                 "--framework",
                 "${config:env.framework}",
                 "--nologo",
@@ -52,7 +52,7 @@
             "type": "shell",
             "args": [
                 "clean",
-                "${workspaceFolder}/${config:env.project}"
+                "${workspaceFolder}/${config:env.directory}${config:env.project}"
             ],
             "problemMatcher": [
                 "$msCompile"

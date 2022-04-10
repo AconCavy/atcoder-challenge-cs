@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/${config:env.project}/Tasks/bin/Debug/${config:env.framework}/Tasks.dll",
+            "program": "${workspaceFolder}/${config:env.directory}${config:env.project}/bin/Debug/${config:env.framework}/${config:env.project}.dll",
             "args": [],
             "stopAtEntry": false,
             "console": "integratedTerminal",
