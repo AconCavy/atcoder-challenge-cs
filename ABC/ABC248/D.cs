@@ -29,11 +29,6 @@ namespace Tasks
                 dict[a].Add(i);
             }
 
-            foreach (var list in dict.Values)
-            {
-                list.Sort();
-            }
-
             var Q = Scanner.Scan<int>();
             while (Q-- > 0)
             {

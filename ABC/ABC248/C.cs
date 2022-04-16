@@ -22,25 +22,24 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M, K) = Scanner.Scan<int, int, int>();
-            var NM = N * M;
-            var dp = new mint[N + 1, NM + 1];
+            var dp = new mint[N + 1, K + 1];
             dp[0, 0] = 1;
 
             for (var i = 0; i < N; i++)
             {
-                for (var j = 0; j <= NM; j++)
+                for (var j = 0; j <= K; j++)
                 {
-                    for (var k = 1; k <= M; k++)
+                    for (var k = 1; k <= M && j + k <= K; k++)
                     {
-                        if (j + k <= NM) dp[i + 1, j + k] += dp[i, j];
+                        dp[i + 1, j + k] += dp[i, j];
                     }
                 }
             }
 
             mint answer = 0;
-            for (var i = 1; i <= K; i++)
+            for (var k = 1; k <= K; k++)
             {
-                answer += dp[N, i];
+                answer += dp[N, k];
             }
 
             Console.WriteLine(answer);
