@@ -34,7 +34,6 @@ namespace Tasks
                 P[i] = (x, y);
             }
 
-
             var answer = 0;
             for (var i = 0; i < N; i++)
             {
@@ -49,10 +48,7 @@ namespace Tasks
                     dict[frac]++;
                 }
 
-                foreach (var count in dict.Values)
-                {
-                    if (count == K - 1) answer++;
-                }
+                answer += dict.Values.Count(x => x + 1 == K);
             }
 
             Console.WriteLine(answer);
