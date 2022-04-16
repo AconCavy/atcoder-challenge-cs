@@ -28,46 +28,33 @@ namespace Tasks
             }
 
             var P = new (long X, long Y)[N];
-            var dictX = new Dictionary<long, int>();
-            var dictY = new Dictionary<long, int>();
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = Scanner.Scan<long, long>();
                 P[i] = (x, y);
-                if (!dictX.ContainsKey(x)) dictX[x] = 0;
-                dictX[x]++;
-                if (!dictY.ContainsKey(y)) dictY[y] = 0;
-                dictY[y]++;
             }
 
-            var set = new HashSet<(Fraction A, double B)>();
 
-            double F(Fraction f, double b, double x) => f.Y * x / f.X + b;
-
+            var answer = 0;
             for (var i = 0; i < N; i++)
             {
-                for (var j = 0; j < N; j++)
+                var dict = new Dictionary<Fraction, int>();
+                for (var j = i + 1; j < N; j++)
                 {
                     var (x1, y1) = P[i];
                     var (x2, y2) = P[j];
                     var (dx, dy) = (x2 - x1, y2 - y1);
-                    if (dx != 0 && dy != 0)
-                    {
-                        var a = new Fraction(dy, dx);
-                        var b = y1 - F(a, 0, x1);
-                        set.Add((a, b));
-                    }
+                    var frac = new Fraction(dy, dx);
+                    if (!dict.ContainsKey(frac)) dict[frac] = 0;
+                    dict[frac]++;
+                }
+
+                foreach (var count in dict.Values)
+                {
+                    if (count == K - 1) answer++;
                 }
             }
 
-            var answer = 0;
-            foreach (var (a, b) in set)
-            {
-                if (P.Count(p => p.Y == F(a, b, p.X)) >= K) answer++;
-            }
-
-            answer += dictX.Count(kv => kv.Value >= K);
-            answer += dictY.Count(kv => kv.Value >= K);
             Console.WriteLine(answer);
         }
 
