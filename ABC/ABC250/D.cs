@@ -23,9 +23,10 @@ namespace Tasks
             var primes = Prime.Sieve((int)1e6).ToArray();
             var M = primes.Length;
             var answer = 0;
-            for (var i = 0; i < M; i++)
+            var j = M - 1;
+            for (var i = 0; i < j; i++)
             {
-                for (var j = i + 1; j < M; j++)
+                while (i < j)
                 {
                     var p = (long)primes[i];
                     var q = (long)primes[j] * primes[j] * primes[j];
@@ -35,19 +36,21 @@ namespace Tasks
                         {
                             if (p * q <= N)
                             {
-                                answer++;
+                                break;
                             }
                             else
                             {
-                                break;
+                                j--;
                             }
                         }
                     }
                     catch
                     {
-                        break;
+                        j--;
                     }
                 }
+
+                answer += j - i;
             }
 
             Console.WriteLine(answer);
