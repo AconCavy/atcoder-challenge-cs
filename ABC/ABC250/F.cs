@@ -27,29 +27,39 @@ namespace Tasks
                 P[i] = (x, y);
             }
 
-            long s = 0;
-            for (var i = 0; i < N; i++)
+            Func<int, int, int, long> f = (int i, int j, int k) =>
             {
-                var j = (i + 1) % N;
-                s += Math.Abs(P[i].X * P[j].Y - P[j].X * P[i].Y);
+                i %= N;
+                j %= N;
+                k %= N;
+                var dx0 = P[j].X - P[i].X;
+                var dy0 = P[j].Y - P[i].Y;
+                var dx1 = P[k].X - P[i].X;
+                var dy1 = P[k].Y - P[i].Y;
+                return Math.Abs(dx0 * dy1 - dx1 * dy0);
+            };
+
+            long s = 0;
+            for (var i = 1; i + 1 < N; i++)
+            {
+                s += f(0, i, i + 1);
             }
 
-            s /= 2;
-            s /= 4;
             const long inf = (long)7e18;
             var answer = inf;
-            for (var k = 0; k < N; k++)
+            long t = 0;
+            var j = 1;
+            for (var i = 0; i < N; i++)
             {
-                long t = 0;
-                for (var d = 0; d < 3; d++)
+                while (t * 4 < s)
                 {
-                    var i = (k + d) % N;
-                    var j = (k + (d + 1) % 3) % N;
-                    t += Math.Abs(P[i].X * P[j].Y - P[j].X * P[i].Y);
+                    t += f(i, j, j + 1);
+                    answer = Math.Min(answer, Math.Abs(s - t * 4));
+                    j++;
                 }
 
-                t /= 2;
-                answer = Math.Min(answer, 8 * Math.Abs(s - t));
+                t -= f(i, i + 1, j);
+                answer = Math.Min(answer, Math.Abs(s - t * 4));
             }
 
             Console.WriteLine(answer);
