@@ -37,13 +37,13 @@ namespace Tasks
                 cumK[k] = B[k] + cumK[k + 1];
             }
 
-            for (var j = M - 2; j >= 0; j--)
+            for (var j = M - 1; j >= 0; j--)
             {
                 cumJ[j] = B[j] * cumK[j + 1] + cumJ[j + 1];
             }
 
             long answer = 0;
-            for (var i = 0; i + 2 < M; i++)
+            for (var i = 0; i < M; i++)
             {
                 answer += B[i] * cumJ[i + 1];
             }
