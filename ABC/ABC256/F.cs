@@ -23,6 +23,83 @@ namespace Tasks
         {
             var (N, Q) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
+
+            var i2 = mint.Inverse(2);
+            var D0 = new FenwickTree(N);
+            var D1 = new FenwickTree(N);
+            var D2 = new FenwickTree(N);
+
+            void Add(int i, mint v)
+            {
+                D0.Add(i, v * i * i);
+                D1.Add(i, v * i);
+                D2.Add(i, v);
+            }
+
+            for (var i = 0; i < N; i++)
+            {
+                Add(i, A[i]);
+            }
+
+            while (Q-- > 0)
+            {
+                var query = Scanner.ScanEnumerable<int>().ToArray();
+                if (query[0] == 1)
+                {
+                    var x = query[1] - 1;
+                    var v = query[2];
+                    Add(x, (mint)v - A[x]);
+                    A[x] = v;
+                }
+                else
+                {
+                    var x = query[1] - 1;
+                    var r = (mint)x;
+                    var answer = D0.Sum(x + 1)
+                    - (D1.Sum(x + 1) * (r * 2 + 3))
+                    + (D2.Sum(x + 1) * (r + 1) * (r + 2));
+                    answer *= i2;
+                    Console.WriteLine(answer);
+                }
+            }
+        }
+
+        public class FenwickTree
+        {
+            public int Length { get; }
+            private readonly mint[] _data;
+            public FenwickTree(int length)
+            {
+                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+                Length = length;
+                _data = new mint[length];
+            }
+            public void Add(int index, mint value)
+            {
+                if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
+                index++;
+                while (index <= Length)
+                {
+                    _data[index - 1] += value;
+                    index += index & -index;
+                }
+            }
+            public long Sum(int length)
+            {
+                if (length < 0 || Length < length) throw new ArgumentOutOfRangeException(nameof(length));
+                var s = 0L;
+                while (length > 0)
+                {
+                    s += _data[length - 1];
+                    length -= length & -length;
+                }
+                return s;
+            }
+            public long Sum(int left, int right)
+            {
+                if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
+                return Sum(right) - Sum(left);
+            }
         }
 
         public readonly struct ModuloInteger : IEquatable<ModuloInteger>
