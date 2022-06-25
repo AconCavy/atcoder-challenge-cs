@@ -29,11 +29,10 @@ namespace Tasks
 
             bool CanMove(Ramp from, Ramp to, long s)
             {
-                var d = Math.Abs(from.X - to.X) + Math.Abs(from.Y - to.Y);
-                return s >= d || from.P * s >= d;
+                return from.P * s >= Math.Abs(from.X - to.X) + Math.Abs(from.Y - to.Y);
             }
 
-            const long inf = (long)4e18 + 10;
+            const long inf = (long)4e9;
             var answer = inf;
             for (var k = 0; k < N; k++)
             {
