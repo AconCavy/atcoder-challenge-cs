@@ -21,7 +21,7 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>();
-            var W = Scanner.ScanEnumerable<int>().ToList();
+            var W = Scanner.ScanEnumerable<int>().ToArray();
 
             var child = new List<int>();
             var adult = new List<int>();
@@ -30,12 +30,10 @@ namespace Tasks
                 (S[i] == '0' ? child : adult).Add(W[i]);
             }
 
-            const int inf = (int)1e9;
-            W.Add(inf + 1);
             child.Sort();
             adult.Sort();
 
-            var answer = 0;
+            var answer = Math.Max(child.Count, adult.Count);
             foreach (var w in W)
             {
                 var c1 = LowerBound(child, w);
