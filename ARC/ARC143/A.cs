@@ -21,9 +21,7 @@ namespace Tasks
         {
             var A = Scanner.ScanEnumerable<long>().ToArray();
             Array.Sort(A);
-            var d = A[2] - A[1];
-            var answer = d == 0 || d * 2 <= A[2] - (A[1] - A[0]) && d <= A[0] ? A[2] : -1;
-
+            var answer = A[0] + A[1] < A[2] ? -1 : A[2];
             Console.WriteLine(answer);
         }
 
