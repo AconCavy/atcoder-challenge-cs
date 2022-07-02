@@ -26,26 +26,15 @@ namespace Tasks
                 AB[i] = Scanner.Scan<long, long>();
             }
 
-            var minStarts = new long[N];
-            for (var i = 1; i < N; i++)
-            {
-                minStarts[i] = minStarts[i - 1] + AB[i - 1].A + AB[i - 1].B;
-            }
-
             const long inf = (long)4e18;
             var answer = inf;
+            long sum = 0;
             for (var i = 0; i < N; i++)
             {
-                var time = minStarts[i];
-                var x = X;
-                if (x - i > 0)
-                {
-                    x -= i + 1;
-                    time += AB[i].A + AB[i].B;
-                }
-
-                time += x * AB[i].B;
+                var x = Math.Max(0, X - (i + 1));
+                var time = sum + AB[i].A + AB[i].B + x * AB[i].B;
                 answer = Math.Min(answer, time);
+                sum += AB[i].A + AB[i].B;
             }
 
             Console.WriteLine(answer);
