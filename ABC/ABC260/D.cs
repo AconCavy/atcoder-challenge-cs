@@ -20,7 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var (N, K) = Scanner.Scan<int, int>();
-            var P = Scanner.ScanEnumerable<int>().Select(x => x).ToArray();
+            var P = Scanner.ScanEnumerable<int>().ToArray();
             var answer = new int[N + 1];
             Array.Fill(answer, -1);
             var set = new SortedSet<int>();
@@ -29,24 +29,22 @@ namespace Tasks
             for (var i = 0; i < N; i++)
             {
                 var p = P[i];
-                var r = p;
+                var r = root[p] = p;
                 var subset = set.GetViewBetween(p, N);
 
                 if (subset.Any())
                 {
                     var q = subset.Min;
-                    r = root[q];
-                    root[p] = r;
-                    dict[r].Add(p);
+                    r = root[p] = root[q];
                     set.Remove(q);
-                    set.Add(p);
                 }
                 else
                 {
-                    set.Add(p);
-                    dict[p] = new List<int> { p };
-                    root[p] = p;
+                    dict[r] = new List<int>();
                 }
+
+                set.Add(p);
+                dict[r].Add(p);
 
                 if (dict[r].Count >= K)
                 {
