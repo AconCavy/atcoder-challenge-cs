@@ -20,20 +20,24 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            var items = Enumerable.Range(1, M).ToArray();
-            foreach (var values in items.Permute(N))
+
+            void Dfs(int[] buffer, int idx, int prev)
             {
-                var ok = true;
-                for (var i = 1; i < values.Length; i++)
+                if (idx == N)
                 {
-                    ok &= values[i] > values[i - 1];
+                    Console.WriteLine(string.Join(" ", buffer));
+                    return;
                 }
 
-                if (ok)
+                for (var i = prev + 1; i <= M; i++)
                 {
-                    Console.WriteLine(string.Join(" ", values));
+                    buffer[idx] = i;
+                    Dfs(buffer, idx + 1, i);
                 }
             }
+
+            var buffer = new int[N];
+            Dfs(buffer, 0, 0);
         }
 
         public static class Scanner
@@ -68,78 +72,6 @@ namespace Tasks
             }
             public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => Scan().Select(Convert<T>);
             private static T Convert<T>(string value) where T : IConvertible => (T)System.Convert.ChangeType(value, typeof(T));
-        }
-    }
-
-    public static partial class EnumerableExtension
-    {
-        /// <summary>
-        ///     Returns the permutation sequences from the original sequence. (nPr patterns).
-        /// </summary>
-        /// <param name="source">A sequence of values.</param>
-        /// <param name="count">A number of objects selected.</param>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <returns>The permutation sequences from the original sequence.</returns>
-        /// <exception cref="ArgumentNullException">source is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">count &lt;= 0 or source.Count() &gt; count</exception>
-        /// <code>
-        /// var permutation = new []{ 1, 2, 3 }.Permute(3);
-        /// permutation: { { 1, 2, 3 }, { 1, 3, 2 }, { 2, 1, 3 }, { 2, 3, 1 }, { 3, 1, 2 }, { 3, 2, 1 } }
-        /// </code>
-        public static IEnumerable<TSource[]> Permute<TSource>(this IEnumerable<TSource>? source, int count)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            IEnumerable<TSource[]> Inner()
-            {
-                var items = source.ToArray();
-                if (count <= 0 || items.Length < count) throw new ArgumentOutOfRangeException(nameof(count));
-                var n = items.Length;
-                var indices = new int[n];
-                for (var i = 0; i < indices.Length; i++)
-                {
-                    indices[i] = i;
-                }
-                var cycles = new int[count];
-                for (var i = 0; i < cycles.Length; i++)
-                {
-                    cycles[i] = n - i;
-                }
-                TSource[] Result()
-                {
-                    var result = new TSource[count];
-                    for (var i = 0; i < count; i++)
-                    {
-                        result[i] = items[indices[i]];
-                    }
-                    return result;
-                }
-                yield return Result();
-                while (true)
-                {
-                    var done = true;
-                    for (var i = count - 1; i >= 0; i--)
-                    {
-                        cycles[i]--;
-                        if (cycles[i] == 0)
-                        {
-                            for (var j = i; j + 1 < indices.Length; j++)
-                            {
-                                (indices[j], indices[j + 1]) = (indices[j + 1], indices[j]);
-                            }
-                            cycles[i] = n - i;
-                        }
-                        else
-                        {
-                            (indices[i], indices[^cycles[i]]) = (indices[^cycles[i]], indices[i]);
-                            yield return Result();
-                            done = false;
-                            break;
-                        }
-                    }
-                    if (done) yield break;
-                }
-            }
-            return Inner();
         }
     }
 }

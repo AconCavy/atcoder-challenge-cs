@@ -26,8 +26,8 @@ namespace Tasks
             var cumR = new long[N + 1];
             for (var i = 0; i < N; i++)
             {
-                cumL[N - 1 - i] = Math.Min(cumL[N - i] + A[N - 1 - i], R * (i + 1));
-                cumR[i + 1] = Math.Min(cumR[i] + A[i], L * (i + 1));
+                cumL[i + 1] = Math.Min(cumL[i] + A[i], L * (i + 1));
+                cumR[N - 1 - i] = Math.Min(cumR[N - i] + A[N - 1 - i], R * (i + 1));
             }
 
             var answer = inf;
