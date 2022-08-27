@@ -20,16 +20,16 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var Query = new (int T, int X, long A)[N];
+            var A = new long[(int)1e5 + 1, 5];
+            var T = 0;
             for (var i = 0; i < N; i++)
             {
                 var (t, x, a) = Scanner.Scan<int, int, long>();
-                Query[i] = (t, x, a);
+                A[t, x] = a;
+                T = t;
             }
 
             const long inf = (long)1e18;
-            var queue = new Queue<(int T, int X, long A)>(Query);
-            var T = Query[^1].T;
             var dp = new long[T + 1, 5];
             for (var i = 0; i <= T; i++)
             {
@@ -38,27 +38,17 @@ namespace Tasks
                     dp[i, j] = -inf;
                 }
             }
+
             dp[0, 0] = 0;
 
             for (var t = 1; t <= T; t++)
             {
-                var (x, a) = (-1, 0L);
-                if (queue.Count > 0 && queue.Peek().T == t)
+                for (var x = 0; x < 5; x++)
                 {
-                    var top = queue.Dequeue();
-                    x = top.X;
-                    a = top.A;
-                }
-
-                for (var j = 0; j < 5; j++)
-                {
-                    var x0 = j - 1;
-                    var x1 = j;
-                    var x2 = j + 1;
-                    var a1 = x1 == x ? a : 0;
-                    if (x0 >= 0) dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x0] + a1);
-                    dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x1] + a1);
-                    if (x2 < 5) dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x2] + a1);
+                    for (var p = x - 1; p <= x + 1; p++)
+                    {
+                        if (0 <= p && p < 5) dp[t, x] = Math.Max(dp[t, x], dp[t - 1, p] + A[t, x]);
+                    }
                 }
             }
 

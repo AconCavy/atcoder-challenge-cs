@@ -27,44 +27,30 @@ namespace Tasks
                 P[i] = new Point(x, y);
             }
 
-            double Area(Point b, Point a, Point c)
+            long Cross(Point a, Point b, Point c)
             {
-                var (dx1, dy1) = (a.X - b.X, a.Y - b.Y);
-                var (dx2, dy2) = (c.X - b.X, c.Y - b.Y);
+                var (dx1, dy1) = (c.X - b.X, c.Y - b.Y);
+                var (dx2, dy2) = (a.X - b.X, a.Y - b.Y);
                 return dx1 * dy2 - dx2 * dy1;
             }
 
+            var answer = true;
             for (var i = 0; i < N; i++)
             {
-                for (var j = i + 1; j < N; j++)
-                {
-                    if (Area(P[(i - 1 + 4) % 4], P[i], P[j]) < 0 || Area(P[i], P[(i + 1) % 4], P[j]) < 0)
-                    {
-                        Console.WriteLine("No");
-                        return;
-                    }
-                }
+                var a = P[i];
+                var b = P[(i + 1) % N];
+                var c = P[(i + 2) % N];
+                answer &= Cross(a, b, c) >= 0;
             }
 
-            Console.WriteLine("Yes");
+            Console.WriteLine(answer ? "Yes" : "No");
         }
 
-        public readonly struct Point : IComparable<Point>, IEquatable<Point>
+        public readonly struct Point
         {
-            public long X { get; }
-            public long Y { get; }
+            public readonly long X;
+            public readonly long Y;
             public Point(long x, long y) => (X, Y) = (x, y);
-            public static bool operator <(Point left, Point right) => left.CompareTo(right) < 0;
-            public static bool operator <=(Point left, Point right) => left.CompareTo(right) <= 0;
-            public static bool operator >(Point left, Point right) => left.CompareTo(right) > 0;
-            public static bool operator >=(Point left, Point right) => left.CompareTo(right) >= 0;
-            public static bool operator ==(Point left, Point right) => left.Equals(right);
-            public static bool operator !=(Point left, Point right) => !left.Equals(right);
-            public int CompareTo(Point other) => (Y * other.X).CompareTo(X * other.Y);
-            public bool Equals(Point other) => Y == other.Y && X == other.X;
-            public override bool Equals(object obj) => obj is Point other && Equals(other);
-            public override int GetHashCode() => HashCode.Combine(Y, X);
-            public override string ToString() => $"{Y}/{X}";
         }
 
         public static class Scanner
