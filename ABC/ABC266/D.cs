@@ -1,0 +1,141 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+namespace Tasks
+{
+    public class D
+    {
+        public static void Main()
+        {
+            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            Console.SetOut(sw);
+            Solve();
+            Console.Out.Flush();
+        }
+
+        public static void Solve()
+        {
+            var N = Scanner.Scan<int>();
+            var Query = new (int T, int X, long A)[N];
+            for (var i = 0; i < N; i++)
+            {
+                var (t, x, a) = Scanner.Scan<int, int, long>();
+                Query[i] = (t, x, a);
+            }
+
+            const long inf = (long)1e18;
+            var queue = new Queue<(int T, int X, long A)>(Query);
+            var T = Query[^1].T;
+            var dp = new long[T + 1, 5];
+            for (var i = 0; i <= T; i++)
+            {
+                for (var j = 0; j < 5; j++)
+                {
+                    dp[i, j] = -inf;
+                }
+            }
+            dp[0, 0] = 0;
+
+            for (var t = 1; t <= T; t++)
+            {
+                var (x, a) = (-1, 0L);
+                if (queue.Count > 0 && queue.Peek().T == t)
+                {
+                    var top = queue.Dequeue();
+                    x = top.X;
+                    a = top.A;
+                }
+
+                for (var j = 0; j < 5; j++)
+                {
+                    var x0 = j - 1;
+                    var x1 = j;
+                    var x2 = j + 1;
+                    var a1 = x1 == x ? a : 0;
+                    if (x0 >= 0) dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x0] + a1);
+                    dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x1] + a1);
+                    if (x2 < 5) dp[t, x1] = Math.Max(dp[t, x1], dp[t - 1, x2] + a1);
+                }
+            }
+
+            var answer = 0L;
+            for (var i = 0; i < 5; i++)
+            {
+                answer = Math.Max(answer, dp[T, i]);
+            }
+
+            Console.WriteLine(answer);
+        }
+
+        public static class Printer
+        {
+            public static void Print<T>(T source) => Console.WriteLine(source);
+            public static void Print1D<T>(IEnumerable<T> source, string separator = "") =>
+                Console.WriteLine(string.Join(separator, source));
+            public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = "") =>
+                Console.WriteLine(string.Join(separator, source.Select(selector)));
+            public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = "") =>
+                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x))));
+            public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = "") =>
+                Console.WriteLine(string.Join("\n", source.Select(x => string.Join(separator, x.Select(selector)))));
+            public static void Print2D<T>(T[,] source, string separator = "")
+            {
+                var (h, w) = (source.GetLength(0), source.GetLength(1));
+                for (var i = 0; i < h; i++)
+                    for (var j = 0; j < w; j++)
+                    {
+                        Console.Write(source[i, j]);
+                        Console.Write(j == w - 1 ? "\n" : separator);
+                    }
+            }
+            public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = "")
+            {
+                var (h, w) = (source.GetLength(0), source.GetLength(1));
+                for (var i = 0; i < h; i++)
+                    for (var j = 0; j < w; j++)
+                    {
+                        Console.Write(selector(source[i, j]));
+                        Console.Write(j == w - 1 ? "\n" : separator);
+                    }
+            }
+        }
+
+        public static class Scanner
+        {
+            public static string ScanLine() => Console.ReadLine()?.Trim() ?? string.Empty;
+            public static string[] Scan() => ScanLine().Split(' ');
+            public static T Scan<T>() where T : IConvertible => Convert<T>(Scan()[0]);
+            public static (T1, T2) Scan<T1, T2>() where T1 : IConvertible where T2 : IConvertible
+            {
+                var line = Scan();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]));
+            }
+            public static (T1, T2, T3) Scan<T1, T2, T3>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible
+            {
+                var line = Scan();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]));
+            }
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible
+            {
+                var line = Scan();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]));
+            }
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible
+            {
+                var line = Scan();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]));
+            }
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible where T6 : IConvertible
+            {
+                var line = Scan();
+                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]), Convert<T6>(line[5]));
+            }
+            public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => Scan().Select(Convert<T>);
+            private static T Convert<T>(string value) where T : IConvertible => (T)System.Convert.ChangeType(value, typeof(T));
+        }
+    }
+}
