@@ -86,28 +86,6 @@ namespace Tasks
             Console.WriteLine("-1");
         }
 
-        public static long LevenshteinDistance(ReadOnlySpan<char> a, ReadOnlySpan<char> b,
-        long editCost = 1, long insertCost = 1, long deleteCost = 1)
-        {
-            var (n, m) = (a.Length + 1, b.Length + 1);
-            var dp = new long[n * m];
-            Array.Fill(dp, long.MaxValue);
-            for (var i = 0; i < n; i++) dp[i * m] = i;
-            for (var i = 0; i < m; i++) dp[i] = i;
-            for (var i = 1; i < n; i++)
-            {
-                for (var j = 1; j < m; j++)
-                {
-                    var ij = i * m + j;
-                    dp[ij] = Math.Min(dp[ij], dp[ij - m] + deleteCost);
-                    dp[ij] = Math.Min(dp[ij], dp[ij - 1] + insertCost);
-                    dp[ij] = Math.Min(dp[ij], dp[ij - m - 1] + (a[i - 1] == b[j - 1] ? 0 : editCost));
-                }
-            }
-
-            return dp[^1];
-        }
-
         public static class Scanner
         {
             public static string ScanLine() => Console.ReadLine()?.Trim() ?? string.Empty;

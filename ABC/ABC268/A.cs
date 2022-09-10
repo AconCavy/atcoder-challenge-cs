@@ -20,8 +20,12 @@ namespace Tasks
         public static void Solve()
         {
             var A = Scanner.ScanEnumerable<int>().ToArray();
-            var set = new HashSet<int>(A);
-            var answer = set.Count;
+            var exists = new bool[101];
+            for (var i = 0; i < 5; i++)
+            {
+                exists[A[i]] = true;
+            }
+            var answer = exists.Count(x => x);
             Console.WriteLine(answer);
         }
 
