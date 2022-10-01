@@ -20,12 +20,12 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M, K) = Scanner.Scan<int, int, int>();
-            var G = new List<(int, int)>[N].Select(x => new List<(int, int)>()).ToArray();
+            var G = new List<(int, long)>[N].Select(x => new List<(int, long)>()).ToArray();
             const long inf = (long)1e18;
             var Edges = new (int U, int V, long C)[M];
             for (var i = 0; i < M; i++)
             {
-                var (a, b, c) = Scanner.Scan<int, int, int>();
+                var (a, b, c) = Scanner.Scan<int, int, long>();
                 a--; b--;
                 G[a].Add((b, c));
                 G[b].Add((a, c));
@@ -33,7 +33,6 @@ namespace Tasks
             }
 
             var E = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToArray();
-            var set = new HashSet<int> { 0 };
             var costs = new long[N];
             Array.Fill(costs, inf);
             costs[0] = 0;
@@ -41,10 +40,9 @@ namespace Tasks
             for (var i = 0; i < K; i++)
             {
                 var (a, b, c) = Edges[E[i]];
-                if (set.Contains(a))
+                if (costs[a] != inf)
                 {
                     costs[b] = Math.Min(costs[b], costs[a] + c);
-                    set.Add(b);
                 }
             }
 

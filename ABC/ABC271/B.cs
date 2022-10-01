@@ -20,11 +20,11 @@ namespace Tasks
         public static void Solve()
         {
             var (N, Q) = Scanner.Scan<int, int>();
-            var A = new List<int>[N];
+            var A = new int[N][];
             for (var i = 0; i < N; i++)
             {
                 var line = Scanner.ScanEnumerable<int>().ToArray();
-                A[i] = line.Skip(1).ToList();
+                A[i] = line[1..];
             }
 
             while (Q-- > 0)
