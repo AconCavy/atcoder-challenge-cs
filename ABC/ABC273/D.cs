@@ -26,9 +26,9 @@ namespace Tasks
             for (var i = 0; i < N; i++)
             {
                 var (r, c) = Scanner.Scan<long, long>();
-                if (!rows.ContainsKey(r)) rows[r] = new List<long> { 0, (H + 1) };
+                if (!rows.ContainsKey(r)) rows[r] = new List<long> { 0, (W + 1) };
                 rows[r].Add(c);
-                if (!cols.ContainsKey(c)) cols[c] = new List<long> { 0, (W + 1) };
+                if (!cols.ContainsKey(c)) cols[c] = new List<long> { 0, (H + 1) };
                 cols[c].Add(r);
             }
 
@@ -56,7 +56,7 @@ namespace Tasks
                 {
                     if (rows.ContainsKey(cr))
                     {
-                        var ub = UpperBound(rows[cr], cc);
+                        var ub = LowerBound(rows[cr], cc);
                         cc = Math.Min(cc + l, rows[cr][ub] - 1);
                     }
                     else
@@ -80,7 +80,7 @@ namespace Tasks
                 {
                     if (cols.ContainsKey(cc))
                     {
-                        var ub = UpperBound(cols[cc], cr);
+                        var ub = LowerBound(cols[cc], cr);
                         cr = Math.Min(cr + l, cols[cc][ub] - 1);
                     }
                     else
@@ -89,8 +89,8 @@ namespace Tasks
                     }
                 }
 
-                cr = Math.Min(Math.Max(cr, 1), W);
-                cc = Math.Min(Math.Max(cc, 1), H);
+                cr = Math.Min(Math.Max(cr, 1), H);
+                cc = Math.Min(Math.Max(cc, 1), W);
                 Console.WriteLine($"{cr} {cc}");
             }
         }
