@@ -24,6 +24,7 @@ namespace Tasks
             var (N, M, K) = Scanner.Scan<int, int, int>();
             var dp = new mint[K + 1, N + 1];
             dp[0, 0] = 1;
+            var im = mint.Inverse(M);
 
             for (var k = 0; k < K; k++)
             {
@@ -33,7 +34,7 @@ namespace Tasks
                     {
                         var x = n + m;
                         if (x > N) x = Math.Max(0, N - (x - N));
-                        dp[k + 1, x] += dp[k, n] / M;
+                        dp[k + 1, x] += dp[k, n] * im;
                     }
                 }
             }
