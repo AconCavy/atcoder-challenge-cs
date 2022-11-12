@@ -21,98 +21,38 @@ namespace Tasks
         {
             var (N, M) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
-            var sum = A.Select(x => (long)x).Sum();
+            long sum = 0;
             var dict = new Dictionary<int, long>();
             foreach (var a in A)
             {
-                var b = a % M;
-                if (!dict.ContainsKey(b)) dict[b] = 0;
-                dict[b] += a;
+                if (!dict.ContainsKey(a)) dict[a] = 0;
+                dict[a] += a;
+                sum += a;
             }
 
             var K = dict.Count;
-            var keys = dict.Keys.ToArray();
-            var (map, remap) = Compress(keys);
-            var dsu = new DisjointSetUnion(K);
-
-            foreach (var key in keys)
-            {
-                var next = (key + 1) % M;
-                if (dict.ContainsKey(next))
-                {
-                    dsu.Merge(map[key], map[next]);
-                }
-            }
+            var B = new List<(int V, long S)>(dict.Select(kv => (kv.Key, kv.Value)));
+            B.Sort();
+            var l = 0;
+            var r = 0;
 
             const long inf = (long)1e18;
             var answer = inf;
-            foreach (var group in dsu.GetGroups())
+            while (l < K)
             {
-                answer = Math.Min(answer, sum - group.Select(x => dict[remap[x]]).Sum());
+                r = l;
+                var s = B[r].S;
+                while (r + 1 < l + K && (B[(r + 1) % K].V % M) == (B[r % K].V + 1) % M)
+                {
+                    s += B[(r + 1) % K].S;
+                    r++;
+                }
+
+                answer = Math.Min(answer, sum - s);
+                l = r + 1;
             }
 
             Console.WriteLine(answer);
-        }
-
-        public static (Dictionary<T, int> Map, Dictionary<int, T> ReMap) Compress<T>(IEnumerable<T> source)
-        {
-            var distinct = source.Distinct().ToArray();
-            Array.Sort(distinct);
-            var map = new Dictionary<T, int>();
-            var remap = new Dictionary<int, T>();
-            foreach (var (x, i) in distinct.Select((x, i) => (x, i)))
-            {
-                map[x] = i;
-                remap[i] = x;
-            }
-            return (map, remap);
-        }
-
-        public class DisjointSetUnion
-        {
-            public int Length { get; }
-            private readonly int[] _parentOrSize;
-            public DisjointSetUnion(int length)
-            {
-                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-                Length = length;
-                _parentOrSize = new int[Length];
-                Array.Fill(_parentOrSize, -1);
-            }
-            public int Merge(int u, int v)
-            {
-                if (u < 0 || Length <= u) throw new ArgumentOutOfRangeException(nameof(u));
-                if (v < 0 || Length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                var (x, y) = (LeaderOf(u), LeaderOf(v));
-                if (x == y) return x;
-                if (-_parentOrSize[x] < -_parentOrSize[y]) (x, y) = (y, x);
-                _parentOrSize[x] += _parentOrSize[y];
-                _parentOrSize[y] = x;
-                return x;
-            }
-            public bool IsSame(int u, int v)
-            {
-                if (u < 0 || Length <= u) throw new ArgumentOutOfRangeException(nameof(u));
-                if (v < 0 || Length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                return LeaderOf(u) == LeaderOf(v);
-            }
-            public int LeaderOf(int v)
-            {
-                if (v < 0 || Length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                if (_parentOrSize[v] < 0) return v;
-                return _parentOrSize[v] = LeaderOf(_parentOrSize[v]);
-            }
-            public int SizeOf(int v)
-            {
-                if (v < 0 || Length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                return -_parentOrSize[LeaderOf(v)];
-            }
-            public IEnumerable<IReadOnlyCollection<int>> GetGroups()
-            {
-                var result = new List<int>[Length].Select(x => new List<int>()).ToArray();
-                for (var i = 0; i < Length; i++) result[LeaderOf(i)].Add(i);
-                return result.Where(x => x.Count > 0);
-            }
         }
 
         public static class Scanner

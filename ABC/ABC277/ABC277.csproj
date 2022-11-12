@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <!-- update here -->
-    <StartupObject>Tasks.G</StartupObject>
+    <StartupObject>Tasks.D</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
