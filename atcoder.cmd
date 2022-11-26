@@ -70,6 +70,7 @@ exit /b
 
   echo Create %PROJECT% to %PROJECT_PATH%.
   call dotnet new cpproj -n %PROJECT% -f netcoreapp3.1 -o %PROJECT_PATH%
+  call code -n . .vscode\settings.json %PROJECT_PATH%\%PROJECT%.csproj %PROJECT_PATH%\Tests.cs
 
   setlocal enabledelayedexpansion
   for %%p in (A B C D E F) do (
@@ -77,7 +78,6 @@ exit /b
   )
   endlocal
 
-  call code -n . %PROJECT_PATH%\%PROJECT%.csproj %PROJECT_PATH%\Tests.cs
   start https://atcoder.jp/contests/%PROJECT%
   endlocal
   exit /b
