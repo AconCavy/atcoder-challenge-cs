@@ -24,12 +24,12 @@ namespace Tasks
             var dp = new mint[N + 1];
             var p2 = P * mint.Inverse(100);
             var p1 = 1 - p2;
-            for (var i = 1; i <= N; i++)
+            for (var i = N - 1; i >= 0; i--)
             {
-                dp[i] = dp[i - 1] * p1 + dp[Math.Max(0, i - 2)] * p2 + 1;
+                dp[i] = dp[Math.Min(N, i + 1)] * p1 + dp[Math.Min(N, i + 2)] * p2 + 1;
             }
 
-            var answer = dp[N];
+            var answer = dp[0];
             Console.WriteLine(answer);
         }
 
