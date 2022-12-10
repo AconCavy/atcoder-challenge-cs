@@ -39,39 +39,11 @@ namespace Tasks
             for (var i = M; i < N; i++)
             {
                 var x = A[i - M];
-                var removed = false;
-                if (set.LowerBound(x) < K)
-                {
-                    removed = true;
-                    sum -= x;
-                }
-
+                sum -= Math.Min(x, set.ElementAt(K - 1));
                 set.Remove(x);
 
-                if (set.Count >= K)
-                {
-                    var y = set.ElementAt(K - 1);
-                    if (!removed)
-                    {
-                        sum -= y;
-                    }
-
-
-                    if (A[i] < y)
-                    {
-                        sum += A[i];
-                    }
-                    else
-                    {
-                        sum += y;
-                    }
-                }
-                else
-                {
-                    sum += A[i];
-                }
-
                 set.Add(A[i]);
+                sum += Math.Min(A[i], set.ElementAt(K - 1));
 
                 answer.Add(sum);
             }
