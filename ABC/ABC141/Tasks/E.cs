@@ -20,259 +20,114 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>();
-            var answer = 0;
-            for (var i = 0; i < N; i++)
+            var rh = new RollingHash(S);
+            var len = 0;
+            for (var l1 = 0; l1 < N; l1++)
             {
-                var z = StringAlgorithm.ZAlgorithm(S.Substring(i)).ToArray();
-                for (var j = 0; j < z.Length; j++)
+                for (var l2 = l1; l2 < N; l2++)
                 {
-                    if (i + z[j] <= i + j) answer = Math.Max(answer, z[j]);
+                    while (l1 + len < l2 && l2 + len < N && rh.Slice(l1, len + 1) == rh.Slice(l2, len + 1))
+                    {
+                        len++;
+                    }
                 }
             }
 
-            Console.WriteLine(answer);
+            Console.WriteLine(len);
         }
-        public static class StringAlgorithm
+
+        public class RollingHash
         {
-            public static IEnumerable<int> CreateSuffixes(string str)
+            private const ulong Mask30 = (1UL << 30) - 1;
+            private const ulong Mask31 = (1UL << 31) - 1;
+            private const ulong Modulo = (1UL << 61) - 1;
+            private const ulong Positivizer = Modulo * ((1UL << 3) - 1);
+            private const int MaxPowerLength = (int)5e3;
+            private static readonly ulong[] Powers = new ulong[MaxPowerLength + 1];
+            private static readonly ulong Base;
+
+            static RollingHash()
             {
-                return CreateSuffixesByInducedSorting(str.Select(x => x - 0), char.MaxValue);
+                Base = (ulong)new Random().Next(1 << 9, 1 << 30);
+                Powers[0] = 1;
+                for (var i = 0; i + 1 < Powers.Length; i++)
+                {
+                    Powers[i + 1] = CalcModulo(Multiply(Powers[i], Base));
+                }
             }
-            public static IEnumerable<int> CreateSuffixes<T>(IEnumerable<T> items)
+
+            private readonly ulong[] _hash;
+
+            public RollingHash(ReadOnlySpan<char> s)
             {
-                var s = items.ToArray();
-                var n = s.Length;
-                var idx = Enumerable.Range(0, n).ToArray();
-                Array.Sort(idx, (x, y) => Comparer<T>.Default.Compare(s[x], s[y]));
-                var s2 = new int[n];
-                var now = 0;
-                for (var i = 0; i < n; i++)
+                _hash = new ulong[s.Length + 1];
+                for (var i = 0; i < s.Length; i++)
                 {
-                    if (i > 0 && !Equals(s[idx[i - 1]], s[idx[i]])) now++;
-                    s2[idx[i]] = now;
+                    _hash[i + 1] = CalcModulo(Multiply(_hash[i], Base) + s[i]);
                 }
-                return CreateSuffixesByInducedSorting(s2, now);
             }
-            public static IEnumerable<int> CreateSuffixes(IEnumerable<int> items, int upper)
+
+            public ulong Slice(int i, int length)
             {
-                if (upper < 0) throw new ArgumentException(nameof(upper));
-                var s = items.ToArray();
-                if (s.Any(x => x < 0 || upper < x)) throw new ArgumentException(nameof(items));
-                return CreateSuffixesByInducedSorting(s, upper);
+                return CalcModulo(_hash[i + length] + Positivizer - Multiply(_hash[i], Powers[length]));
             }
-            public static IEnumerable<int> CreateLongestCommonPrefixes(string str, IEnumerable<int> suffixArray)
+
+            private static ulong Multiply(ulong a, ulong b)
             {
-                return CreateLongestCommonPrefixes(str.Select(x => x - 0), suffixArray);
+                var au = a >> 31;
+                var ad = a & Mask31;
+                var bu = b >> 31;
+                var bd = b & Mask31;
+                var m = ad * bu + au * bd;
+                var mu = m >> 30;
+                var md = m & Mask30;
+                return ((au * bu) << 1) + mu + (md << 31) + ad * bd;
             }
-            public static IEnumerable<int> CreateLongestCommonPrefixes<T>(IEnumerable<T> items,
-                IEnumerable<int> suffixArray)
+
+            private static ulong CalcModulo(ulong v)
             {
-                var s = items.ToArray();
-                var sa = suffixArray.ToArray();
-                var n = s.Length;
-                if (n < 1) throw new ArgumentException(nameof(items));
-                var rnk = new int[n];
-                for (var i = 0; i < rnk.Length; i++) rnk[sa[i]] = i;
-                var lcp = new int[n - 1];
-                var h = 0;
-                for (var i = 0; i < n; i++)
-                {
-                    if (h > 0) h--;
-                    if (rnk[i] == 0) continue;
-                    var j = sa[rnk[i] - 1];
-                    while (j + h < n && i + h < n)
-                    {
-                        if (!Equals(s[j + h], s[i + h])) break;
-                        h++;
-                    }
-                    lcp[rnk[i] - 1] = h;
-                }
-                return lcp;
-            }
-            public static IEnumerable<int> ZAlgorithm(string str)
-            {
-                return ZAlgorithm(str.Select(x => x - 0));
-            }
-            public static IEnumerable<int> ZAlgorithm<T>(IEnumerable<T> items)
-            {
-                var s = items.ToArray();
-                var n = s.Length;
-                if (n == 0) return new List<int>();
-                var z = new int[n];
-                for (int i = 1, j = 0; i < n; i++)
-                {
-                    z[i] = j + z[j] <= i ? 0 : System.Math.Min(j + z[j] - i, z[i - j]);
-                    while (i + z[i] < n && Equals(s[z[i]], s[i + z[i]])) z[i]++;
-                    if (j + z[j] < i + z[i]) j = i;
-                }
-                z[0] = n;
-                return z;
-            }
-            private static IEnumerable<int> CreateSuffixesByInducedSorting(IEnumerable<int> items, int upper,
-                int naive = 10, int doubling = 40)
-            {
-                var s = items.ToArray();
-                var n = s.Length;
-                switch (n)
-                {
-                    case 0: return new int[0];
-                    case 1: return new[] { 0 };
-                    case 2: return s[0] < s[1] ? new[] { 0, 1 } : new[] { 1, 0 };
-                }
-                if (n < naive) return CreateSuffixesByNaive(s);
-                if (n < doubling) return CreateSuffixesByDoubling(s);
-                var sa = new int[n];
-                var ls = new bool[n];
-                for (var i = n - 2; i >= 0; i--)
-                {
-                    ls[i] = s[i] == s[i + 1] ? ls[i + 1] : s[i] < s[i + 1];
-                }
-                var sumL = new int[upper + 1];
-                var sumS = new int[upper + 1];
-                for (var i = 0; i < n; i++)
-                {
-                    if (!ls[i]) sumS[s[i]]++;
-                    else sumL[s[i] + 1]++;
-                }
-                for (var i = 0; i <= upper; i++)
-                {
-                    sumS[i] += sumL[i];
-                    if (i < upper) sumL[i + 1] += sumS[i];
-                }
-                void Induce(IEnumerable<int> ilms)
-                {
-                    sa = Enumerable.Repeat(-1, sa.Length).ToArray();
-                    var buffer = new int[upper + 1];
-                    sumS.CopyTo(buffer, 0);
-                    foreach (var d in ilms)
-                    {
-                        if (d == n) continue;
-                        sa[buffer[s[d]]++] = d;
-                    }
-                    sumL.CopyTo(buffer, 0);
-                    sa[buffer[s[n - 1]]++] = n - 1;
-                    for (var i = 0; i < n; i++)
-                    {
-                        var v = sa[i];
-                        if (v >= 1 && !ls[v - 1]) sa[buffer[s[v - 1]]++] = v - 1;
-                    }
-                    sumL.CopyTo(buffer, 0);
-                    for (var i = n - 1; i >= 0; i--)
-                    {
-                        var v = sa[i];
-                        if (v >= 1 && ls[v - 1])
-                        {
-                            sa[--buffer[s[v - 1] + 1]] = v - 1;
-                        }
-                    }
-                }
-                var lmsMap = Enumerable.Repeat(-1, n + 1).ToArray();
-                var m = 0;
-                for (var i = 1; i < n; i++)
-                {
-                    if (!ls[i - 1] && ls[i]) lmsMap[i] = m++;
-                }
-                var lms = new List<int>();
-                for (var i = 1; i < n; i++)
-                {
-                    if (!ls[i - 1] && ls[i]) lms.Add(i);
-                }
-                Induce(lms);
-                if (m <= 0) return sa;
-                var sortedLms = sa.Where(x => lmsMap[x] != -1).ToArray();
-                var recS = new int[m];
-                var recUpper = 0;
-                recS[lmsMap[sortedLms[0]]] = 0;
-                for (var i = 1; i < m; i++)
-                {
-                    var l = sortedLms[i - 1];
-                    var r = sortedLms[i];
-                    var el = lmsMap[l] + 1 < m ? lms[lmsMap[l] + 1] : n;
-                    var er = lmsMap[r] + 1 < m ? lms[lmsMap[r] + 1] : n;
-                    var isSame = true;
-                    if (el - l != er - r) isSame = false;
-                    else
-                    {
-                        while (l < el && s[l] == s[r])
-                        {
-                            l++;
-                            r++;
-                        }
-                        if (l == n || s[l] != s[r]) isSame = false;
-                    }
-                    if (!isSame) recUpper++;
-                    recS[lmsMap[sortedLms[i]]] = recUpper;
-                }
-                var recSa = CreateSuffixesByInducedSorting(recS, recUpper, naive, doubling).ToArray();
-                for (var i = 0; i < m; i++)
-                {
-                    sortedLms[i] = lms[recSa[i]];
-                }
-                Induce(sortedLms);
-                return sa;
-            }
-            private static IEnumerable<int> CreateSuffixesByNaive(IEnumerable<int> items)
-            {
-                var s = items.ToArray();
-                var n = s.Length;
-                var sa = Enumerable.Range(0, n).ToArray();
-                int Compare(int x, int y)
-                {
-                    var comparer = Comparer<int>.Default;
-                    if (x == y) return 0;
-                    while (x < n && y < n)
-                    {
-                        if (s[x] != s[y]) return comparer.Compare(s[x], s[y]);
-                        x++;
-                        y++;
-                    }
-                    return comparer.Compare(x, n);
-                }
-                Array.Sort(sa, Compare);
-                return sa;
-            }
-            private static IEnumerable<int> CreateSuffixesByDoubling(IEnumerable<int> items)
-            {
-                var rnk = items.ToArray();
-                var n = rnk.Length;
-                var sa = Enumerable.Range(0, n).ToArray();
-                var tmp = new int[n];
-                for (var k = 1; k < n; k *= 2)
-                {
-                    int Compare(int x, int y)
-                    {
-                        var comparer = Comparer<int>.Default;
-                        if (rnk[x] != rnk[y]) return comparer.Compare(rnk[x], rnk[y]);
-                        var rx = x + k < n ? rnk[x + k] : -1;
-                        var ry = y + k < n ? rnk[y + k] : -1;
-                        return comparer.Compare(rx, ry);
-                    }
-                    Array.Sort(sa, Compare);
-                    tmp[sa[0]] = 0;
-                    for (var i = 1; i < n; i++)
-                    {
-                        tmp[sa[i]] = tmp[sa[i - 1]] + (Compare(sa[i - 1], sa[i]) < 0 ? 1 : 0);
-                    }
-                    (tmp, rnk) = (rnk, tmp);
-                }
-                return sa;
+                var vu = v >> 61;
+                var vd = v & Modulo;
+                var x = vu + vd;
+                return x < Modulo ? x : x - Modulo;
             }
         }
 
         public static class Scanner
         {
-            private static Queue<string> queue = new Queue<string>();
-            public static T Next<T>()
+            public static T Scan<T>() where T : IConvertible => Convert<T>(Scan()[0]);
+            public static (T1, T2) Scan<T1, T2>() where T1 : IConvertible where T2 : IConvertible
             {
-                if (!queue.Any()) foreach (var item in Console.ReadLine().Trim().Split(" ")) queue.Enqueue(item);
-                return (T)Convert.ChangeType(queue.Dequeue(), typeof(T));
+                var buffer = Scan();
+                return (Convert<T1>(buffer[0]), Convert<T2>(buffer[1]));
             }
-            public static T Scan<T>() => Next<T>();
-            public static (T1, T2) Scan<T1, T2>() => (Next<T1>(), Next<T2>());
-            public static (T1, T2, T3) Scan<T1, T2, T3>() => (Next<T1>(), Next<T2>(), Next<T3>());
-            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>());
-            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() => (Next<T1>(), Next<T2>(), Next<T3>(), Next<T4>(), Next<T5>());
-            public static IEnumerable<T> ScanEnumerable<T>() => Console.ReadLine().Trim().Split(" ").Select(x => (T)Convert.ChangeType(x, typeof(T)));
+            public static (T1, T2, T3) Scan<T1, T2, T3>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible
+            {
+                var buffer = Scan();
+                return (Convert<T1>(buffer[0]), Convert<T2>(buffer[1]), Convert<T3>(buffer[2]));
+            }
+            public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible
+            {
+                var buffer = Scan();
+                return (Convert<T1>(buffer[0]), Convert<T2>(buffer[1]), Convert<T3>(buffer[2]), Convert<T4>(buffer[3]));
+            }
+            public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible
+            {
+                var buffer = Scan();
+                return (Convert<T1>(buffer[0]), Convert<T2>(buffer[1]), Convert<T3>(buffer[2]), Convert<T4>(buffer[3]), Convert<T5>(buffer[4]));
+            }
+            public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible where T6 : IConvertible
+            {
+                var buffer = Scan();
+                return (Convert<T1>(buffer[0]), Convert<T2>(buffer[1]), Convert<T3>(buffer[2]), Convert<T4>(buffer[3]), Convert<T5>(buffer[4]), Convert<T6>(buffer[5]));
+            }
+            public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => Scan().Select(Convert<T>);
+            private static string[] Scan()
+            {
+                var line = Console.ReadLine()?.Trim() ?? string.Empty;
+                return string.IsNullOrEmpty(line) ? Array.Empty<string>() : line.Split(' ');
+            }
+            private static T Convert<T>(string value) where T : IConvertible => (T)System.Convert.ChangeType(value, typeof(T));
         }
     }
 }
