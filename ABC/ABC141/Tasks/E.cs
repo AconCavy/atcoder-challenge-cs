@@ -26,9 +26,12 @@ namespace Tasks
             {
                 for (var l2 = l1; l2 < N; l2++)
                 {
-                    while (l1 + len < l2 && l2 + len < N && rh.Slice(l1, len + 1) == rh.Slice(l2, len + 1))
+                    while (l1 + len < l2 && l2 + len < N)
                     {
-                        len++;
+                        var h1 = rh.Slice(l1, l1 + len + 1);
+                        var h2 = rh.Slice(l2, l2 + len + 1);
+                        if (h1 == h2) len++;
+                        else break;
                     }
                 }
             }
@@ -42,22 +45,19 @@ namespace Tasks
             private const ulong Mask31 = (1UL << 31) - 1;
             private const ulong Modulo = (1UL << 61) - 1;
             private const ulong Positivizer = Modulo * ((1UL << 3) - 1);
-            private const int MaxPowerLength = (int)5e3;
+            private const int MaxPowerLength = (int)1e5;
             private static readonly ulong[] Powers = new ulong[MaxPowerLength + 1];
             private static readonly ulong Base;
-
             static RollingHash()
             {
-                Base = (ulong)new Random().Next(1 << 9, 1 << 30);
+                Base = (ulong)new Random().Next(1 << 8, 1 << 30);
                 Powers[0] = 1;
                 for (var i = 0; i + 1 < Powers.Length; i++)
                 {
                     Powers[i + 1] = CalcModulo(Multiply(Powers[i], Base));
                 }
             }
-
             private readonly ulong[] _hash;
-
             public RollingHash(ReadOnlySpan<char> s)
             {
                 _hash = new ulong[s.Length + 1];
@@ -66,12 +66,10 @@ namespace Tasks
                     _hash[i + 1] = CalcModulo(Multiply(_hash[i], Base) + s[i]);
                 }
             }
-
-            public ulong Slice(int i, int length)
+            public ulong Slice(int l, int r)
             {
-                return CalcModulo(_hash[i + length] + Positivizer - Multiply(_hash[i], Powers[length]));
+                return CalcModulo(_hash[r] + Positivizer - Multiply(_hash[l], Powers[r - l]));
             }
-
             private static ulong Multiply(ulong a, ulong b)
             {
                 var au = a >> 31;
@@ -83,7 +81,6 @@ namespace Tasks
                 var md = m & Mask30;
                 return ((au * bu) << 1) + mu + (md << 31) + ad * bd;
             }
-
             private static ulong CalcModulo(ulong v)
             {
                 var vu = v >> 61;
