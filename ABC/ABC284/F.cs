@@ -11,7 +11,7 @@ namespace Tasks
     {
         public static void Main()
         {
-            using var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            using var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
             Console.SetOut(sw);
             Solve();
             Console.Out.Flush();
@@ -21,52 +21,78 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var T = Scanner.Scan<string>();
-            var c1 = new int[26];
-            var c2 = new int[26];
 
-            for (var i = 0; i < N; i++)
+            string F(int i) => T[..i] + T[(i + N)..];
+
+            var rh1 = new RollingHash(T);
+            var rh2 = new RollingHash(new string(T.Reverse().ToArray()));
+            for (var i = 0; i <= N; i++)
             {
-                c1[T[N - 1 - i] - 'a']++;
-                c2[T[i] - 'a']++;
-            }
-
-            {
-                var s1 = T[N..];
-                var s2 = new string(T[..N].Reverse().ToArray());
-                if (s1 == s2)
+                var h1 = rh1.Slice(0, i);
+                var h2 = rh2.Slice(N - i, i);
+                var h3 = rh1.Slice(i + N, N - i);
+                var h4 = rh2.Slice(N, N - i);
+                if (h1 == h2 && h3 == h4)
                 {
-                    Console.WriteLine(s1);
-                    Console.WriteLine(0);
-                    return;
-                }
-            }
-
-            for (var k = 0; k < N; k++)
-            {
-                c1[T[k] - 'a']++;
-                c2[T[k] - 'a']--;
-                c1[T[k + N] - 'a']--;
-                c2[T[k + N] - 'a']++;
-                var ok = true;
-                for (var i = 0; i < 26; i++)
-                {
-                    ok &= c1[i] == c2[i];
-                }
-
-                if (!ok) continue;
-
-                var s1 = T[..(k + 1)] + T[(k + N + 1)..];
-                var s2 = new string(T.Substring(k + 1, N).Reverse().ToArray());
-                ok &= s1 == s2;
-                if (ok)
-                {
-                    Console.WriteLine(s1);
-                    Console.WriteLine(k + 1);
+                    Console.WriteLine(F(i));
+                    Console.WriteLine(i);
                     return;
                 }
             }
 
             Console.WriteLine(-1);
+        }
+
+        // https://qiita.com/keymoon/items/11fac5627672a6d6a9f6
+        public class RollingHash
+        {
+            private const ulong Mask30 = (1UL << 30) - 1;
+            private const ulong Mask31 = (1UL << 31) - 1;
+            private const ulong Modulo = (1UL << 61) - 1;
+            private const ulong Positivizer = Modulo * ((1UL << 3) - 1);
+            private const int MaxPowerLength = (int)2e6;
+            private static readonly ulong[] Powers = new ulong[MaxPowerLength + 1];
+            private static readonly ulong Base;
+            static RollingHash()
+            {
+                Base = (ulong)new Random().Next(1 << 8, 1 << 30);
+                Powers[0] = 1;
+                for (var i = 0; i + 1 < Powers.Length; i++)
+                {
+                    Powers[i + 1] = CalcModulo(Multiply(Powers[i], Base));
+                }
+            }
+            private readonly ulong[] _hash;
+            public RollingHash(ReadOnlySpan<char> s)
+            {
+                _hash = new ulong[s.Length + 1];
+                for (var i = 0; i < s.Length; i++)
+                {
+                    _hash[i + 1] = CalcModulo(Multiply(_hash[i], Base) + s[i]);
+                }
+            }
+            public ulong Slice(int i, int length)
+            {
+                return CalcModulo(_hash[i + length] + Positivizer - Multiply(_hash[i], Powers[length]));
+            }
+            private static ulong Multiply(ulong a, ulong b)
+            {
+                var au = a >> 31;
+                var ad = a & Mask31;
+                var bu = b >> 31;
+                var bd = b & Mask31;
+                var m = ad * bu + au * bd;
+                var mu = m >> 30;
+                var md = m & Mask30;
+                return ((au * bu) << 1) + mu + (md << 31) + ad * bd;
+            }
+            private static ulong CalcModulo(ulong v)
+            {
+                var vu = v >> 61;
+                var vd = v & Modulo;
+                var x = vu + vd;
+                return x < Modulo ? x : x - Modulo;
+            }
         }
 
         public static class Scanner
