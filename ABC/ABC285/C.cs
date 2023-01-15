@@ -20,19 +20,12 @@ namespace Tasks
         public static void Solve()
         {
             var S = Scanner.Scan<string>();
-            var N = S.Length;
-            var T = S.Select(x => x - 'A' + 1).Reverse().ToArray();
-            var bases = new long[N + 1];
-            bases[0] = 1;
-            for (var i = 0; i < N; i++)
-            {
-                bases[i + 1] = bases[i] * 26;
-            }
-
+            long b = 1;
             long answer = 0;
-            for (var i = 0; i < N; i++)
+            foreach (var c in S.Select(x => x - 'A' + 1).Reverse())
             {
-                answer += T[i] * bases[i];
+                answer += c * b;
+                b *= 26;
             }
 
             Console.WriteLine(answer);

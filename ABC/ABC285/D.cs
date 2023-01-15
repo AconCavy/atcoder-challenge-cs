@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Microsoft.VisualBasic;
 
 namespace Tasks
 {
@@ -21,7 +22,9 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var dict = new Dictionary<string, int>();
-            var G = new Graph(N * 2);
+            var M = N * 2;
+            var G = new List<int>[M].Select(x => new List<int>()).ToArray();
+            var inDeg = new int[M];
             var idx = 0;
             for (var i = 0; i < N; i++)
             {
@@ -29,62 +32,31 @@ namespace Tasks
                 if (!dict.ContainsKey(s)) dict[s] = idx++;
                 if (!dict.ContainsKey(t)) dict[t] = idx++;
                 var (u, v) = (dict[s], dict[t]);
-                G.AddEdge(u, v, 1);
+                inDeg[v]++;
+                G[u].Add(v);
             }
 
-            var (answer, _) = G.TopologicalSort();
+            var queue = new Queue<int>();
+            for (var i = 0; i < M; i++)
+            {
+                if (inDeg[i] == 0) queue.Enqueue(i);
+            }
+
+            var sorted = new int[M];
+            var curr = 0;
+            while (queue.TryDequeue(out var u))
+            {
+                foreach (var v in G[u])
+                {
+                    inDeg[v]--;
+                    if (inDeg[v] == 0) queue.Enqueue(v);
+                }
+
+                sorted[curr++] = u;
+            }
+
+            var answer = curr == M;
             Console.WriteLine(answer ? "Yes" : "No");
-        }
-
-        public class Graph
-        {
-            public int Length { get; }
-            private readonly List<Edge>[] _data;
-            private readonly int[] _degree;
-            public Graph(int length)
-            {
-                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-                Length = length;
-                _data = new List<Edge>[Length].Select(_ => new List<Edge>()).ToArray();
-                _degree = new int[Length];
-            }
-            public void AddEdge(int u, int v, long cost)
-            {
-                if (u < 0 || Length <= u) throw new ArgumentOutOfRangeException(nameof(u));
-                if (v < 0 || Length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-                _data[u].Add(new Edge(v, cost));
-                _degree[v]++;
-            }
-
-            public (bool, int[]) TopologicalSort()
-            {
-                var queue = new Queue<int>();
-                var degree = new int[Length];
-                _degree.CopyTo(degree, 0);
-                for (var i = 0; i < degree.Length; i++)
-                {
-                    if (degree[i] == 0) queue.Enqueue(i);
-                }
-                var result = new int[Length];
-                var idx = 0;
-                while (queue.Count > 0)
-                {
-                    var v = queue.Dequeue();
-                    foreach (var node in _data[v])
-                    {
-                        degree[node.To]--;
-                        if (degree[node.To] == 0) queue.Enqueue(node.To);
-                    }
-                    result[idx++] = v;
-                }
-                return (idx == Length, result);
-            }
-            private readonly struct Edge
-            {
-                internal int To { get; }
-                internal long Cost { get; }
-                public Edge(int to, long cost) => (To, Cost) = (to, cost);
-            }
         }
 
         public static class Scanner

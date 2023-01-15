@@ -54,42 +54,33 @@ namespace Tasks
                     }
 
                     var alpha = 0;
-                    long rem = r - l;
                     var ll = l;
                     var answer = true;
-                    while (alpha < 26 && tc[alpha] == 0)
-                    {
-                        alpha++;
-                    }
+                    while (alpha < 26 && tc[alpha] == 0) alpha++;
 
                     if (alpha < 26)
                     {
-                        rem -= tc[alpha];
                         ll += tc[alpha];
                         alpha++;
                     }
 
-                    while (answer && rem > 0 && alpha < 26)
+                    while (answer && alpha < 26 && ll + tc[alpha] <= r)
                     {
                         var rr = ll + tc[alpha];
-                        if (rem > tc[alpha])
+                        if (rr < r)
                         {
                             answer &= sc[alpha] == tc[alpha];
-                            answer &= tc[alpha] == fts[alpha].Sum(ll, rr);
-                            rem -= tc[alpha];
                         }
                         else
                         {
                             answer &= sc[alpha] >= tc[alpha];
-                            answer &= tc[alpha] == fts[alpha].Sum(ll, rr);
-                            rem -= tc[alpha];
                         }
 
+                        answer &= tc[alpha] == fts[alpha].Sum(ll, rr);
                         ll = rr;
                         alpha++;
                     }
 
-                    answer &= rem == 0;
                     Console.WriteLine(answer ? "Yes" : "No");
                 }
             }
