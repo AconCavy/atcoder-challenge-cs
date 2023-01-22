@@ -777,24 +777,40 @@
             "}"
         ]
     },
-    "TestClass": {
+    "TestMethod": {
         "scope": "csharp",
         "prefix": "test",
         "body": [
             "[Timeout(2000)]",
             "[TestCase(",
             "    @\"\",",
-            "    @\"\")]",
+            "    @\"\",",
+            "    TestName = \"{m}{i}\")]",
             "[TestCase(",
             "    @\"\",",
-            "    @\"\")]",
+            "    @\"\",",
+            "    TestName = \"{m}{i}\")]",
             "[TestCase(",
             "    @\"\",",
-            "    @\"\")]",
-            "public void ${1:task}Test(string input, string output)",
+            "    @\"\",",
+            "    TestName = \"{m}{i}\")]",
+            "public void ${1:Task}Test(string input, string output)",
             "{",
             "    Utility.InOutTest(Tasks.${1}.Solve, input, output${2:, 1e-9});",
             "}"
+        ]
+    },
+    "TestCase": {
+        "scope": "csharp",
+        "prefix": [
+            "testcase",
+            "tc"
+        ],
+        "body": [
+            "[TestCase(",
+            "    @\"\",",
+            "    @\"\",",
+            "    TestName = \"{m}{i}\")]",
         ]
     },
 }
