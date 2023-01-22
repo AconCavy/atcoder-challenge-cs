@@ -47,5 +47,28 @@ cra
         {
             Utility.InOutTest(Tasks.B.Solve, input, output);
         }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"3
+2
+1 2
+2 2
+4
+2 3 1 1
+2 1 1 2
+2
+1 1
+2 2
+",
+            @"Yes
+Yes
+No
+",
+            TestName = "{m}{i}")]
+        public void CTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.C.Solve, input, output);
+        }
     }
 }

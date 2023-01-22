@@ -19,6 +19,39 @@ namespace Tasks
 
         public static void Solve()
         {
+            var T = Scanner.Scan<int>();
+            while (T-- > 0)
+            {
+                var N = Scanner.Scan<int>();
+                var A = Scanner.ScanEnumerable<int>().ToArray();
+                var B = Scanner.ScanEnumerable<int>().ToArray();
+                var idx = 0;
+                for (var i = 0; i < N; i++)
+                {
+                    if (A[i] == B[i])
+                    {
+                        idx = i;
+                        break;
+                    }
+                }
+
+                var prev = A[idx];
+
+                var ok = true;
+                for (var i = 0; i <= N && ok; i++)
+                {
+                    var j = (idx - i + N) % N;
+                    if (A[j] != B[j])
+                    {
+                        A[j] = prev;
+                        ok &= A[j] == B[j];
+                    }
+
+                    prev = A[j];
+                }
+
+                Console.WriteLine(ok ? "Yes" : "No");
+            }
         }
 
         public static class Scanner
