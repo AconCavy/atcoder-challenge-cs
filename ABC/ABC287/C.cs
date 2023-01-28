@@ -29,24 +29,23 @@ namespace Tasks
                 G[v].Add(u);
             }
 
+            if (M != N - 1 || G.Any(x => x.Count > 2))
+            {
+                Console.WriteLine("No");
+                return;
+            }
+
             var used = new bool[N];
-            var queue = new Queue<(int U, int P)>();
-            queue.Enqueue((0, -1));
+            var queue = new Queue<int>();
             used[0] = true;
+            queue.Enqueue(0);
             while (queue.Count > 0)
             {
-                var (u, p) = queue.Dequeue();
-                foreach (var v in G[u])
+                var u = queue.Dequeue();
+                foreach (var v in G[u].Where(x => !used[x]))
                 {
-                    if (v == p) continue;
-                    if (used[v])
-                    {
-                        Console.WriteLine("No");
-                        return;
-                    }
-
                     used[v] = true;
-                    queue.Enqueue((v, u));
+                    queue.Enqueue(v);
                 }
             }
 
