@@ -30,6 +30,44 @@ namespace Tasks
                 G[a].Add(b);
                 G[b].Add(a);
             }
+
+            mint[,] Dfs(int u, int p)
+            {
+                var currDp = new mint[2, 2];
+                currDp[0, 0] = currDp[1, 1] = 1;
+                foreach (var v in G[u])
+                {
+                    if (v == p) continue;
+                    var childDp = Dfs(v, u);
+                    var currLength = currDp.GetLength(0);
+                    var childLength = childDp.GetLength(0);
+                    var nextDp = new mint[currLength + childLength - 1, 2];
+                    for (var j = 0; j < currLength; j++)
+                    {
+                        for (var k = 0; k < childLength; k++)
+                        {
+                            nextDp[j + k, 0] += currDp[j, 0] * childDp[k, 0];
+                            nextDp[j + k, 0] += currDp[j, 0] * childDp[k, 1];
+                            nextDp[j + k, 1] += currDp[j, 1] * childDp[k, 0];
+                            if (j + k > 0)
+                            {
+                                nextDp[j + k - 1, 1] += currDp[j, 1] * childDp[k, 1];
+                            }
+                        }
+                    }
+
+                    currDp = nextDp;
+                }
+
+                return currDp;
+            }
+
+            var dp = Dfs(0, -1);
+            for (var x = 1; x <= N; x++)
+            {
+                var answer = dp[x, 0] + dp[x, 1];
+                Console.WriteLine(answer);
+            }
         }
 
         public readonly struct ModuloInteger : IEquatable<ModuloInteger>
