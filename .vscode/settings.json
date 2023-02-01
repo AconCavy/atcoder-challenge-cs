@@ -1,5 +1,5 @@
 {
-    "env.directory": "ABC/",
-    "env.project": "ABC287",
+    "env.directory": "Other/",
+    "env.project": "DP",
     "env.framework": "netcoreapp3.1"
 }
