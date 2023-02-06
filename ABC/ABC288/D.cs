@@ -21,16 +21,33 @@ namespace Tasks
         {
             var (N, K) = Scanner.Scan<int, int>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
-            var cum = new long[N + K];
+            var cum = new long[K, N + 1];
             for (var i = 0; i < N; i++)
             {
-                cum[i] -= A[i];
-                cum[i + K] += A[i];
+                cum[i % K, i + 1] = A[i];
             }
 
-            for (var i = 1; i < N + K; i++)
+            for (var k = 0; k < K; k++)
             {
-                cum[i] += cum[i - 1];
+                for (var i = 0; i < N; i++)
+                {
+                    cum[k, i + 1] += cum[k, i];
+                }
+            }
+
+            var Q = Scanner.Scan<int>();
+            while (Q-- > 0)
+            {
+                var (l, r) = Scanner.Scan<int, int>();
+                l--;
+                var answer = true;
+                var s = cum[0, r] - cum[0, l];
+                for (var k = 1; k < K; k++)
+                {
+                    answer &= (cum[k, r] - cum[k, l]) == s;
+                }
+
+                Console.WriteLine(answer ? "Yes" : "No");
             }
         }
 
