@@ -22,13 +22,19 @@ namespace Tasks
             var N = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
             var M = Scanner.Scan<int>();
-            var B = Scanner.ScanEnumerable<int>().ToHashSet();
+            var B = Scanner.ScanEnumerable<int>().ToArray();
             var X = Scanner.Scan<int>();
             var dp = new bool[X + 1];
             dp[0] = true;
+            var mochi = new bool[X + 1];
+            foreach (var b in B)
+            {
+                mochi[b] = true;
+            }
+
             for (var i = 0; i < X; i++)
             {
-                if (B.Contains(i)) continue;
+                if (mochi[i]) continue;
                 foreach (var a in A.Where(x => i + x <= X))
                 {
                     dp[i + a] |= dp[i];
