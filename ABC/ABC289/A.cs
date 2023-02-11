@@ -20,8 +20,7 @@ namespace Tasks
         public static void Solve()
         {
             var S = Scanner.Scan<string>();
-            var T = S.Select(x => (x - '0') ^ 1).ToArray();
-            var answer = string.Join("", T);
+            var answer = string.Join("", S.Select(x => (x - '0') ^ 1));
             Console.WriteLine(answer);
         }
 
