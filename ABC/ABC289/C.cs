@@ -21,30 +21,28 @@ namespace Tasks
         {
             var (N, M) = Scanner.Scan<int, int>();
             var C = new int[M];
-            var A = new HashSet<int>[M];
+            var A = new int[M][];
             for (var i = 0; i < M; i++)
             {
                 C[i] = Scanner.Scan<int>();
-                A[i] = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToHashSet();
+                A[i] = Scanner.ScanEnumerable<int>().ToArray();
             }
 
             var answer = 0;
             for (var s = 1; s < 1 << M; s++)
             {
-                var ok1 = true;
-                for (var j = 0; j < N; j++)
+                var exists = new bool[N + 1];
+                for (var i = 0; i < M; i++)
                 {
-                    var ok2 = false;
-                    for (var k = 0; k < M; k++)
+                    if ((s >> i & 1) == 0) continue;
+                    foreach (var a in A[i])
                     {
-                        if ((s >> k & 1) == 0) continue;
-                        ok2 |= A[k].Contains(j);
+                        exists[a] = true;
                     }
-
-                    ok1 &= ok2;
                 }
 
-                if (ok1) answer++;
+                var ok = Enumerable.Range(1, N).All(x => exists[x]);
+                if (ok) answer++;
             }
 
             Console.WriteLine(answer);
