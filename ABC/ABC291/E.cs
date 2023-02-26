@@ -22,8 +22,7 @@ namespace Tasks
             var (N, M) = Scanner.Scan<int, int>();
             var G = new List<int>[N].Select(x => new List<int>()).ToArray();
             var E = new HashSet<(int, int)>();
-            var outDeg = new int[N];
-            var inDeg = new int[N];
+            var deg = new int[N];
 
             for (var i = 0; i < M; i++)
             {
@@ -32,14 +31,11 @@ namespace Tasks
                 if (E.Contains((x, y))) continue;
                 E.Add((x, y));
                 G[x].Add(y);
-                outDeg[x]++;
-                inDeg[y]++;
+                deg[y]++;
             }
 
             var queue = new Queue<int>();
-            var deg = new int[N];
-            inDeg.CopyTo(deg, 0);
-            for (var i = 0; i < deg.Length; i++)
+            for (var i = 0; i < N; i++)
             {
                 if (deg[i] == 0) queue.Enqueue(i);
             }
@@ -48,6 +44,12 @@ namespace Tasks
             var idx = 0;
             while (queue.Count > 0)
             {
+                if (queue.Count > 1)
+                {
+                    Console.WriteLine("No");
+                    return;
+                }
+
                 var u = queue.Dequeue();
                 foreach (var v in G[u])
                 {
@@ -58,7 +60,7 @@ namespace Tasks
                 result[idx++] = u;
             }
 
-            if (idx != N || outDeg.Count(x => x == 0) > 1 || inDeg.Count(x => x == 0) > 1)
+            if (idx != N)
             {
                 Console.WriteLine("No");
                 return;
