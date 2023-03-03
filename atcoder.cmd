@@ -18,6 +18,8 @@ echo %CONTEST_TYPE% | findstr /r "A[BGR]C" > nul
 
 if %ERRORLEVEL%==0 (
   set OUTPUT=%CD%\%CONTEST_TYPE%
+) else (
+  set OUTPUT=%CD%\Other
 )
 
 if not exist %OUTPUT% (
