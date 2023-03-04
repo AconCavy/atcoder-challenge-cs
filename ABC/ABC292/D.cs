@@ -31,18 +31,22 @@ namespace Tasks
                 dsu.Merge(u, v);
             }
 
-            var count = new int[N];
+            var vc = new int[N];
+            for (var u = 0; u < N; u++)
+            {
+                vc[dsu.LeaderOf(u)]++;
+            }
+
+            var ec = new int[N];
             foreach (var (u, _) in E)
             {
-                var leader = dsu.LeaderOf(u);
-                count[leader]++;
+                ec[dsu.LeaderOf(u)]++;
             }
 
             var answer = true;
-            foreach (var group in dsu.GetGroups())
+            for (var u = 0; u < N; u++)
             {
-                var leader = dsu.LeaderOf(group.First());
-                answer &= count[leader] == group.Count;
+                answer &= vc[u] == ec[u];
             }
 
             Console.WriteLine(answer ? "Yes" : "No");
