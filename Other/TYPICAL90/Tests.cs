@@ -447,5 +447,372 @@ aaaaaaaaaaaaaaaaaaaattttttttttttttttttttccccccccccccccccccccoooooooooooooooooooo
         {
             Utility.InOutTest(Tasks.H.Solve, input, output);
         }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"7
+1 72
+2 78
+2 94
+1 23
+2 89
+1 40
+1 75
+1
+2 6
+",
+            @"63 261
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"7
+1 72
+2 78
+2 94
+1 23
+2 89
+1 40
+1 75
+10
+1 3
+2 4
+3 5
+4 6
+5 7
+1 5
+2 6
+3 7
+1 6
+2 7
+",
+            @"72 172
+23 172
+23 183
+63 89
+115 89
+95 261
+63 261
+138 183
+135 261
+138 261
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"1
+1 100
+3
+1 1
+1 1
+1 1
+",
+            @"100 0
+100 0
+100 0
+",
+            TestName = "{m}-3")]
+        [TestCase(
+            @"20
+2 90
+1 67
+2 9
+2 17
+2 85
+2 43
+2 11
+1 32
+2 16
+1 19
+2 65
+1 14
+1 51
+2 94
+1 4
+1 55
+2 90
+1 89
+1 35
+2 81
+20
+3 17
+5 5
+11 11
+8 10
+3 13
+2 6
+3 7
+3 5
+12 18
+4 8
+3 16
+6 8
+3 20
+1 12
+1 6
+5 16
+3 10
+17 19
+4 4
+7 15
+",
+            @"175 430
+0 85
+0 65
+51 16
+116 246
+67 154
+0 165
+0 111
+213 184
+32 156
+175 340
+32 54
+299 511
+132 336
+67 244
+175 314
+51 181
+124 90
+0 17
+120 186
+",
+            TestName = "{m}-4")]
+        public void JTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.J.Solve, input, output);
+        }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"3 3
+10
+1 2 2
+1 1 1
+2 1 1 2 2
+1 3 2
+2 1 1 2 2
+2 2 2 3 2
+1 2 3
+1 2 1
+2 1 1 2 2
+2 1 1 3 3
+",
+            @"No
+No
+Yes
+Yes
+No
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"1 1
+3
+2 1 1 1 1
+1 1 1
+2 1 1 1 1
+",
+            @"No
+Yes
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"5 5
+42
+2 3 4 3 4
+2 3 2 3 2
+1 4 1
+2 4 1 2 2
+1 1 2
+1 4 5
+1 3 3
+2 4 2 1 3
+1 3 5
+2 2 4 2 3
+2 2 4 2 5
+2 3 4 5 1
+2 3 1 2 2
+2 3 1 1 2
+2 2 4 5 2
+2 3 2 5 3
+1 4 3
+2 3 3 3 5
+2 3 1 3 2
+1 1 5
+2 4 4 5 3
+1 1 4
+2 1 3 2 5
+2 4 3 1 4
+2 2 3 3 3
+1 2 1
+1 2 5
+2 1 4 5 3
+2 4 4 2 5
+2 4 2 2 4
+1 2 2
+2 4 1 5 2
+1 2 4
+2 3 1 4 1
+1 4 4
+2 3 2 2 1
+2 1 1 5 2
+1 4 2
+2 4 2 3 5
+1 3 2
+1 3 4
+1 2 3
+",
+            @"No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+No
+Yes
+",
+            TestName = "{m}-3")]
+        public void LTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.L.Solve, input, output);
+        }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"7 9
+1 2 2
+1 3 3
+2 5 2
+3 4 1
+3 5 4
+4 7 5
+5 6 1
+5 7 6
+6 7 3
+",
+            @"8
+8
+9
+9
+8
+8
+8
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"4 3
+1 2 1
+2 3 10
+3 4 100
+",
+            @"111
+111
+111
+111
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"4 3
+1 2 314
+1 3 159
+1 4 265
+",
+            @"265
+893
+583
+265
+",
+            TestName = "{m}-3")]
+        public void MTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.M.Solve, input, output);
+        }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"1
+869
+120
+",
+            @"749
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"6
+8 6 9 1 2 0
+1 5 7 2 3 9
+",
+            @"5
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"10
+31 41 59 26 53 58 97 93 23 84
+17 32 5 8 7 56 88 77 29 35
+",
+            @"211
+",
+            TestName = "{m}-3")]
+        [TestCase(
+            @"20
+804289382 846930886 681692776 714636914 957747792 424238335 719885386 649760491 596516649 189641420 25202361 350490026 783368690 102520058 44897761 967513925 365180539 540383425 304089172 303455735
+35005211 521595368 294702567 726956428 336465782 861021530 278722862 233665123 145174065 468703135 101513928 801979801 315634021 635723058 369133068 125898166 59961392 89018454 628175011 656478041
+",
+            @"2736647674
+",
+            TestName = "{m}-4")]
+        public void NTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.N.Solve, input, output);
+        }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"227
+21 47 56
+",
+            @"5
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"9999
+1 5 10
+",
+            @"1004
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"998244353
+314159 265358 97932
+",
+            @"3333
+",
+            TestName = "{m}-3")]
+        [TestCase(
+            @"100000000
+10001 10002 10003
+",
+            @"9998
+",
+            TestName = "{m}-4")]
+        public void PTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.P.Solve, input, output);
+        }
     }
 }
