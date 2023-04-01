@@ -31,17 +31,13 @@ namespace Tasks
                 if (i == A[i]) isSelf[i] = true;
             }
 
-            var set = new HashSet<int>();
+            var answer = 0;
             foreach (var graph in scc.GetGraph())
             {
                 if (graph.Count == 1 && !isSelf[graph[0]]) continue;
-                foreach (var u in graph)
-                {
-                    set.Add(u);
-                }
+                answer += graph.Count;
             }
 
-            var answer = set.Count;
             Console.WriteLine(answer);
         }
 

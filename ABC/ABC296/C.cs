@@ -21,19 +21,9 @@ namespace Tasks
         {
             var (N, X) = Scanner.Scan<int, long>();
             var A = Scanner.ScanEnumerable<long>().ToArray();
-            Array.Sort(A);
-            var r = 0;
-            for (var l = 0; l < N; l++)
-            {
-                while (r < N && A[r] - A[l] < X) r++;
-                if (r < N && A[r] - A[l] == X)
-                {
-                    Console.WriteLine("Yes");
-                    return;
-                }
-            }
-
-            Console.WriteLine("No");
+            var set = new HashSet<long>(A);
+            var answer = set.Any(a => set.Contains(a + X));
+            Console.WriteLine(answer ? "Yes" : "No");
         }
 
         public static class Scanner

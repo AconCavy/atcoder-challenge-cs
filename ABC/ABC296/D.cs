@@ -22,21 +22,12 @@ namespace Tasks
             var (N, M) = Scanner.Scan<long, long>();
             const long Inf = (long)1e18;
 
-            if (M <= N)
-            {
-                Console.WriteLine(M);
-                return;
-            }
-
             var answer = Inf;
             for (var a = 1; a <= Math.Min(N, (M + a - 1) / a); a++)
             {
-                var x = M / a;
-                for (var b = Math.Max(1, x - 1); b <= Math.Min(N, x + 1); b++)
-                {
-                    var c = a * b;
-                    if (c >= M) answer = Math.Min(answer, c);
-                }
+                var b = Math.Min(N, (M + a - 1) / a);
+                var c = a * b;
+                if (c >= M) answer = Math.Min(answer, c);
             }
 
             if (answer == Inf) answer = -1;
