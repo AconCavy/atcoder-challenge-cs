@@ -27,6 +27,22 @@ namespace Tasks
 
             bool HasDuplicated(int[] source) => source.Distinct().Count() < source.Length;
 
+            long CalcInversion(int[] source)
+            {
+                long result = 0;
+                var ft = new FenwickTree(source.Length);
+                var (map, _) = Compress(source);
+                for (var i = 0; i < source.Length; i++)
+                {
+                    result += i - ft.Sum(map[source[i]]);
+                    ft.Add(map[source[i]], 1);
+                }
+
+                return result;
+            }
+
+            bool AreEven(int[] a, int[] b) => (CalcInversion(a) + CalcInversion(b)) % 2 == 0;
+
             if (!AreSameSet(A, B))
             {
                 Console.WriteLine("No");
@@ -39,21 +55,81 @@ namespace Tasks
                 return;
             }
 
-            var idxA = new Dictionary<int, int>();
-            var idxB = new Dictionary<int, int>();
-            for (var i = 0; i < N; i++)
+            if (AreEven(A, B))
             {
-                idxA[A[i]] = i;
-                idxB[B[i]] = i;
+                Console.WriteLine("Yes");
+                return;
             }
 
-            var answer = true;
-            for (var i = 0; i < N; i++)
-            {
-                answer &= !(B[i] == A[idxB[A[i]]] || A[i] == B[idxA[B[i]]]);
-            }
+            Console.WriteLine("No");
+        }
 
-            Console.WriteLine(answer ? "Yes" : "No");
+        public static (Dictionary<T, int> Map, Dictionary<int, T> ReMap) Compress<T>(IEnumerable<T> source)
+        {
+            var distinct = source.Distinct().ToArray();
+            Array.Sort(distinct);
+            var map = new Dictionary<T, int>();
+            var remap = new Dictionary<int, T>();
+            foreach (var (x, i) in distinct.Select((x, i) => (x, i)))
+            {
+                map[x] = i;
+                remap[i] = x;
+            }
+            return (map, remap);
+        }
+
+        public class FenwickTree
+        {
+            public int Length { get; }
+            private readonly long[] _data;
+            public FenwickTree(int length)
+            {
+                if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+                Length = length;
+                _data = new long[length];
+            }
+            public void Add(int index, long value)
+            {
+                if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
+                index++;
+                while (index <= Length)
+                {
+                    _data[index - 1] += value;
+                    index += index & -index;
+                }
+            }
+            public long Sum(int length)
+            {
+                if (length < 0 || Length < length) throw new ArgumentOutOfRangeException(nameof(length));
+                var s = 0L;
+                while (length > 0)
+                {
+                    s += _data[length - 1];
+                    length -= length & -length;
+                }
+                return s;
+            }
+            public long Sum(int left, int right)
+            {
+                if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
+                return Sum(right) - Sum(left);
+            }
+            public int LowerBound(long value) => Bound(value, (x, y) => x <= y);
+            public int UpperBound(long value) => Bound(value, (x, y) => x < y);
+            private int Bound(long value, Func<long, long, bool> compare)
+            {
+                if (Length == 0 || compare(value, _data[0])) return 0;
+                var x = 0;
+                var r = 1;
+                while (r < Length) r <<= 1;
+                for (var k = r; k > 0; k >>= 1)
+                {
+                    if (x + k - 1 >= Length || compare(value, _data[x + k - 1])) continue;
+                    value -= _data[x + k - 1];
+                    x += k;
+                }
+                return x;
+            }
         }
 
         public static class Scanner
