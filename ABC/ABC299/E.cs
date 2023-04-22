@@ -63,37 +63,30 @@ namespace Tasks
             var minD = new int[N];
             const int Inf = (int)1e9;
             Array.Fill(minD, Inf);
+            var PD = new (int P, int D)[K];
             for (var i = 0; i < K; i++)
             {
                 var (p, d) = Scanner.Scan<int, int>();
                 p--;
-                minD[p] = d;
+                PD[i] = (p, d);
             }
 
             var C = new int[N];
             Array.Fill(C, 1);
-            for (var i = 0; i < N; i++)
+            foreach (var (p, d) in PD)
             {
-                if (minD[i] == Inf) continue;
                 for (var j = 0; j < N; j++)
                 {
-                    if (minD[i] > D[i][j])
-                    {
-                        C[j] = 0;
-                    }
+                    if (D[p][j] < d) C[j] = 0;
                 }
             }
 
-            for (var i = 0; i < N; i++)
+            foreach (var (p, d) in PD)
             {
-                if (minD[i] == Inf) continue;
                 var ok = false;
-                for (var j = 0; j < N; j++)
+                for (var v = 0; v < N; v++)
                 {
-                    if (C[j] == 1 && minD[i] == D[i][j])
-                    {
-                        ok = true;
-                    }
+                    ok |= C[v] == 1 && D[p][v] == d;
                 }
 
                 if (!ok)

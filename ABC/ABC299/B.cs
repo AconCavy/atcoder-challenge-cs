@@ -22,26 +22,17 @@ namespace Tasks
             var (N, T) = Scanner.Scan<int, int>();
             var C = Scanner.ScanEnumerable<int>().ToArray();
             var R = Scanner.ScanEnumerable<int>().ToArray();
-            var dict = new Dictionary<int, List<(int R, int I)>>();
+            var dict = new Dictionary<int, (int R, int I)>();
             for (var i = 0; i < N; i++)
             {
-                if (!dict.ContainsKey(C[i])) dict[C[i]] = new List<(int R, int I)>();
-                dict[C[i]].Add((R[i], i));
+                var c = C[i];
+                var r = R[i];
+                if (!dict.ContainsKey(c)) dict[c] = (r, i);
+                else if (r > dict[c].R) dict[c] = (r, i);
             }
 
             var t = dict.ContainsKey(T) ? T : C[0];
-
-            var answer = -1;
-            var max = -1;
-            foreach (var (r, i) in dict[t])
-            {
-                if (max < r)
-                {
-                    max = r;
-                    answer = i + 1;
-                }
-            }
-
+            var answer = dict[t].I + 1;
             Console.WriteLine(answer);
         }
 
