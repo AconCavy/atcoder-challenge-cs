@@ -21,51 +21,26 @@ namespace Tasks
         {
             var N = Scanner.Scan<long>();
             var P = Prime.Sieve((int)1e6).Select(x => (long)x).ToArray();
-            long answer = 0;
-
-            for (var i = 0; i < P.Length; i++)
+            var answer = 0;
+            for (var i = 0; i + 2 < P.Length; i++)
             {
                 var a = P[i];
                 var aa = a * a;
-                if (aa > N) break;
-
+                if (aa >= N) break;
                 for (var j = i + 2; j < P.Length; j++)
                 {
                     var c = P[j];
                     var cc = c * c;
-                    if (cc > N || aa * cc > N) break;
-                    var aacc = aa * cc;
-                    var k = Math.Min(j - 1, LowerBound(P, N / aacc));
-                    while (k > i && (P[k] >= c || aacc * P[k] > N)) k--;
-                    answer += Math.Max(0, k - i);
+                    if (cc >= N || aa * cc >= N) break;
+                    var v = N / (aa * cc);
+                    for (var k = i + 1; k < j && P[k] <= v; k++)
+                    {
+                        answer++;
+                    }
                 }
             }
 
             Console.WriteLine(answer);
-        }
-
-        public static int UpperBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>
-        {
-            var (l, r) = (-1, source.Length);
-            while (r - l > 1)
-            {
-                var m = l + (r - l) / 2;
-                if (source[m].CompareTo(key) > 0) r = m;
-                else l = m;
-            }
-            return r;
-        }
-
-        public static int LowerBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>
-        {
-            var (l, r) = (-1, source.Length);
-            while (r - l > 1)
-            {
-                var m = l + (r - l) / 2;
-                if (source[m].CompareTo(key) >= 0) r = m;
-                else l = m;
-            }
-            return r;
         }
 
         public static class Prime
