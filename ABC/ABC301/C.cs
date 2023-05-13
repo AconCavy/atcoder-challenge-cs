@@ -38,8 +38,6 @@ namespace Tasks
             var usedT = F(T);
             var answer = true;
 
-            char ToChar(int i) => (char)(i + 'a');
-
             bool G(int i)
             {
                 foreach (var c in "atcoder")
@@ -49,7 +47,6 @@ namespace Tasks
 
                 return false;
             }
-
 
             for (var i = 0; i < 26; i++)
             {

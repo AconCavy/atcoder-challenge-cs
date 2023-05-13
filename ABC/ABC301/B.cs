@@ -21,21 +21,15 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<int>().ToArray();
-            var prev = A[0] - 1;
 
             IEnumerable<int> F()
             {
-                foreach (var a in A)
+                var x = A[0];
+                yield return x;
+                foreach (var a in A.Skip(1))
                 {
-                    while (prev < a)
-                    {
-                        yield return ++prev;
-                    }
-
-                    while (prev > a)
-                    {
-                        yield return --prev;
-                    }
+                    while (x < a) yield return ++x;
+                    while (x > a) yield return --x;
                 }
             }
 
