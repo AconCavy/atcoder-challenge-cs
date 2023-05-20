@@ -20,21 +20,14 @@ namespace Tasks
         public static void Solve()
         {
             var (N, Q) = Scanner.Scan<int, int>();
-            var queries = new int[Q][];
-
-            for (var i = 0; i < Q; i++)
-            {
-                queries[i] = Scanner.ScanEnumerable<int>().ToArray();
-            }
-
-            var removed = new HashSet<int>[N].Select(_ => new HashSet<int>()).ToArray();
             var connected = new HashSet<int>[N].Select(_ => new HashSet<int>()).ToArray();
             var answer = N;
 
             for (var i = 0; i < Q; i++)
             {
-                var queryType = queries[i][0];
-                var queryArgs = queries[i].AsSpan(1);
+                var query = Scanner.ScanEnumerable<int>().ToArray();
+                var queryType = query[0];
+                var queryArgs = query.AsSpan(1);
 
                 void QF1(ReadOnlySpan<int> queryArgs)
                 {

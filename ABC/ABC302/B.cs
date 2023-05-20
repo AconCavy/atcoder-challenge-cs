@@ -28,31 +28,33 @@ namespace Tasks
                 S[i] = Scanner.Scan<string>().ToCharArray();
             }
 
-            bool F(int h, int w, int dh, int dw, int i)
+            for (var ch = 0; ch < H; ch++)
             {
-                if (i >= 5) return true;
-                var result = true;
-                var nh = h + dh * i;
-                var nw = w + dw * i;
-                if (nh < 0 || nh >= H || nw < 0 || nw >= W) return false;
-                result &= S[nh][nw] == Snuke[i];
-                result &= F(h, w, dh, dw, i + 1);
-                return result;
-            }
-
-            for (var i = 0; i < H; i++)
-            {
-                for (var j = 0; j < W; j++)
+                for (var cw = 0; cw < W; cw++)
                 {
                     for (var dh = -1; dh <= 1; dh++)
                     {
                         for (var dw = -1; dw <= 1; dw++)
                         {
-                            if (F(i, j, dh, dw, 0))
+                            var ok = true;
+                            for (var k = 0; k < 5 && ok; k++)
+                            {
+                                var nh = ch + dh * k;
+                                var nw = cw + dw * k;
+                                if (nh < 0 || nh >= H || nw < 0 || nw >= W)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+
+                                ok &= S[nh][nw] == Snuke[k];
+                            }
+
+                            if (ok)
                             {
                                 for (var k = 0; k < 5; k++)
                                 {
-                                    Console.WriteLine($"{i + 1 + dh * k} {j + 1 + dw * k}");
+                                    Console.WriteLine($"{ch + 1 + dh * k} {cw + 1 + dw * k}");
                                 }
 
                                 return;
