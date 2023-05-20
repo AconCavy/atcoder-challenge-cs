@@ -410,6 +410,48 @@
             "}"
         ]
     },
+    "QuerySwitch": {
+        "scope": "csharp",
+        "prefix": [
+            "query",
+            "queryswitch"
+        ],
+        "body": [
+            "for (var i = 0; i < Q; i++)",
+            "{",
+            "    var query = Scanner.ScanEnumerable<int>().ToArray();",
+            "    var queryType = query[0];",
+            "    var queryArgs = query.AsSpan(1);",
+            "",
+            "    void QF1(ReadOnlySpan<int> queryArgs)",
+            "    {",
+            "    }",
+            "",
+            "    void QF2(ReadOnlySpan<int> queryArgs)",
+            "    {",
+            "    }",
+            "",
+            "    void QF3(ReadOnlySpan<int> queryArgs)",
+            "    {",
+            "    }",
+            "",
+            "    switch (queryType)",
+            "    {",
+            "        case 1:",
+            "            QF1(queryArgs);",
+            "            break;",
+            "        case 2:",
+            "            QF2(queryArgs);",
+            "            break;",
+            "        case 3:",
+            "            QF3(queryArgs);",
+            "            break;",
+            "        default:",
+            "            break;",
+            "    }",
+            "}",
+        ]
+    },
     "Bfs": {
         "scope": "csharp",
         "prefix": "bfs",
