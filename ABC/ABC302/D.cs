@@ -32,6 +32,7 @@ namespace Tasks
                 var a = A[i];
                 var j = Math.Max(0, UpperBound(B, a + D) - 1);
                 var b = B[j];
+                if (Math.Abs(a - b) <= D)
                 {
                     answer = Math.Max(answer, a + b);
                 }

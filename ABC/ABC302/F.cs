@@ -21,55 +21,37 @@ namespace Tasks
         {
             var (N, M) = Scanner.Scan<int, int>();
             var S = new HashSet<int>[N];
-            var Has = new HashSet<int>[M + 1].Select(_ => new HashSet<int>()).ToArray();
+            var G = new List<int>[N + M + 1].Select(x => new List<int>()).ToArray();
             for (var i = 0; i < N; i++)
             {
                 _ = Scanner.Scan<int>();
                 S[i] = Scanner.ScanEnumerable<int>().ToHashSet();
                 foreach (var s in S[i])
                 {
-                    Has[s].Add(i);
+                    G[i + 1].Add(N + s);
+                    G[N + s].Add(i + 1);
                 }
             }
 
             var queue = new Queue<int>();
-            var costs = new int[M + 1];
+            var costs = new int[N + M + 1];
             Array.Fill(costs, -1);
-            var used = new bool[N];
-
-            foreach (var u in Has[1])
-            {
-                queue.Enqueue(u);
-                used[u] = true;
-
-                foreach (var s in S[u])
-                {
-                    costs[s] = 0;
-                }
-            }
+            costs[N + 1] = 0;
+            queue.Enqueue(N + 1);
 
             while (queue.Count > 0)
             {
                 var u = queue.Dequeue();
-
-                foreach (var s1 in S[u])
+                foreach (var v in G[u])
                 {
-                    foreach (var v in Has[s1])
-                    {
-                        if (used[v]) continue;
-                        foreach (var s2 in S[v])
-                        {
-                            if (costs[s2] != -1) continue;
-                            costs[s2] = costs[s1] + 1;
-                        }
-
-                        queue.Enqueue(v);
-                        used[v] = true;
-                    }
+                    if (costs[v] != -1) continue;
+                    costs[v] = costs[u] + 1;
+                    queue.Enqueue(v);
                 }
             }
 
-            var answer = costs[M];
+            var answer = costs[N + M];
+            if (answer != -1) answer = (answer - 1) / 2;
             Console.WriteLine(answer);
         }
 
