@@ -21,12 +21,13 @@ namespace Tasks
         {
             var (W, H) = Scanner.Scan<int, int>();
             var N = Scanner.Scan<int>();
-            var Berries = new Berry[N];
+            var Berries = new (int X, int Y)[N];
             for (var i = 0; i < N; i++)
             {
                 var (x, y) = Scanner.Scan<int, int>();
-                Berries[i] = new Berry(x, y);
+                Berries[i] = (x, y);
             }
+
             var AN = Scanner.Scan<int>();
             var A = Scanner.ScanEnumerable<int>().ToList();
             var BN = Scanner.Scan<int>();
@@ -35,10 +36,10 @@ namespace Tasks
             B.Insert(0, 0);
 
             var dict = new Dictionary<(int, int), int>();
-            for (var idx = 0; idx < N; idx++)
+            foreach (var (x, y) in Berries)
             {
-                var i = LowerBound(A, Berries[idx].X);
-                var j = LowerBound(B, Berries[idx].Y);
+                var i = LowerBound(A, x);
+                var j = LowerBound(B, y);
                 if (!dict.ContainsKey((i, j))) dict[(i, j)] = 0;
                 dict[(i, j)]++;
             }
@@ -66,13 +67,6 @@ namespace Tasks
             }
 
             Console.WriteLine($"{min} {max}");
-        }
-
-        public readonly struct Berry
-        {
-            public readonly int X;
-            public readonly int Y;
-            public Berry(int x, int y) => (X, Y) = (x, y);
         }
 
         public static int LowerBound<T>(List<T> source, T key) where T : IComparable<T>
