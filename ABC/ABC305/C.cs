@@ -26,52 +26,20 @@ namespace Tasks
                 G[i] = Scanner.Scan<string>().ToCharArray();
             }
 
-            var (a, b, c, d) = (0, 0, 0, 0);
+            const int Inf = (int)1e9;
+            var (a, b, c, d) = (Inf, 0, Inf, 0);
             for (var i = 0; i < H; i++)
             {
-                if (G[i].Contains('#'))
-                {
-                    a = i;
-                    break;
-                }
-            }
-            for (var i = H - 1; i >= 0; i--)
-            {
-                if (G[i].Contains('#'))
-                {
-                    b = i;
-                    break;
-                }
-            }
-
-            for (var j = 0; j < W; j++)
-            {
-                var exist = false;
-                for (var i = 0; i < H && !exist; i++)
+                for (var j = 0; j < W; j++)
                 {
                     if (G[i][j] == '#')
                     {
-                        exist = true;
-                        c = j;
+                        a = Math.Min(a, i);
+                        b = Math.Max(b, i);
+                        c = Math.Min(c, j);
+                        d = Math.Max(d, j);
                     }
                 }
-
-                if (exist) break;
-            }
-
-            for (var j = W - 1; j >= 0; j--)
-            {
-                var exist = false;
-                for (var i = 0; i < H && !exist; i++)
-                {
-                    if (G[i][j] == '#')
-                    {
-                        exist = true;
-                        d = j;
-                    }
-                }
-
-                if (exist) break;
             }
 
             for (var i = a; i <= b; i++)
