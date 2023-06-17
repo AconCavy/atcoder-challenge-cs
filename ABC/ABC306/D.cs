@@ -32,12 +32,12 @@ namespace Tasks
 
                 if (x == 0)
                 {
-                    if (dp[i, 0] != -1) dp[i + 1, 0] = Math.Max(dp[i + 1, 0], dp[i, 0] + y);
-                    if (dp[i, 0] != -1) dp[i + 1, 0] = Math.Max(dp[i + 1, 0], dp[i, 1] + y);
+                    dp[i + 1, 0] = Math.Max(dp[i + 1, 0], dp[i, 0] + y);
+                    dp[i + 1, 0] = Math.Max(dp[i + 1, 0], dp[i, 1] + y);
                 }
                 else
                 {
-                    if (dp[i, 0] != -1) dp[i + 1, 1] = Math.Max(dp[i + 1, 1], dp[i, 0] + y);
+                    dp[i + 1, 1] = Math.Max(dp[i + 1, 1], dp[i, 0] + y);
                 }
             }
 
