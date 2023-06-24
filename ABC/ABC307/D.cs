@@ -23,53 +23,24 @@ namespace Tasks
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>();
             var level = 0;
-            var levels = new int[N];
-            var dict = new Dictionary<int, Queue<int>>();
-            for (var i = 0; i < N; i++)
+            var T = new char[N];
+            var idx = 0;
+            foreach (var c in S)
             {
-                var c = S[i];
-                if (c == '(')
+                if (c == ')' && level > 0)
                 {
-                    level++;
-                    if (!dict.ContainsKey(level)) dict[level] = new Queue<int>();
-                    dict[level].Enqueue(i);
-                    levels[i] = level;
-                }
-                if (c == ')')
-                {
-                    if (!dict.ContainsKey(level)) dict[level] = new Queue<int>();
-                    dict[level].Enqueue(i);
-                    levels[i] = level;
+                    while (idx >= 0 && T[idx - 1] != '(') idx--;
+                    idx--;
                     level--;
-                    level = Math.Max(level, 0);
-                }
-            }
-
-            var builder = new StringBuilder();
-            var l = 0;
-            while (l < N)
-            {
-                if (levels[l] == 0)
-                {
-                    builder.Append(S[l]);
                 }
                 else
                 {
-                    var queue = dict[levels[l]];
-                    while (queue.Count > 0 && l >= queue.Peek()) queue.Dequeue();
-                    if (queue.Count > 0)
-                    {
-                        l = queue.Dequeue();
-                    }
-                    else
-                    {
-                        builder.Append(S[l]);
-                    }
+                    T[idx++] = c;
+                    if (c == '(') level++;
                 }
-                l++;
             }
 
-            var answer = builder.ToString();
+            var answer = new string(T[..idx]);
             Console.WriteLine(answer);
         }
 
