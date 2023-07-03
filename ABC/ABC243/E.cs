@@ -9,9 +9,9 @@ namespace Tasks
 {
     public class E
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            using var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
             Solve();
             Console.Out.Flush();
@@ -20,23 +20,23 @@ namespace Tasks
         public static void Solve()
         {
             var (N, M) = Scanner.Scan<int, int>();
-            const long inf = (long)1e18;
+            var E = new (int A, int B, long C)[M];
             var G = new long[N, N];
+            const long Inf = (long)1e18;
             for (var i = 0; i < N; i++)
             {
                 for (var j = 0; j < N; j++)
                 {
-                    G[i, j] = inf;
+                    G[i, j] = Inf;
                 }
             }
 
-            var E = new (int U, int V, long C)[M];
             for (var i = 0; i < M; i++)
             {
                 var (a, b, c) = Scanner.Scan<int, int, long>();
                 a--; b--;
-                G[a, b] = G[b, a] = c;
                 E[i] = (a, b, c);
+                G[a, b] = G[b, a] = c;
             }
 
             for (var k = 0; k < N; k++)
@@ -51,13 +51,13 @@ namespace Tasks
             }
 
             var answer = 0;
-            foreach (var (i, j, c) in E)
+            foreach (var (a, b, c) in E)
             {
                 var unused = false;
                 for (var k = 0; k < N; k++)
                 {
-                    if (i == k || j == k) continue;
-                    unused |= G[i, k] + G[k, j] <= c;
+                    if (k == a || k == b) continue;
+                    unused |= G[a, k] + G[k, b] <= c;
                 }
 
                 if (unused) answer++;
@@ -68,35 +68,38 @@ namespace Tasks
 
         public static class Scanner
         {
-            public static string ScanLine() => Console.ReadLine()?.Trim() ?? string.Empty;
-            public static string[] Scan() => ScanLine().Split(' ');
-            public static T Scan<T>() where T : IConvertible => Convert<T>(Scan()[0]);
+            public static T Scan<T>() where T : IConvertible => Convert<T>(ScanStringArray()[0]);
             public static (T1, T2) Scan<T1, T2>() where T1 : IConvertible where T2 : IConvertible
             {
-                var line = Scan();
-                return (Convert<T1>(line[0]), Convert<T2>(line[1]));
+                var input = ScanStringArray();
+                return (Convert<T1>(input[0]), Convert<T2>(input[1]));
             }
             public static (T1, T2, T3) Scan<T1, T2, T3>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible
             {
-                var line = Scan();
-                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]));
+                var input = ScanStringArray();
+                return (Convert<T1>(input[0]), Convert<T2>(input[1]), Convert<T3>(input[2]));
             }
             public static (T1, T2, T3, T4) Scan<T1, T2, T3, T4>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible
             {
-                var line = Scan();
-                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]));
+                var input = ScanStringArray();
+                return (Convert<T1>(input[0]), Convert<T2>(input[1]), Convert<T3>(input[2]), Convert<T4>(input[3]));
             }
             public static (T1, T2, T3, T4, T5) Scan<T1, T2, T3, T4, T5>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible
             {
-                var line = Scan();
-                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]));
+                var input = ScanStringArray();
+                return (Convert<T1>(input[0]), Convert<T2>(input[1]), Convert<T3>(input[2]), Convert<T4>(input[3]), Convert<T5>(input[4]));
             }
             public static (T1, T2, T3, T4, T5, T6) Scan<T1, T2, T3, T4, T5, T6>() where T1 : IConvertible where T2 : IConvertible where T3 : IConvertible where T4 : IConvertible where T5 : IConvertible where T6 : IConvertible
             {
-                var line = Scan();
-                return (Convert<T1>(line[0]), Convert<T2>(line[1]), Convert<T3>(line[2]), Convert<T4>(line[3]), Convert<T5>(line[4]), Convert<T6>(line[5]));
+                var input = ScanStringArray();
+                return (Convert<T1>(input[0]), Convert<T2>(input[1]), Convert<T3>(input[2]), Convert<T4>(input[3]), Convert<T5>(input[4]), Convert<T6>(input[5]));
             }
-            public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => Scan().Select(Convert<T>);
+            public static IEnumerable<T> ScanEnumerable<T>() where T : IConvertible => ScanStringArray().Select(Convert<T>);
+            private static string[] ScanStringArray()
+            {
+                var line = Console.ReadLine()?.Trim() ?? string.Empty;
+                return string.IsNullOrEmpty(line) ? Array.Empty<string>() : line.Split(' ');
+            }
             private static T Convert<T>(string value) where T : IConvertible => (T)System.Convert.ChangeType(value, typeof(T));
         }
     }
