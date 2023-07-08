@@ -22,18 +22,18 @@ namespace Tasks
             var (N, K) = Scanner.Scan<int, long>();
             var dict = new Dictionary<long, long>();
             dict[1] = 0;
+            long cum = 0;
             for (var i = 0; i < N; i++)
             {
                 var (a, b) = Scanner.Scan<long, long>();
-                dict[1] += b;
+                cum += b;
                 if (!dict.ContainsKey(a + 1)) dict[a + 1] = 0;
-                dict[a + 1] -= b;
+                dict[a + 1] += b;
             }
 
-            long cum = 0;
             foreach (var (a, b) in dict.OrderBy(x => x.Key))
             {
-                cum += b;
+                cum -= b;
                 if (cum <= K)
                 {
                     Console.WriteLine(a);
@@ -41,7 +41,6 @@ namespace Tasks
                 }
             }
         }
-
         public static class Scanner
         {
             public static T Scan<T>() where T : IConvertible => Convert<T>(ScanStringArray()[0]);
