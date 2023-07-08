@@ -40,28 +40,28 @@ namespace Tasks
                 }
             }
 
-            var costs = new int[2][];
-            foreach (var (k, G, N) in new[] { (0, G1, N1), (1, G2, N2) })
+            int MaxDist(List<int>[] G, int N, int s)
             {
-                costs[k] = new int[N];
-                Array.Fill(costs[k], -1);
+                var dist = new int[N];
+                Array.Fill(dist, -1);
                 var queue = new Queue<int>();
-                var s = k == 0 ? 0 : N - 1;
                 queue.Enqueue(s);
-                costs[k][s] = 0;
+                dist[s] = 0;
                 while (queue.Count > 0)
                 {
                     var u = queue.Dequeue();
                     foreach (var v in G[u])
                     {
-                        if (costs[k][v] != -1) continue;
-                        costs[k][v] = costs[k][u] + 1;
+                        if (dist[v] != -1) continue;
+                        dist[v] = dist[u] + 1;
                         queue.Enqueue(v);
                     }
                 }
+
+                return dist.Max();
             }
 
-            var answer = costs[0].Max() + costs[1].Max() + 1;
+            var answer = MaxDist(G1, N1, 0) + MaxDist(G2, N2, N2 - 1) + 1;
             Console.WriteLine(answer);
         }
 
