@@ -20,20 +20,12 @@ namespace Tasks
         public static void Solve()
         {
             var N = Scanner.Scan<int>();
-            var A = Scanner.Scan<string>();
-            var answer = 0;
-            var (c0, c1) = (0, 0);
-            foreach (var a in A)
+            var S = Scanner.Scan<string>();
+            long answer = 0;
+            var (c0, c1) = (0L, 0L);
+            foreach (var c in S)
             {
-                if (a == '0')
-                {
-                    (c0, c1) = (1, c0 + c1);
-                }
-                else
-                {
-                    (c0, c1) = (c1, c0 + 1);
-                }
-
+                (c0, c1) = c == '0' ? (1, c0 + c1) : (c1, c0 + 1);
                 answer += c1;
             }
 
