@@ -21,12 +21,26 @@ namespace Tasks
         {
             var N = Scanner.Scan<int>();
             var S = Scanner.Scan<string>();
-            long answer = 0;
-            var (c0, c1) = (0L, 0L);
-            foreach (var c in S)
+            var dp = new long[N + 1, 2];
+            for (var i = 0; i < N; i++)
             {
-                (c0, c1) = c == '0' ? (1, c0 + c1) : (c1, c0 + 1);
-                answer += c1;
+                var v = S[i] - '0';
+                dp[i + 1, v]++;
+                if (v == 0)
+                {
+                    dp[i + 1, 1] += dp[i, 0] + dp[i, 1];
+                }
+                else
+                {
+                    dp[i + 1, 0] += dp[i, 1];
+                    dp[i + 1, 1] += dp[i, 0];
+                }
+            }
+
+            long answer = 0;
+            for (var i = 1; i <= N; i++)
+            {
+                answer += dp[i, 1];
             }
 
             Console.WriteLine(answer);
