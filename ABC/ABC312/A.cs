@@ -19,9 +19,9 @@ namespace Tasks
 
         public static void Solve()
         {
-            var Set = new HashSet<string> { "ACE", "BDF", "CEG", "DFA", "EGB", "FAC", "GBD" };
+            var OK = new string[] { "ACE", "BDF", "CEG", "DFA", "EGB", "FAC", "GBD" };
             var S = Scanner.Scan<string>();
-            var answer = Set.Contains(S);
+            var answer = OK.Contains(S);
             Console.WriteLine(answer ? "Yes" : "No");
         }
 

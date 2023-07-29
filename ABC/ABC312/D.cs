@@ -28,27 +28,16 @@ namespace Tasks
             for (var i = 0; i < N; i++)
             {
                 var c = S[i];
-                if (c == '(')
+                if (c == '(' || c == '?')
                 {
                     for (var j = 0; j < N; j++)
                     {
                         dp[i + 1, j + 1] += dp[i, j];
                     }
                 }
-                else if (c == ')')
-                {
-                    for (var j = 1; j <= N; j++)
-                    {
-                        dp[i + 1, j - 1] += dp[i, j];
-                    }
-                }
-                else
-                {
-                    for (var j = 0; j < N; j++)
-                    {
-                        dp[i + 1, j + 1] += dp[i, j];
-                    }
 
+                if (c == ')' || c == '?')
+                {
                     for (var j = 1; j <= N; j++)
                     {
                         dp[i + 1, j - 1] += dp[i, j];

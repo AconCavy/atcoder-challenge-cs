@@ -19,6 +19,49 @@ namespace Tasks
 
         public static void Solve()
         {
+            var N = Scanner.Scan<int>();
+            var G = new int[105, 105, 105];
+            var P = new (int X1, int Y1, int Z1, int X2, int Y2, int Z2)[N];
+            for (var i = 0; i < N; i++)
+            {
+                var (x1, y1, z1, x2, y2, z2) = Scanner.Scan<int, int, int, int, int, int>();
+                x1++; y1++; z1++;
+                P[i] = (x1, y1, z1, x2, y2, z2);
+
+                for (var x = x1; x <= x2; x++)
+                {
+                    for (var y = y1; y <= y2; y++)
+                    {
+                        for (var z = z1; z <= z2; z++)
+                        {
+                            G[x, y, z] = i + 1;
+                        }
+                    }
+                }
+            }
+
+            foreach (var (x1, y1, z1, x2, y2, z2) in P)
+            {
+                var set = new HashSet<int>();
+                for (var x = x1; x <= x2; x++)
+                {
+                    for (var y = y1; y <= y2; y++)
+                    {
+                        for (var z = z1; z <= z2; z++)
+                        {
+                            set.Add(G[x1 - 1, y, z]);
+                            set.Add(G[x2 + 1, y, z]);
+                            set.Add(G[x, y1 - 1, z]);
+                            set.Add(G[x, y2 + 1, z]);
+                            set.Add(G[x, y, z1 - 1]);
+                            set.Add(G[x, y, z2 + 1]);
+                        }
+                    }
+                }
+
+                set.Remove(0);
+                Console.WriteLine(set.Count);
+            }
         }
 
         public static class Scanner
