@@ -36,8 +36,7 @@ namespace Tasks
                 answer += Math.Abs(A[N - 1 - i] - (ave + 1));
             }
 
-            answer = (answer + 1) / 2;
-
+            answer /= 2;
             Console.WriteLine(answer);
         }
 
