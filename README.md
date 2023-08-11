@@ -4,7 +4,7 @@ The repository is C# solutions submitted for AtCoder.
 
 ## Environment
 
-.NET Core 3.1
+.NET 7
 
 ## Install Templates
 
