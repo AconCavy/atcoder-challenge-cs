@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TEMPLATE_VERSION="3.0.1"
+TEMPLATE_VERSION="3.0.2"
 PACKAGE="AconCavy.CompetitiveProgramming.Templates.$TEMPLATE_VERSION.nupkg"
 URI="https://github.com/AconCavy/cp-template-csharp/releases/download/v$TEMPLATE_VERSION/$PACKAGE"
 OUTPUT_DIR="tmp"
