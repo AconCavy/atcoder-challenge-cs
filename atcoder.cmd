@@ -2,6 +2,7 @@
 
 set PROJECT=%~1
 set TASK=%~2
+set TARGET_FRAMEWORK=net7
 
 set IS_HELP=false
 if "%PROJECT%"=="" set IS_HELP=true
@@ -71,7 +72,7 @@ exit /b
   )
 
   echo Create %PROJECT% to %PROJECT_PATH%.
-  call dotnet new cpproj -n %PROJECT% -f netcoreapp3.1 -o %PROJECT_PATH%
+  call dotnet new cpproj -n %PROJECT% -f %TARGET_FRAMEWORK% -o %PROJECT_PATH%
   call code -n . .vscode\settings.json %PROJECT_PATH%\%PROJECT%.csproj %PROJECT_PATH%\Tests.cs
 
   setlocal enabledelayedexpansion

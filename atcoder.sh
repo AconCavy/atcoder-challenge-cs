@@ -23,6 +23,7 @@ function task {
 function project {
   PROJECT_PATH=$1
   PROJECT=$2
+  TARGET_FRAMEWORK=net7
 
   if [ -e $PROJECT_PATH ]; then
     echo "$PROJECT_PATH is already exist. Skip creating the project."
@@ -30,7 +31,7 @@ function project {
   fi
 
   echo "Create $PROJECT to $PROJECT_PATH".
-  dotnet new cpproj -n $PROJECT -f netcoreapp3.1 -o $PROJECT_PATH
+  dotnet new cpproj -n $PROJECT -f $TARGET_FRAMEWORK -o $PROJECT_PATH
 
   for p in A B C D E F; do
     task $PROJECT_PATH $p
