@@ -21,12 +21,12 @@ public class B
     {
         const int M = 37;
         var N = Scanner.Scan<int>();
-        var C = new List<int>[M + 1, M + 1];
+        var S = new List<int>[M + 1, M + 1];
         for (var i = 0; i <= M; i++)
         {
             for (var j = 0; j <= M; j++)
             {
-                C[i, j] = new List<int>();
+                S[i, j] = new List<int>();
             }
         }
 
@@ -36,22 +36,16 @@ public class B
             var A = Scanner.ScanEnumerable<int>().ToArray();
             foreach (var a in A)
             {
-                C[a, c].Add(i);
+                S[a, c].Add(i);
             }
         }
 
         var X = Scanner.Scan<int>();
         for (var i = 0; i <= M; i++)
         {
-            if (C[X, i].Count == 0) continue;
-            Console.WriteLine(C[X, i].Count);
-            for (var j = 0; j < C[X, i].Count; j++)
-            {
-                Console.Write(C[X, i][j]);
-                if (j == C[X, i].Count - 1) Console.WriteLine();
-                else Console.Write(" ");
-            }
-
+            if (S[X, i].Count == 0) continue;
+            Console.WriteLine(S[X, i].Count);
+            Console.WriteLine(string.Join(" ", S[X, i]));
             return;
         }
 

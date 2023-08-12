@@ -33,15 +33,11 @@ public class C
         {
             if (ID[i].Count <= 1) continue;
             var idx = ID[i];
-            var prev = T[idx[0]];
-            for (var j = 1; j < idx.Count; j++)
+            var prev = T[idx[^1]];
+            for (var j = 0; j < idx.Count; j++)
             {
-                var tmp = T[idx[j]];
-                T[idx[j]] = prev;
-                prev = tmp;
+                (T[idx[j]], prev) = (prev, T[idx[j]]);
             }
-
-            T[idx[0]] = prev;
         }
 
         var answer = new string(T);
