@@ -40,10 +40,10 @@ public class E
             foreach (var v in G[u])
             {
                 if (used[v]) continue;
-                used[v] = true;
                 Dfs(v);
             }
 
+            used[u] = true;
             answer.Add(u);
         }
 

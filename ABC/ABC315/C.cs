@@ -20,38 +20,31 @@ public class C
     public static void Solve()
     {
         var N = Scanner.Scan<int>();
-        var iceCreams = new (int N, long S)[N];
         var S = new Dictionary<long, Dictionary<int, int>>();
-        var queue = new PriorityQueue<(int F, long S), long>();
+        var ices = new (int F, long S)[N];
         for (var i = 0; i < N; i++)
         {
             var (f, s) = Scanner.Scan<int, long>();
-            iceCreams[i] = (f, s);
-            queue.Enqueue((f, s), -s);
+            ices[i] = (f, s);
+        }
+
+        Array.Sort(ices, (x, y) => y.S.CompareTo(x.S));
+
+        long answer = 0;
+        for (var i = 1; i < N; i++)
+        {
+            if (ices[i].F != ices[0].F)
+            {
+                answer = ices[0].S + ices[i].S;
+                break;
+            }
         }
 
         var count = new int[N + 1];
         var same = new long[N + 1];
-        long d = 0;
-        long df = -1;
-        var flag = false;
-        while (queue.TryDequeue(out var top, out _))
+        for (var i = 0; i < N; i++)
         {
-            var (f, s) = top;
-            if (!flag)
-            {
-                if (df == -1)
-                {
-                    d = s;
-                    df = f;
-                }
-                else if (df != f)
-                {
-                    d += s;
-                    flag = true;
-                }
-            }
-
+            var (f, s) = ices[i];
             if (count[f] == 0)
             {
                 count[f]++;
@@ -64,8 +57,7 @@ public class C
             }
         }
 
-        var answer = d;
-        for (var i = 0; i <= N; i++)
+        for (var i = 1; i <= N; i++)
         {
             answer = Math.Max(answer, same[i]);
         }
