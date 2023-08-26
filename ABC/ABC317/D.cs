@@ -21,36 +21,35 @@ public class D
     {
         var N = Scanner.Scan<int>();
         var V = new (long X, long Y, long Z)[N];
-        var G = new List<(long X, long Z)>();
         long zs = 0;
-        long got = 0;
         for (var i = 0; i < N; i++)
         {
             var (x, y, z) = Scanner.Scan<long, long, long>();
             V[i] = (x, y, z);
             zs += z;
+        }
+
+        const long Inf = (long)1e18;
+        var dp = new long[zs + 1];
+        Array.Fill(dp, Inf);
+        dp[0] = 0;
+        for (var i = 0; i < N; i++)
+        {
+            var (x, y, z) = V[i];
             var v = (Math.Max(0, y - x) + 1) / 2;
-            if (v > 0) G.Add((v, z));
-            else got += z;
+            for (var s = zs; s >= z; s--)
+            {
+                dp[s] = Math.Min(dp[s], dp[s - z] + v);
+            }
         }
 
         var req = (zs + 1) / 2;
-        var dp = new Dictionary<long, long>();
-        dp[got] = 0;
-
-        const long Inf = (long)1e18;
-        foreach (var (x, z) in G)
+        var answer = Inf;
+        for (var s = req; s <= zs; s++)
         {
-            var ndp = new Dictionary<long, long>(dp);
-            foreach (var (s, v) in dp)
-            {
-                if (!ndp.ContainsKey(s + z)) ndp[s + z] = Inf;
-                ndp[s + z] = Math.Min(ndp[s + z], v + x);
-            }
-            dp = ndp;
+            answer = Math.Min(answer, dp[s]);
         }
 
-        var answer = dp.Where(x => x.Key >= req).Min(x => x.Value);
         Console.WriteLine(answer);
     }
 

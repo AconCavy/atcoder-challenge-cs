@@ -25,25 +25,25 @@ public class F
     {
         var (N, A, B, C) = Scanner.Scan<long, int, int, int>();
 
-        void F(int x) => Console.WriteLine(Convert.ToString(x, 2).PadLeft(8));
+        // void F(int x) => Console.WriteLine(Convert.ToString(x, 2).PadLeft(8));
 
-        for (var a = A; a <= N; a += A)
-        {
-            for (var b = B; b <= N; b += B)
-            {
-                for (var c = C; c <= N; c += c)
-                {
-                    if ((a ^ b ^ c) == 0)
-                    {
-                        Console.WriteLine($"{a} {b}");
-                        F(a);
-                        F(b);
-                        // F(c);
-                        Console.WriteLine();
-                    }
-                }
-            }
-        }
+        // for (var a = A; a <= N; a += A)
+        // {
+        //     for (var b = B; b <= N; b += B)
+        //     {
+        //         for (var c = C; c <= N; c += c)
+        //         {
+        //             if ((a ^ b ^ c) == 0)
+        //             {
+        //                 Console.WriteLine($"{a} {b}");
+        //                 F(a);
+        //                 F(b);
+        //                 // F(c);
+        //                 Console.WriteLine();
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     public readonly struct ModuloInteger : IEquatable<ModuloInteger>,

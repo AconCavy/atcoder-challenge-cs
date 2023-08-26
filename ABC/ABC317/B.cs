@@ -22,16 +22,13 @@ public class B
         var N = Scanner.Scan<int>();
         var A = Scanner.ScanEnumerable<int>().ToArray();
         Array.Sort(A);
-        var v = A[0];
         for (var i = 1; i < N; i++)
         {
-            if (v + 1 != A[i])
+            if (A[i - 1] + 1 != A[i])
             {
-                Console.WriteLine(v + 1);
+                Console.WriteLine(A[i - 1] + 1);
                 return;
             }
-
-            v = A[i];
         }
     }
 
