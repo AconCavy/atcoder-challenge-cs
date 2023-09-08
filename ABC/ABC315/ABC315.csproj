@@ -12,7 +12,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
 
     <!-- update here -->
-    <StartupObject>Tasks.F</StartupObject>
+    <StartupObject>Tasks.D</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

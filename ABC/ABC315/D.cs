@@ -26,88 +26,80 @@ public class D
             S[i] = Scanner.Scan<string>().ToCharArray();
         }
 
-        var chars = new List<int>();
-        var used = new HashSet<int>();
-        var answer = 0;
+        var cntH = new int[H][].Select(_ => new int[26]).ToArray();
+        var cntW = new int[W][].Select(_ => new int[26]).ToArray();
         for (var i = 0; i < H; i++)
         {
             for (var j = 0; j < W; j++)
             {
-                if (char.IsLetter(S[i][j]) && char.IsLower(S[i][j]))
-                {
-                    answer++;
-                    if (!used.Contains(S[i][j]))
-                    {
-                        used.Add(S[i][j]);
-                        chars.Add(S[i][j]);
-                    }
-                }
+                var c = S[i][j] - 'a';
+                cntH[i][c]++;
+                cntW[j][c]++;
             }
         }
 
-        foreach (var c in chars)
+        (bool, int) F(int[] cnt)
         {
-            var TH = new bool[H, W];
-            var TW = new bool[H, W];
+            var chr = -1;
+            for (var i = 0; i < 26; i++)
+            {
+                if (chr == -1)
+                {
+                    if (cnt[i] > 0) chr = i;
+                }
+                else
+                {
+                    if (cnt[i] > 0) return (false, -1);
+                }
+            }
+
+            return (chr != -1 && cnt[chr] >= 2, chr);
+        }
+
+        var remH = H;
+        var remW = W;
+        for (var k = 0; k < H + W; k++)
+        {
+            var rmvH = new int[26];
+            var rmvW = new int[26];
 
             for (var i = 0; i < H; i++)
             {
-                var ok = true;
-                var count = 0;
-                for (var j = 0; j < W && ok; j++)
+                var (res, chr) = F(cntH[i]);
+                if (res)
                 {
-                    ok &= S[i][j] == c || S[i][j] == '.';
-                    if (S[i][j] == c) count++;
-                }
-
-                ok &= count >= 2;
-                if (!ok) continue;
-                for (var j = 0; j < W; j++)
-                {
-                    if (S[i][j] == c)
-                    {
-                        TH[i, j] = true;
-                    }
+                    cntH[i][chr] = 0;
+                    rmvH[chr]++;
+                    remH--;
                 }
             }
 
             for (var j = 0; j < W; j++)
             {
-                var ok = true;
-                var count = 0;
-                for (var i = 0; i < H && ok; i++)
+                var (res, chr) = F(cntW[j]);
+                if (res)
                 {
-                    ok &= S[i][j] == c || S[i][j] == '.';
-                    if (S[i][j] == c) count++;
+                    cntW[j][chr] = 0;
+                    rmvW[chr]++;
+                    remW--;
                 }
+            }
 
-                ok &= count >= 2;
-                if (!ok) continue;
+            for (var chr = 0; chr < 26; chr++)
+            {
                 for (var i = 0; i < H; i++)
                 {
-                    if (S[i][j] == c)
-                    {
-                        TW[i, j] = true;
-                    }
+                    cntH[i][chr] -= rmvW[chr];
                 }
-            }
 
-            for (var i = 0; i < H; i++)
-            {
                 for (var j = 0; j < W; j++)
                 {
-                    if (TH[i, j] || TW[i, j])
-                    {
-                        S[i][j] = '.';
-                        answer--;
-                    }
+                    cntW[j][chr] -= rmvH[chr];
                 }
             }
-            // Printer.Print2D(S);
-            // Console.WriteLine();
         }
 
-
+        var answer = remH * remW;
         Console.WriteLine(answer);
     }
 
