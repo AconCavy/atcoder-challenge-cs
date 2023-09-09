@@ -29,16 +29,16 @@ public class C
 
         var all = 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1;
         var p = all;
-        var tate = new List<int>[3].Select(_ => new List<int>(3)).ToArray();
         var yoko = new List<int>[3].Select(_ => new List<int>(3)).ToArray();
+        var tate = new List<int>[3].Select(_ => new List<int>(3)).ToArray();
         var naname1 = new List<int>();
         var naname2 = new List<int>();
         foreach (var items in Enumerable.Range(0, 9).Permute())
         {
             for (var i = 0; i < 3; i++)
             {
-                tate[i].Clear();
                 yoko[i].Clear();
+                tate[i].Clear();
                 naname1.Clear();
                 naname2.Clear();
             }
@@ -48,13 +48,13 @@ public class C
             {
                 var (h, w) = F(items[i]);
                 var v = C[h][w];
-                tate[h].Add(v);
-                yoko[w].Add(v);
+                yoko[h].Add(v);
+                tate[w].Add(v);
                 if (h - w == 0) naname1.Add(v);
                 if (h + w == 2) naname2.Add(v);
 
-                ng |= tate[h].Count == 3 && tate[h][0] == tate[h][1] && tate[h][0] != tate[h][2];
-                ng |= yoko[w].Count == 3 && yoko[w][0] == yoko[w][1] && yoko[w][0] != yoko[w][2];
+                ng |= yoko[h].Count == 3 && yoko[h][0] == yoko[h][1] && yoko[h][0] != yoko[h][2];
+                ng |= tate[w].Count == 3 && tate[w][0] == tate[w][1] && tate[w][0] != tate[w][2];
                 ng |= naname1.Count == 3 && naname1[0] == naname1[1] && naname1[0] != naname1[2];
                 ng |= naname2.Count == 3 && naname2[0] == naname2[1] && naname2[0] != naname2[2];
             }

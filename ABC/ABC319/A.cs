@@ -30,7 +30,7 @@ mnbvmar 3555
 newbiedmy 3516
 semiexp 3481";
         var dict = new Dictionary<string, string>();
-        foreach (var line in T.Replace("\n", Environment.NewLine).Split(Environment.NewLine))
+        foreach (var line in T.Replace("\r", string.Empty).Split('\n'))
         {
             var array = line.Split(' ');
             var name = array[0];

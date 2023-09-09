@@ -21,24 +21,21 @@ public class B
     public static void Solve()
     {
         var N = Scanner.Scan<int>();
-        var builder = new StringBuilder();
+        var S = new char[N + 1];
+        Array.Fill(S, '-');
         for (var i = 0; i <= N; i++)
         {
-            var ok = false;
             for (var j = 1; j <= 9; j++)
             {
                 if (N % j == 0 && i % (N / j) == 0)
                 {
-                    builder.Append((char)(j + '0'));
-                    ok = true;
+                    S[i] = (char)(j + '0');
                     break;
                 }
             }
-
-            if (!ok) builder.Append('-');
         }
 
-        var answer = builder.ToString();
+        var answer = new string(S);
         Console.WriteLine(answer);
     }
 

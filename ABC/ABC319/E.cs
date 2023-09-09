@@ -31,23 +31,23 @@ public class E
             lcm = Lcm(lcm, p);
         }
 
-        var sum = new long[lcm];
+        var cum = new long[lcm];
         for (var l = 0; l < lcm; l++)
         {
-            var cum = l + X;
+            cum[l] = l + X;
             for (var i = 0; i + 1 < N; i++)
             {
-                cum = (cum + P[i] - 1) / P[i] * P[i] + T[i];
+                cum[l] = (cum[l] + P[i] - 1) / P[i] * P[i] + T[i];
             }
 
-            sum[l] = cum + Y;
+            cum[l] += Y;
         }
 
         var Q = Scanner.Scan<int>();
         while (Q-- > 0)
         {
             var q = Scanner.Scan<int>();
-            var answer = q / lcm * lcm + sum[q % lcm];
+            var answer = q / lcm * lcm + cum[q % lcm];
             Console.WriteLine(answer);
         }
     }
