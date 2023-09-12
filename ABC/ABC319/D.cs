@@ -55,12 +55,15 @@ public class D
         Console.WriteLine(answer);
     }
 
-    public static long BinarySearch(long ng, long ok, Func<long, bool> func)
+    public static T BinarySearch<T>(T ng, T ok, Func<T, bool> f) where T : INumber<T> => BinarySearch(ng, ok, f, T.One);
+    public static T BinarySearch<T>(T ng, T ok, Func<T, bool> f, T eps) where T : INumber<T>
     {
-        while (Math.Abs(ok - ng) > 1)
+        var one = T.One;
+        var two = one + one;
+        while (T.Abs(ok - ng) > eps)
         {
-            var m = (ok + ng) / 2;
-            if (func(m)) ok = m;
+            var m = ng + (ok - ng) / two;
+            if (f(m)) ok = m;
             else ng = m;
         }
         return ok;
