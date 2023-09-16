@@ -137,12 +137,12 @@
     "Inf": {
         "scope": "csharp",
         "prefix": "inf",
-        "body": "const int Inf = (int)1e9;"
+        "body": "const int Inf = 1 << 30;"
     },
     "LongInf": {
         "scope": "csharp",
         "prefix": "linf",
-        "body": "const long Inf = (long)1e18;"
+        "body": "const long Inf = 1L << 60;"
     },
     "Delta4d": {
         "scope": "csharp",
