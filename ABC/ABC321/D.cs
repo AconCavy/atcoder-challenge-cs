@@ -33,9 +33,9 @@ public class D
         long answer = 0;
         for (var i = 0; i < N; i++)
         {
-            var ub = UpperBound(B, Math.Max(0, P - A[i]));
-            var x = A[i] * ub + cumB[ub];
-            var y = (M - ub) * P;
+            var lb = LowerBound(B, Math.Max(0, P - A[i]));
+            var x = A[i] * lb + cumB[lb];
+            var y = (M - lb) * P;
             answer += x + y;
         }
 
