@@ -627,15 +627,18 @@
             "lowerbound"
         ],
         "body": [
-            "public static int LowerBound<T>(ReadOnlyMemory<T> source, T key) where T : IComparable<T>",
+            "public static int LowerBound<T>(List<T> source, T key) where T : IComparable<T>",
+            "    => LowerBound(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source), key);",
+            "public static int LowerBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>",
             "{",
-            "    bool F(int i) => source.Span[i].CompareTo(key) >= 0;",
-            "    return BinarySearch(-1, source.Length, F);",
-            "}",
-            "public static int LowerBound<T, U>(ReadOnlyMemory<T> source, Func<T, U> map, U key) where U : IComparable<U>",
-            "{",
-            "    bool F(int i) => map(source.Span[i]).CompareTo(key) >= 0;",
-            "    return BinarySearch(-1, source.Length, F);",
+            "    var (l, r) = (-1, source.Length);",
+            "    while (r - l > 1)",
+            "    {",
+            "        var m = l + (r - l) / 2;",
+            "        if (source[m].CompareTo(key) >= 0) r = m;",
+            "        else l = m;",
+            "    }",
+            "    return r;",
             "}"
         ]
     },
@@ -646,15 +649,18 @@
             "upperbound"
         ],
         "body": [
-            "public static int UpperBound<T>(ReadOnlyMemory<T> source, T key) where T : IComparable<T>",
+            "public static int UpperBound<T>(List<T> source, T key) where T : IComparable<T>",
+            "    => UpperBound(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source), key);",
+            "public static int UpperBound<T>(ReadOnlySpan<T> source, T key) where T : IComparable<T>",
             "{",
-            "    bool F(int i) => source.Span[i].CompareTo(key) > 0;",
-            "    return BinarySearch(-1, source.Length, F);",
-            "}",
-            "public static int UpperBound<T, U>(ReadOnlyMemory<T> source, Func<T, U> map, U key) where U : IComparable<U>",
-            "{",
-            "    bool F(int i) => map(source.Span[i]).CompareTo(key) > 0;",
-            "    return BinarySearch(-1, source.Length, F);",
+            "    var (l, r) = (-1, source.Length);",
+            "    while (r - l > 1)",
+            "    {",
+            "        var m = l + (r - l) / 2;",
+            "        if (source[m].CompareTo(key) > 0) r = m;",
+            "        else l = m;",
+            "    }",
+            "    return r;",
             "}"
         ]
     },
