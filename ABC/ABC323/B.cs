@@ -29,22 +29,10 @@ public class B
         var answer = new (int ID, int C)[N];
         for (var i = 0; i < N; i++)
         {
-            var count = 0;
-            for (var j = 0; j < N; j++)
-            {
-                if (i != j && G[i][j] == 'o') count++;
-            }
-
-            answer[i] = (i, count);
+            answer[i] = (i, G[i].Count(x => x == 'o'));
         }
 
-        Array.Sort(answer, (x, y) =>
-        {
-            var result = y.C.CompareTo(x.C);
-            return result == 0 ? x.ID.CompareTo(y.ID) : result;
-        });
-
-        Console.WriteLine(string.Join(" ", answer.Select(x => x.ID + 1)));
+        Console.WriteLine(string.Join(" ", answer.OrderByDescending(x => x.C).ThenBy(x => x.ID).Select(x => x.ID + 1)));
     }
 
     public static class Scanner
