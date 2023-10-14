@@ -24,38 +24,24 @@ public class C
         for (var i = 0; i < N; i++)
         {
             var S = Scanner.Scan<string>();
-            if (S == T)
-            {
-                answers.Add(i + 1);
-                continue;
-            }
-
             if (Math.Abs(S.Length - T.Length) > 1) continue;
+
             var si = 0;
             var ti = 0;
             var diff = 0;
             var ok = true;
             while (si < S.Length && ti < T.Length && ok)
             {
-                if (S[si] == T[ti])
-                {
-                    si++;
-                    ti++;
-                }
+                if (S[si] == T[ti]) { si++; ti++; }
                 else
                 {
-                    if (diff < 1)
-                    {
-                        diff++;
-                        if (S.Length < T.Length) ti++;
-                        else if (T.Length < S.Length) si++;
-                        else { si++; ti++; }
-                    }
-                    else
-                    {
-                        ok = false;
-                    }
+                    diff++;
+                    if (S.Length < T.Length) { ti++; }
+                    else if (S.Length > T.Length) { si++; }
+                    else { si++; ti++; }
                 }
+
+                ok = diff <= 1;
             }
 
             if (ok) answers.Add(i + 1);
