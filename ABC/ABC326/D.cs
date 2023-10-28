@@ -24,23 +24,45 @@ public class D
         var C = Scanner.Scan<string>();
 
         var G = new char[N, N];
+
+        bool CheckR()
+        {
+            var result = true;
+            for (var i = 0; i < N && result; i++)
+            {
+                for (var j = 0; j < N && result; j++)
+                {
+                    if (G[i, j] != '.') { result &= G[i, j] == R[i]; break; }
+                }
+            }
+
+            return result;
+        }
+
+        bool CheckC()
+        {
+            var result = true;
+            for (var j = 0; j < N && result; j++)
+            {
+                for (var i = 0; i < N && result; i++)
+                {
+                    if (G[i, j] != '.') { result &= G[i, j] == C[j]; break; }
+                }
+            }
+
+            return result;
+        }
+
         foreach (var AI in Permutation.GeneratePermutation(N))
         {
             foreach (var BI in Permutation.GeneratePermutation(N))
             {
-                var ok = true;
-                for (var i = 0; i < N; i++)
-                {
-                    ok &= AI[i] != BI[i];
-                }
-
-                if (!ok) continue;
-
                 foreach (var CI in Permutation.GeneratePermutation(N))
                 {
-                    ok = true;
-                    for (var i = 0; i < N; i++)
+                    var ok = true;
+                    for (var i = 0; i < N && ok; i++)
                     {
+                        ok &= AI[i] != BI[i];
                         ok &= AI[i] != CI[i];
                         ok &= BI[i] != CI[i];
                     }
@@ -62,27 +84,7 @@ public class D
                         G[CI[i], i] = 'C';
                     }
 
-                    for (var i = 0; i < N && ok; i++)
-                    {
-                        for (var j = 0; j < N && ok; j++)
-                        {
-                            if (G[i, j] == '.') continue;
-                            ok &= G[i, j] == R[i];
-                            break;
-                        }
-                    }
-
-                    for (var j = 0; j < N && ok; j++)
-                    {
-                        for (var i = 0; i < N && ok; i++)
-                        {
-                            if (G[i, j] == '.') continue;
-                            ok &= G[i, j] == C[j];
-                            break;
-                        }
-                    }
-
-                    if (ok)
+                    if (CheckR() && CheckC())
                     {
                         Console.WriteLine("Yes");
                         Printer.Print2D(G);

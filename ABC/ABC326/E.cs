@@ -24,12 +24,21 @@ public class E
         var N = Scanner.Scan<int>();
         var A = Scanner.ScanEnumerable<int>().ToArray();
         var iN = mint.Inverse(N);
-        mint answer = 0;
-        mint p = 1;
-        for (var i = 0; i < N; i++)
+        var E = new mint[N + 1];
+        var P = new mint[N + 1];
+        var cumP = new mint[N + 1];
+        P[0] = cumP[0] = 1;
+        for (var i = 1; i <= N; i++)
         {
-            answer += p * A[i] * iN;
-            p += p * iN;
+            P[i] = cumP[i - 1] * iN;
+            E[i] = A[i - 1] * P[i];
+            cumP[i] = cumP[i - 1] + P[i];
+        }
+
+        mint answer = 0;
+        for (var i = 1; i <= N; i++)
+        {
+            answer += E[i];
         }
 
         Console.WriteLine(answer);
