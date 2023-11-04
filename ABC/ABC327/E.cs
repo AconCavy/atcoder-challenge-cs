@@ -21,31 +21,20 @@ public class E
     {
         var N = Scanner.Scan<int>();
         var P = Scanner.ScanEnumerable<int>().ToArray();
-        const double Inf = 1e18;
         var sqrt = new double[N + 1];
-        var w = new double[N + 2];
-        var cumw = new double[N + 2];
-        cumw[1] = w[1] = 1;
-        for (var i = 1; i <= N; i++)
+        var w = new double[N + 1];
+        var cumW = new double[N + 1];
+        sqrt[1] = cumW[1] = w[1] = 1;
+        for (var i = 2; i <= N; i++)
         {
             sqrt[i] = Math.Sqrt(i);
-            w[i + 1] = w[i] * 0.9;
-            cumw[i + 1] = cumw[i] + w[i + 1];
-        }
-
-        var dp = new double[N + 1, N + 1];
-        for (var i = 0; i <= N; i++)
-        {
-            for (var j = 0; j <= N; j++)
-            {
-                dp[i, j] = -Inf;
-            }
+            w[i] = w[i - 1] * 0.9;
+            cumW[i] = cumW[i - 1] + w[i];
         }
 
         Array.Reverse(P);
-        dp[1, 0] = 0;
-        dp[1, 1] = w[1] * P[0];
-        for (var i = 1; i < N; i++)
+        var dp = new double[N + 1, N + 1];
+        for (var i = 0; i < N; i++)
         {
             for (var j = 0; j <= i; j++)
             {
@@ -54,51 +43,15 @@ public class E
             }
         }
 
+        const double Inf = 1e18;
         var answer = -Inf;
-        for (var i = 1; i <= N; i++)
+        for (var j = 1; j <= N; j++)
         {
-            for (var j = 1; j <= i; j++)
-            {
-                var score = dp[i, j] / cumw[j] - 1200 / sqrt[j];
-                answer = Math.Max(answer, score);
-            }
+            var r = dp[N, j] / cumW[j] - 1200 / sqrt[j];
+            answer = Math.Max(answer, r);
         }
 
         Console.WriteLine(answer);
-
-    }
-
-    public static class Printer
-    {
-        public static void Print<T>(T source) => Console.WriteLine(source);
-        public static void Print1D<T>(IEnumerable<T> source, string separator = "") => Console.WriteLine(string.Join(separator, source));
-        public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = "") => Console.WriteLine(string.Join(separator, source.Select(selector)));
-        public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = "") => Console.WriteLine(string.Join(Environment.NewLine, source.Select(x => string.Join(separator, x))));
-        public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = "") => Console.WriteLine(string.Join(Environment.NewLine, source.Select(x => string.Join(separator, x.Select(selector)))));
-        public static void Print2D<T>(T[,] source, string separator = "")
-        {
-            var (h, w) = (source.GetLength(0), source.GetLength(1));
-            for (var i = 0; i < h; i++)
-            {
-                for (var j = 0; j < w; j++)
-                {
-                    Console.Write(source[i, j]);
-                    Console.Write(j == w - 1 ? Environment.NewLine : separator);
-                }
-            }
-        }
-        public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = "")
-        {
-            var (h, w) = (source.GetLength(0), source.GetLength(1));
-            for (var i = 0; i < h; i++)
-            {
-                for (var j = 0; j < w; j++)
-                {
-                    Console.Write(selector(source[i, j]));
-                    Console.Write(j == w - 1 ? Environment.NewLine : separator);
-                }
-            }
-        }
     }
 
     public static class Scanner

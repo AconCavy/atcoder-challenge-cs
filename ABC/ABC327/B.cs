@@ -20,14 +20,20 @@ public class B
     public static void Solve()
     {
         var B = Scanner.Scan<long>();
-        const long Inf = (long)1e18;
-        for (var i = 0L; i <= 20; i++)
+        for (long i = 1; i <= 20; i++)
         {
             long v = 1;
             for (var j = 0; j < i; j++)
             {
-                v *= i;
-                if (v > Inf) break;
+                if (v <= B / i)
+                {
+                    v *= i;
+                }
+                else
+                {
+                    Console.WriteLine(-1);
+                    return;
+                }
             }
 
             if (v == B)
