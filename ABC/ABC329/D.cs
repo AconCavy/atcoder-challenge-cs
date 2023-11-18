@@ -20,24 +20,21 @@ public class D
     public static void Solve()
     {
         var (N, M) = Scanner.Scan<int, int>();
-        var A = Scanner.ScanEnumerable<int>().Select(x => x - 1).ToArray();
-        var sets = new SortedSet<int>[M + 1].Select(_ => new SortedSet<int>()).ToArray();
-        for (var i = 0; i < N; i++)
+        var A = Scanner.ScanEnumerable<int>().ToArray();
+        var count = new int[N + 1];
+        var answer = 0;
+        foreach (var a in A)
         {
-            sets[0].Add(i);
-        }
-        var curr = new int[N];
-        var max = 0;
-        for (var i = 0; i < M; i++)
-        {
-            var a = A[i];
-            var c = curr[a];
-            sets[c].Remove(a);
-            sets[c + 1].Add(a);
-            curr[a] = c + 1;
-            max = Math.Max(max, c + 1);
+            count[a]++;
+            if (count[answer] < count[a])
+            {
+                answer = a;
+            }
+            else if (count[answer] == count[a])
+            {
+                answer = Math.Min(answer, a);
+            }
 
-            var answer = sets[max].Min + 1;
             Console.WriteLine(answer);
         }
     }

@@ -21,24 +21,13 @@ public class F
     {
         var (N, Q) = Scanner.Scan<int, int>();
         var C = Scanner.ScanEnumerable<int>().ToArray();
-        var set = new HashSet<int>[N].Select(_ => new HashSet<int>()).ToArray();
-        for (var i = 0; i < N; i++)
-        {
-            set[i].Add(C[i]);
-        }
+        var set = C.Select(c => new HashSet<int> { c }).ToArray();
         while (Q-- > 0)
         {
             var (a, b) = Scanner.Scan<int, int>();
             a--; b--;
-            if (set[b].Count < set[a].Count)
-            {
-                (set[a], set[b]) = (set[b], set[a]);
-            }
-            foreach (var v in set[a])
-            {
-                set[b].Add(v);
-            }
-
+            if (set[b].Count < set[a].Count) (set[a], set[b]) = (set[b], set[a]);
+            set[b].UnionWith(set[a]);
             set[a].Clear();
             Console.WriteLine(set[b].Count);
         }

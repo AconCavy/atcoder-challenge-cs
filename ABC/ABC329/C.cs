@@ -21,28 +21,17 @@ public class C
     {
         var N = Scanner.Scan<int>();
         var S = Scanner.Scan<string>().Select(x => x - 'a').ToArray();
-        var used = new bool[N + 10, 26];
+        var maxLengths = new int[26];
         var l = 0;
         var r = 0;
         while (l < N)
         {
-            while (r < N && S[r] == S[l])
-            {
-                used[r - l, S[l]] = true;
-                r++;
-            }
+            while (r < N && S[r] == S[l]) r++;
+            maxLengths[S[l]] = Math.Max(maxLengths[S[l]], r - l);
             l = r;
         }
 
-        var answer = 0;
-        for (var i = 0; i < N; i++)
-        {
-            for (var j = 0; j < 26; j++)
-            {
-                if (used[i, j]) answer++;
-            }
-        }
-
+        var answer = maxLengths.Sum();
         Console.WriteLine(answer);
     }
 

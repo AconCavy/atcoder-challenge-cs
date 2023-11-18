@@ -22,34 +22,42 @@ public class E
         var (N, M) = Scanner.Scan<int, int>();
         var S = Scanner.Scan<string>();
         var T = Scanner.Scan<string>();
-        var X = S.ToCharArray().AsSpan();
-        var prev = X.ToArray().AsSpan();
 
-        while (true)
+        var X = S.ToCharArray();
+        var used = new bool[N - M + 1];
+        var queue = new Queue<int>();
+
+        void F(int idx)
         {
-            var r = M - 1;
+            if (used[idx]) return;
 
-            while (r < N)
+            var ok = true;
+            for (var i = 0; i < M && ok; i++)
             {
-                var ok = true;
-                for (var i = 0; i < M && ok; i++)
-                {
-                    ok &= (X[r - i] == '#' || X[r - i] == T[M - 1 - i]);
-                }
-
-                if (ok)
-                {
-                    for (var i = 0; i < M; i++)
-                    {
-                        X[r - i] = '#';
-                    }
-                }
-
-                r++;
+                ok &= (X[idx + i] == '#' || X[idx + i] == T[i]);
             }
 
-            if (X.SequenceEqual(prev)) break;
-            X.CopyTo(prev);
+            if (ok)
+            {
+                used[idx] = true;
+                queue.Enqueue(idx);
+            }
+        }
+
+        for (var i = 0; i < N - (M - 1); i++)
+        {
+            F(i);
+        }
+
+        while (queue.Count > 0)
+        {
+            var idx = queue.Dequeue();
+            X.AsSpan(idx, M).Fill('#');
+
+            for (var i = Math.Max(0, idx - (M - 1)); i <= Math.Min(N - M, idx + (M - 1)); i++)
+            {
+                F(i);
+            }
         }
 
         var answer = new string(X) == new string('#', N);
