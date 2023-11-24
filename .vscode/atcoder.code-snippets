@@ -494,6 +494,29 @@
             "}"
         ]
     },
+    "IsBipartite": {
+        "scope": "csharp",
+        "prefix": "isbipartite",
+        "body": [
+            "var isBipartite = true;",
+            "var queue = new Queue<int>();",
+            "queue.Enqueue(0);",
+            "var colors = new int[${1:N}];",
+            "Array.Fill(colors, -1);",
+            "colors[0] = 0;",
+            "while (queue.TryDequeue(out var u) && isBipartite)",
+            "{",
+            "    foreach (var v in G[u])",
+            "    {",
+            "        isBipartite &= colors[u] == colors[v];",
+            "        if (!isBipartite) break;",
+            "        if (colors[v] != -1) continue;",
+            "        colors[v] = colors[u] ^ 1;",
+            "        queue.Enqueue(v);",
+            "    }",
+            "}",
+        ]
+    },
     "WarshallFloyd": {
         "scope": "csharp",
         "prefix": [
