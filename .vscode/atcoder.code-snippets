@@ -517,6 +517,34 @@
             "}",
         ]
     },
+    "TopologicalSort": {
+        "scope": "csharp",
+        "prefix": "topologicalsort",
+        "body": [
+            "var queue = new Queue<int>();",
+            "var inDeg = new int[N];",
+            "for (var i = 0; i < N; i++)",
+            "{",
+            "    if (inDeg[i] == 0) queue.Enqueue(i);",
+            "}",
+            "",
+            "var indices = new int[N];",
+            "var idx = 0;",
+            "",
+            "while (queue.TryDequeue(out var u))",
+            "{",
+            "    foreach (var v in G[u])",
+            "    {",
+            "        inDeg[v]--;",
+            "        if (inDeg[v] == 0) queue.Enqueue(v);",
+            "    }",
+            "",
+            "    indices[idx++] = u;",
+            "}",
+            "",
+            "var result = idx == N;",
+        ]
+    },
     "WarshallFloyd": {
         "scope": "csharp",
         "prefix": [
