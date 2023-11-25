@@ -27,28 +27,6 @@ public class F
             var (x, y) = Scanner.Scan<long, long>();
             P[i] = new Point(x, y);
         }
-
-        var dictX = new SortedDictionary<long, long>();
-        var dictY = new SortedDictionary<long, long>();
-        for (var i = 0; i < N; i++)
-        {
-            var (x, y) = P[i];
-            if (!dictX.ContainsKey(x)) dictX[x] = 0;
-            dictX[x]++;
-            if (!dictY.ContainsKey(y)) dictX[y] = 0;
-            dictY[y]++;
-        }
-
-        bool F(int l)
-        {
-            var sumX = P.Select(p => p.X).Sum();
-            var sumY = P.Select(p => p.Y).Sum();
-            var midX = sumX / 2d;
-            var midY = sumX / 2d;
-        }
-
-        var answer = BinarySearch(-1, Inf, F);
-        Console.WriteLine(answer);
     }
 
     public static T BinarySearch<T>(T ng, T ok, Func<T, bool> f) where T : INumber<T> => BinarySearch(ng, ok, f, T.One);

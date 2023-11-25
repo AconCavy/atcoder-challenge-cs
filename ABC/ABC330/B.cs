@@ -21,26 +21,7 @@ public class B
     {
         var (N, L, R) = Scanner.Scan<int, long, long>();
         var A = Scanner.ScanEnumerable<long>().ToArray();
-        var answers = new long[N];
-        bool F(long x) => L <= x && x <= R;
-        for (var i = 0; i < N; i++)
-        {
-            var a = A[i];
-            if (F(a))
-            {
-                answers[i] = a;
-            }
-            else
-            {
-                var l = Math.Abs(L - a);
-                var r = Math.Abs(R - a);
-                var min = Math.Min(l, r);
-                var x = min + a;
-                if (F(min + a)) answers[i] = min + a;
-                else if (F(a - min)) answers[i] = a - min;
-            }
-        }
-
+        var answers = A.Select(x => Math.Min(Math.Max(L, x), R));
         Console.WriteLine(string.Join(" ", answers));
     }
 

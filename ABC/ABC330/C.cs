@@ -25,30 +25,17 @@ public class C
         for (long x = 0; x * x <= D; x++)
         {
             var xx = x * x;
-            var yy = Math.Abs(xx - D);
-            var sqy = (long)Math.Sqrt(yy);
-            for (var y = sqy - 2; y <= sqy + 2; y++)
+            var c = xx - D;
+            var y = c >= 0 ? 0 : (long)Math.Sqrt(-c);
+            for (var k = 0; k < 2; k++)
             {
-                var v = Math.Abs(xx + y * y - D);
+                var yy = (y + k) * (y + k);
+                var v = Math.Abs(xx + yy - D);
                 answer = Math.Min(answer, v);
             }
         }
 
         Console.WriteLine(answer);
-    }
-
-    public static T BinarySearch<T>(T ng, T ok, Func<T, bool> f) where T : INumber<T> => BinarySearch(ng, ok, f, T.One);
-    public static T BinarySearch<T>(T ng, T ok, Func<T, bool> f, T eps) where T : INumber<T>
-    {
-        var one = T.One;
-        var two = one + one;
-        while (T.Abs(ok - ng) > eps)
-        {
-            var m = ng + (ok - ng) / two;
-            if (f(m)) ok = m;
-            else ng = m;
-        }
-        return ok;
     }
 
     public static class Scanner
