@@ -526,5 +526,63 @@ avadakedavra
         {
             Utility.InOutTest(Tasks.N.Solve, input, output);
         }
+
+        [Timeout(2000)]
+        [TestCase(
+            @"3 100
+1 2
+2 3
+",
+            @"3
+4
+3
+",
+            TestName = "{m}-1")]
+        [TestCase(
+            @"4 100
+1 2
+1 3
+1 4
+",
+            @"8
+5
+5
+5
+",
+            TestName = "{m}-2")]
+        [TestCase(
+            @"1 100
+",
+            @"1
+",
+            TestName = "{m}-3")]
+        [TestCase(
+            @"10 2
+8 5
+10 8
+6 5
+1 5
+4 8
+2 10
+3 6
+9 2
+1 7
+",
+            @"0
+0
+1
+1
+1
+0
+1
+0
+1
+1
+",
+            TestName = "{m}-4")]
+        public void VTest(string input, string output)
+        {
+            Utility.InOutTest(Tasks.V.Solve, input, output);
+        }
     }
 }
