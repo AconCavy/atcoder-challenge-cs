@@ -20,8 +20,8 @@ public class E
     public static void Solve()
     {
         var (N, M, L) = Scanner.Scan<int, int, int>();
-        var A = Scanner.ScanEnumerable<long>().Select((x, i) => (V: x, I: i)).ToArray();
-        var B = Scanner.ScanEnumerable<long>().Select((x, i) => (V: x, I: i)).ToArray();
+        var A = Scanner.ScanEnumerable<long>().ToArray();
+        var B = Scanner.ScanEnumerable<long>().ToArray();
         var set = new HashSet<(int C, int D)>();
         for (var i = 0; i < L; i++)
         {
@@ -30,104 +30,21 @@ public class E
             set.Add((c, d));
         }
 
-        Array.Sort(A, (x, y) => y.V.CompareTo(x.V));
-        Array.Sort(B, (x, y) => y.V.CompareTo(x.V));
+        var C = B.Select((x, i) => (V: x, I: i)).OrderByDescending(x => x.V).ToArray();
         long answer = 0;
         for (var i = 0; i < N; i++)
         {
-            var (a, ai) = A[i];
+            var (a, ai) = (A[i], i);
             for (var j = 0; j < M; j++)
             {
-                var (b, bi) = B[j];
+                var (b, bi) = C[j];
                 if (set.Contains((ai, bi))) continue;
-                if (answer >= a + b) break;
-                answer = a + b;
+                answer = Math.Max(answer, a + b);
                 break;
             }
         }
 
         Console.WriteLine(answer);
-    }
-
-    public class PriorityQueue<T> : IReadOnlyCollection<T>
-    {
-        private readonly Comparison<T> _comparison;
-        private readonly List<T> _heap;
-        public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer = null) : this(comparer)
-        {
-            foreach (var item in items) Enqueue(item);
-        }
-        public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison) : this(comparison)
-        {
-            foreach (var item in items) Enqueue(item);
-        }
-        public PriorityQueue(IComparer<T> comparer = null) : this((comparer ?? Comparer<T>.Default).Compare) { }
-        public PriorityQueue(Comparison<T> comparison)
-        {
-            _heap = new List<T>();
-            _comparison = comparison;
-        }
-        public int Count => _heap.Count;
-        public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public void Enqueue(T item)
-        {
-            var child = Count;
-            _heap.Add(item);
-            while (child > 0)
-            {
-                var parent = (child - 1) / 2;
-                if (_comparison(_heap[parent], _heap[child]) <= 0) break;
-                (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
-                child = parent;
-            }
-        }
-        public T Dequeue()
-        {
-            if (Count == 0) throw new InvalidOperationException();
-            var result = _heap[0];
-            _heap[0] = _heap[Count - 1];
-            _heap.RemoveAt(Count - 1);
-            var parent = 0;
-            while (parent * 2 + 1 < Count)
-            {
-                var left = parent * 2 + 1;
-                var right = parent * 2 + 2;
-                if (right < Count && _comparison(_heap[left], _heap[right]) > 0)
-                    left = right;
-                if (_comparison(_heap[parent], _heap[left]) <= 0) break;
-                (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
-                parent = left;
-            }
-            return result;
-        }
-        public T Peek()
-        {
-            if (Count == 0) throw new InvalidOperationException();
-            return _heap[0];
-        }
-        public bool TryDequeue(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Dequeue();
-                return true;
-            }
-            result = default;
-            return false;
-        }
-        public bool TryPeek(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Peek();
-                return true;
-            }
-            result = default;
-            return false;
-        }
-        public void Clear() => _heap.Clear();
-        public bool Contains(T item) => _heap.Contains(item);
     }
 
     public static class Scanner
