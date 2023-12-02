@@ -2,7 +2,7 @@
 
 set PROJECT=%~1
 set TASK=%~2
-set TARGET_FRAMEWORK=net7
+set TARGET_FRAMEWORK=net7.0
 
 set IS_HELP=false
 if "%PROJECT%"=="" set IS_HELP=true

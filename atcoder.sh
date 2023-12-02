@@ -23,7 +23,7 @@ function task {
 function project {
   PROJECT_PATH=$1
   PROJECT=$2
-  TARGET_FRAMEWORK=net7
+  TARGET_FRAMEWORK=net7.0
 
   if [ -e $PROJECT_PATH ]; then
     echo "$PROJECT_PATH is already exist. Skip creating the project."
