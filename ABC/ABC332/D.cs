@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Tasks;
 
@@ -39,27 +40,25 @@ public class D
 
                 if (!ok) continue;
 
-                var inv = 0;
-                var ftH = new FenwickTree<int>(H);
-                var ftW = new FenwickTree<int>(W);
-                for (var i = 0; i < H; i++)
-                {
-                    inv += i - ftH.Sum(oAH[i] + 1);
-                    ftH.Add(oAH[i], 1);
-                }
-
-                for (var j = 0; j < W; j++)
-                {
-                    inv += j - ftW.Sum(oAW[j] + 1);
-                    ftW.Add(oAW[j], 1);
-                }
-
+                var inv = InversionNumber(oAH) + InversionNumber(oAW);
                 answer = Math.Min(answer, inv);
             }
         }
 
         if (answer == Inf) answer = -1;
         Console.WriteLine(answer);
+    }
+
+    public static int InversionNumber(IReadOnlyList<int> source)
+    {
+        var result = 0;
+        var ft = new FenwickTree<int>(source.Count);
+        for (var i = 0; i < source.Count; i++)
+        {
+            result += i - ft.Sum(source[i] + 1);
+            ft.Add(source[i], 1);
+        }
+        return result;
     }
 
     public class FenwickTree<T>
