@@ -703,6 +703,26 @@
             "}"
         ]
     },
+    "InversionNumber": {
+        "scope": "csharp",
+        "prefix": [
+            "inversionnumber",
+            "invnum"
+        ],
+        "body": [
+            "public static int InversionNumber(IReadOnlyList<int> source)",
+            "{",
+            "    var result = 0;",
+            "    var ft = new FenwickTree<int>(source.Count);",
+            "    for (var i = 0; i < source.Count; i++)",
+            "    {",
+            "        result += i - ft.Sum(source[i] + 1);",
+            "        ft.Add(source[i], 1);",
+            "    }",
+            "    return result;",
+            "}",
+        ]
+    },
     "Loop": {
         "scope": "csharp",
         "prefix": "loop",
