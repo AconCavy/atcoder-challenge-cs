@@ -21,26 +21,31 @@ public class C
     {
         var (N, K) = Scanner.Scan<int, int>();
         var A = Scanner.ScanEnumerable<int>().ToArray();
-        var cumL = new long[K + 1];
-        var cumR = new long[K + 1];
-        for (var i = 0; i < K; i++)
+        var D = new long[K - 1];
+        for (var i = 0; i + 1 < K; i++)
         {
-            cumL[i + 1] += cumL[i];
-            if (i % 2 == 1) cumL[i + 1] += A[i] - A[i - 1];
+            D[i] = A[i + 1] - A[i];
         }
 
-        Array.Reverse(A);
-        for (var i = 0; i < K; i++)
+        var M = K / 2;
+        var cumL = new long[M + 1];
+        var cumR = new long[M + 1];
+        for (var i = 0; i < M; i++)
         {
-            cumR[i + 1] += cumR[i];
-            if (i % 2 == 1) cumR[i + 1] += A[i - 1] - A[i];
+            cumL[i + 1] = cumL[i] + D[i * 2];
+        }
+
+        Array.Reverse(D);
+        for (var i = 0; i < M; i++)
+        {
+            cumR[i + 1] = cumR[i] + D[i * 2];
         }
 
         Array.Reverse(cumR);
 
         const long Inf = 1L << 60;
         var answer = Inf;
-        for (var i = 0; i < K; i += 2)
+        for (var i = 0; i <= M; i++)
         {
             answer = Math.Min(answer, cumL[i] + cumR[i]);
         }

@@ -22,10 +22,8 @@ public class B
         var (A, M, L, R) = Scanner.Scan<long, long, long, long>();
         R -= L;
         A -= L;
-        A = (A % M + M) % M;
-        R -= A;
-
-        long answer = R < 0 ? 0 : R / M + 1;
+        var B = (A % M + M) % M;
+        var answer = R < B ? 0 : (R - B) / M + 1;
         Console.WriteLine(answer);
     }
 
