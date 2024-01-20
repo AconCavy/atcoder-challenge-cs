@@ -30,24 +30,6 @@ public class D
         var oY = new long[H + 1, W];
         var xX = new long[H, W + 1];
         var xY = new long[H + 1, W];
-        const long Inf = 1 << 30;
-        for (var i = 0; i < H; i++)
-        {
-            for (var j = 0; j < W; j++)
-            {
-                if (S[i][j] == 'o')
-                {
-                    oX[i, j + 1] = 1;
-                    oY[i + 1, j] = 1;
-                }
-                else if (S[i][j] == 'x')
-                {
-                    xX[i, j + 1] = 1;
-                    xY[i + 1, j] = 1;
-                }
-            }
-        }
-
         for (var i = 0; i < H; i++)
         {
             for (var j = 0; j < W; j++)
@@ -56,9 +38,21 @@ public class D
                 oY[i + 1, j] += oY[i, j];
                 xX[i, j + 1] += xX[i, j];
                 xY[i + 1, j] += xY[i, j];
+
+                if (S[i][j] == 'o')
+                {
+                    oX[i, j + 1] += 1;
+                    oY[i + 1, j] += 1;
+                }
+                else if (S[i][j] == 'x')
+                {
+                    xX[i, j + 1] += 1;
+                    xY[i + 1, j] += 1;
+                }
             }
         }
 
+        const long Inf = 1 << 30;
         var answer = Inf;
         for (var i = 0; i < H; i++)
         {
