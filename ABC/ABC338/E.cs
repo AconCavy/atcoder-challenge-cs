@@ -20,7 +20,7 @@ public class E
     public static void Solve()
     {
         var N = Scanner.Scan<int>();
-        var M = N * 3;
+        var M = N * 2;
         var G = new List<int>[M].Select(x => new List<int>()).ToArray();
         for (var i = 0; i < N; i++)
         {
@@ -31,15 +31,16 @@ public class E
             if (a + 1 != b) G[a].Add(b);
         }
 
-        var stack = new Stack<int>();
+        var queue = new PriorityQueue<int, int>();
         for (var a = 0; a < M; a++)
         {
+            while (queue.Count > 0 && queue.Peek() <= a) queue.Dequeue();
+
             foreach (var b in G[a])
             {
-                if (stack.Count > 0)
+                if (queue.TryPeek(out var x, out _))
                 {
-                    var top = stack.Peek();
-                    if (a < top && top < b)
+                    if (a < x && x < b)
                     {
                         Console.WriteLine("Yes");
                         return;
@@ -47,52 +48,13 @@ public class E
                 }
             }
 
-            while (stack.Count > 0 && stack.Peek() < a)
-            {
-                stack.Pop();
-            }
-
             foreach (var v in G[a])
             {
-                stack.Push(v);
+                queue.Enqueue(v, v);
             }
         }
 
         Console.WriteLine("No");
-    }
-
-    public static int LowerBound<T>(List<T> source, T key, IComparer<T>? comparer = null)
-        => LowerBound(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source), key, comparer);
-
-    public static int LowerBound<T>(ReadOnlySpan<T> source, T key, IComparer<T>? comparer = null)
-    {
-        comparer ??= Comparer<T>.Default;
-        var (lo, hi) = (-1, source.Length);
-        while (hi - lo > 1)
-        {
-            var mi = lo + ((hi - lo) >> 1);
-            if (comparer.Compare(source[mi], key) >= 0) hi = mi;
-            else lo = mi;
-        }
-
-        return hi;
-    }
-
-    public static int UpperBound<T>(List<T> source, T key, IComparer<T>? comparer = null)
-        => UpperBound(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source), key, comparer);
-
-    public static int UpperBound<T>(ReadOnlySpan<T> source, T key, IComparer<T>? comparer = null)
-    {
-        comparer ??= Comparer<T>.Default;
-        var (lo, hi) = (-1, source.Length);
-        while (hi - lo > 1)
-        {
-            var mi = lo + ((hi - lo) >> 1);
-            if (comparer.Compare(source[mi], key) > 0) hi = mi;
-            else lo = mi;
-        }
-
-        return hi;
     }
 
     public static class Scanner
