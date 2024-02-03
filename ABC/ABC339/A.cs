@@ -20,8 +20,7 @@ public class A
     public static void Solve()
     {
         var S = Scanner.Scan<string>();
-        var N = S.Length;
-        var i = N - 1;
+        var i = S.Length - 1;
         while (S[i] != '.') i--;
         var answer = S[(i + 1)..];
         Console.WriteLine(answer);
