@@ -24,10 +24,10 @@ public class D
         var A = Scanner.ScanEnumerable<long>().ToArray();
         for (var i = 0; i < N; i++)
         {
-            for (var d = 1000; d > 0; d--)
+            for (var j = (int)Math.Sqrt(A[i]); j * j > 0; j--)
             {
-                var dd = d * d;
-                if (A[i] % dd == 0) A[i] /= dd;
+                var sq = j * j;
+                if (A[i] % sq == 0) A[i] /= sq;
             }
         }
 
@@ -37,10 +37,9 @@ public class D
             count[a]++;
         }
 
-        long answer = count[0] * (count[0] - 1) / 2;
-        for (long i = 1; i < M; i++)
+        var answer = count[0] * (count[0] - 1) / 2 + count[0] * (N - count[0]);
+        for (var i = 1; i < M; i++)
         {
-            answer += count[0] * count[i];
             answer += count[i] * (count[i] - 1) / 2;
         }
 
