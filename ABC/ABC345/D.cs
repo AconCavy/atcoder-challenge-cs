@@ -21,20 +21,15 @@ public class D
     {
         var (N, H, W) = Scanner.Scan<int, int, int>();
         var T = new (int A, int B)[N];
-        var M = 0;
         for (var i = 0; i < N; i++)
         {
             var (a, b) = Scanner.Scan<int, int>();
-            if ((a > H && a > W) || (b > H && b > W)) continue;
-            T[M++] = (a, b);
+            T[i] = (a, b);
         }
-
-        T = T[..M];
-        Array.Sort(T, (x, y) => (y.A * y.B).CompareTo(x.A * x.B));
 
         var G = new bool[H, W];
 
-        bool Dfs(int k)
+        bool Dfs((int A, int B)[] tiles, int k)
         {
             var result = true;
             for (var i = 0; i < H && result; i++)
@@ -45,51 +40,50 @@ public class D
                 }
             }
 
-            if (k >= M || result) return result;
+            if (k >= N || result) return result;
 
-            if (Dfs(k + 1))
-            {
-                return true;
-            }
+            if (Dfs(tiles, k + 1)) return true;
 
-            var (a, b) = T[k];
-            for (var d = 0; d < 2; d++)
+            var (a, b) = tiles[k];
+            for (var t = 0; t < 2; t++)
             {
-                for (var i = 0; i + a <= H; i++)
+                var end = false;
+                for (var h = 0; h + a <= H && !end; h++)
                 {
-                    for (var j = 0; j + b <= W; j++)
+                    for (var w = 0; w + b <= W && !end; w++)
                     {
+                        if (G[h, w]) continue;
+
                         var ok = true;
-                        for (var x = 0; x < a; x++)
+                        for (var i = 0; i < a && ok; i++)
                         {
-                            for (var y = 0; y < b; y++)
+                            for (var j = 0; j < b && ok; j++)
                             {
-                                ok &= G[i + x, j + y] == false;
+                                ok &= !G[h + i, w + j];
                             }
                         }
 
                         if (!ok) continue;
 
-                        for (var x = 0; x < a; x++)
+                        for (var i = 0; i < a; i++)
                         {
-                            for (var y = 0; y < b; y++)
+                            for (var j = 0; j < b; j++)
                             {
-                                G[i + x, j + y] = true;
+                                G[h + i, w + j] = true;
                             }
                         }
 
-                        if (Dfs(k + 1))
-                        {
-                            return true;
-                        }
+                        if (Dfs(tiles, k + 1)) return true;
 
-                        for (var x = 0; x < a; x++)
+                        for (var i = 0; i < a; i++)
                         {
-                            for (var y = 0; y < b; y++)
+                            for (var j = 0; j < b; j++)
                             {
-                                G[i + x, j + y] = false;
+                                G[h + i, w + j] = false;
                             }
                         }
+
+                        end = true;
                     }
                 }
 
@@ -100,40 +94,66 @@ public class D
             return false;
         }
 
-
-        var answer = Dfs(0);
-        Console.WriteLine(answer ? "Yes" : "No");
-    }
-
-    public static class Printer
-    {
-        public static void Print<T>(T source) => Console.WriteLine(source);
-        public static void Print1D<T>(IEnumerable<T> source, string separator = "") => Console.WriteLine(string.Join(separator, source));
-        public static void Print1D<T, U>(IEnumerable<T> source, Func<T, U> selector, string separator = "") => Console.WriteLine(string.Join(separator, source.Select(selector)));
-        public static void Print2D<T>(IEnumerable<IEnumerable<T>> source, string separator = "") => Console.WriteLine(string.Join(Environment.NewLine, source.Select(x => string.Join(separator, x))));
-        public static void Print2D<T, U>(IEnumerable<IEnumerable<T>> source, Func<T, U> selector, string separator = "") => Console.WriteLine(string.Join(Environment.NewLine, source.Select(x => string.Join(separator, x.Select(selector)))));
-        public static void Print2D<T>(T[,] source, string separator = "")
+        var tiles = new (int A, int B)[N];
+        foreach (var order in Permutation.Generate(N))
         {
-            var (h, w) = (source.GetLength(0), source.GetLength(1));
-            for (var i = 0; i < h; i++)
+            for (var i = 0; i < N; i++)
             {
-                for (var j = 0; j < w; j++)
-                {
-                    Console.Write(source[i, j]);
-                    Console.Write(j == w - 1 ? Environment.NewLine : separator);
-                }
+                tiles[i] = T[order[i]];
+            }
+
+            if (Dfs(tiles, 0))
+            {
+                Console.WriteLine("Yes");
+                return;
             }
         }
-        public static void Print2D<T, U>(T[,] source, Func<T, U> selector, string separator = "")
+
+        Console.WriteLine("No");
+    }
+
+    public static class Permutation
+    {
+        public static bool NextPermutation(Span<int> indices)
         {
-            var (h, w) = (source.GetLength(0), source.GetLength(1));
-            for (var i = 0; i < h; i++)
+            var n = indices.Length;
+            var (i, j) = (n - 2, n - 1);
+            while (i >= 0 && indices[i] >= indices[i + 1]) i--;
+            if (i == -1) return false;
+            while (j > i && indices[j] <= indices[i]) j--;
+            (indices[i], indices[j]) = (indices[j], indices[i]);
+            indices[(i + 1)..].Reverse();
+            return true;
+        }
+        public static bool PreviousPermutation(Span<int> indices)
+        {
+            var n = indices.Length;
+            var (i, j) = (n - 2, n - 1);
+            while (i >= 0 && indices[i] <= indices[i + 1]) i--;
+            if (i == -1) return false;
+            indices[(i + 1)..].Reverse();
+            while (j > i && indices[j - 1] < indices[i]) j--;
+            (indices[i], indices[j]) = (indices[j], indices[i]);
+            return true;
+        }
+        public static IEnumerable<IReadOnlyList<int>> Generate(int n)
+        {
+            return Inner();
+            IEnumerable<IReadOnlyList<int>> Inner()
             {
-                for (var j = 0; j < w; j++)
-                {
-                    Console.Write(selector(source[i, j]));
-                    Console.Write(j == w - 1 ? Environment.NewLine : separator);
-                }
+                var indices = new int[n];
+                for (var i = 0; i < indices.Length; i++) indices[i] = i;
+                do { yield return indices; } while (NextPermutation(indices));
+            }
+        }
+        public static IEnumerable<IReadOnlyList<int>> GenerateDescending(int n)
+        {
+            return Inner();
+            IEnumerable<IReadOnlyList<int>> Inner()
+            {
+                var indices = new int[n];
+                for (var i = 0; i < indices.Length; i++) indices[i] = n - 1 - i;
+                do { yield return indices; } while (PreviousPermutation(indices));
             }
         }
     }
