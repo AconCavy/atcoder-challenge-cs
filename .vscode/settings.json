@@ -1,6 +1,6 @@
 {
     "env.directory": "ABC/",
-    "env.project": "ABC350",
+    "env.project": "ABC351",
     "env.framework": "net7.0",
     "dotnet.server.useOmnisharp": true,
 }
